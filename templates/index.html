@@ -5,40 +5,43 @@
 	<title>Tool title</title>
 	<meta content="initial-scale=1.0" name="viewport">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet"> 
-	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"> 
-	<script type="text/javascript" src="{{ url_for('static', filename='js/chart.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/annotations.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Maven+Pro:400,500,700" rel="stylesheet">
+	<link href="{{ url_for("static", filename="css/styles.css") }}" rel="stylesheet"> 
+	<script type="text/javascript" src="{{ url_for("static", filename="js/chart.js") }}"></script>
+	<script type="text/javascript" src="{{ url_for("static", filename="js/annotations.js") }}"></script>
+	<script type="text/javascript" src="{{ url_for("static", filename="js/visualize.js") }}"></script>
 </head>
 <body>
 	<header>
-        <div class='inner-wrapper'>
+        <div class="inner-wrapper">
             <h1 id="title">Tool Title</h1>
             <ul>
-                <li id='help-button'>
+                <li id="help-button" class="icon-button">
                     <a href="#" title="Help">
                         <i class="material-icons">help</i>
                     </a>
                 </li>
-                <li id='settings-button'>
+                <li id="settings-button" class="icon-button">
                     <a href="#" title="Settings">
                         <i class="material-icons">settings</i>
                     </a>
                 </li>
                 <li>
-                    <button class='button'>
-                        <span class='button-text'>Login</span>
-                        <span class='button-icon material-icons'>keyboard_arrow_right</span>
+                    <button class="button">
+                        <span class="button-text">Login</span>
+                        <span class="button-icon material-icons">navigate_next</span>
                     </button>
                 </li>
             </ul>
         </div>
     </header>
     <nav>
-        <div class='inner-wrapper'>
+        <div class="inner-wrapper">
           <ul>
-            <li><a href="#">Upload</a></li>
+            <li><a href="#" class="selected">Upload</a></li>
             <li><a href="#">Questions</a></li>
             <li><a href="#">Grades</a></li>
             <li><a href="#">Review</a></li>
@@ -47,17 +50,55 @@
         </div>
     </nav>
     <div id="content">
-        <div class='inner-wrapper'>
+        <div class="inner-wrapper">
             <h2>Upload files
-                <span>Instructions on uploading student data files.</span>
+                <span>Subtitle describing this page.</span>
             </h2>
-            <section class="action">
+            <p>
+                Instructions on uploading student data files. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            <section id="upload">
+                <div id="upload-area">
+                    <div>
+                        <i class="icon">
+                            cloud_upload
+                        </i>
+                        <span id="upload-drag-description">
+                            Drop files here
+                        </span>
+                    </div>
+                </div>
+                <div id="upload-statuses">
+                    <div class="upload-status">
+                        <input type="file" name="file-student-data" id="file-student-data" class="upload-file" />
+                        <label for="file-student-data"><span><em>Choose</em> a student test data file</span></label>
+                        <span class="upload-subtext">Required</span>
+                    </div>
+                    <div class="upload-status">
+                        <input type="file" name="file-student-data" id="file-student-data" class="upload-file" />
+                        <label for="file-student-data"><span><em>Choose</em> a test version/answer file</span></label>
+                        <span class="upload-subtext">Required</span>
+                    </div>
+                    <div class="upload-status">
+                        <input type="file" name="file-student-data" id="file-student-data" class="upload-file" />
+                        <label for="file-student-data"><span><em>Choose</em> a question text file</span></label>
+                        <span class="upload-subtext">Optional</span>
+                    </div>
+                </div>
             </section>
+            <button class="button disabled-button" id="next-button">
+                <span class="button-text">Next</span>
+                <span class="button-icon material-icons">arrow_forward</span>
+            </button>
         </div>
     </div>
     <footer>
-        <div class='inner-wrapper'>
-            <h3>Arbitrary text here.</h3>
+        <div class="inner-wrapper">
+            <ul>
+                <li><a href="#">Help</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
         </div>
     </footer>
 </body>

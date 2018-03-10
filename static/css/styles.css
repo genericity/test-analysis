@@ -32,6 +32,7 @@ body {
     max-width: 1800px;
     margin: auto;
     overflow: auto;
+    position: relative;
 }
 
 #content .inner-wrapper {
@@ -106,6 +107,11 @@ header ul {
      margin-left: auto; /* Align to the right. */
 }
 
+header ul li .button .button-icon {
+     font-size: 42px;
+     padding: 0;
+}
+
 .icon-button {
      padding: 0 20px 0 0;
 }
@@ -160,7 +166,7 @@ nav ul li a:hover {
      background: #ECEFF1;
 }
 
-nav ul li:after {
+nav ul li:after, .upload-file + label:before, #upload-area .icon {
      font-family: 'Material Icons';
      font-weight: normal;
      font-style: normal;
@@ -181,7 +187,9 @@ nav ul li:after {
      -moz-osx-font-smoothing: grayscale;
      /* Support for IE. */
      font-feature-settings: 'liga';
+}
 
+nav ul li:after {
      content: 'play_arrow';
      color: #fff;
      position: absolute;
@@ -224,24 +232,55 @@ nav ul li:last-child:after{
 }
 
 .button-icon{
-     font-size: 42px;
+     font-size: 32px;
      float: right;
+     padding: 5px 12px 5px 6px;
 }
 
 .button:hover {
      background: #1E88E5;
 }
 
+.reversed-button .button-icon {
+     float: left;
+     padding: 5px 6px 5px 12px;
+}
+
+.reversed-button .button-text {
+     float: right;
+     padding: 0 18px 0 0;
+}
+
+.disabled-button {
+     background: #9E9E9E;
+     border-color: #757575;
+     cursor: default;
+}
+
+.disabled-button:hover {
+     background: #9E9E9E;
+}
+
+#back-button {
+     float: left;
+}
+
+#next-button {
+     float: right;
+}
+
 /* Main area */
 
 #content {
      background: #fff;
+     padding: 24px 0;
 }
 
 #content .inner-wrapper h2 {
      font-size: 44px;
      line-height: 1.2em;
      font-weight: 700;
+     margin: 20px 0;
 }
 
 #content .inner-wrapper h2 span {
@@ -250,6 +289,124 @@ nav ul li:last-child:after{
 
 #content p {
      margin: 0 0 1em 0;
+}
+
+/* Uploads */
+
+#upload {
+     display: flex;
+     flex-direction: row;
+     position: relative;
+     width: 100%;
+     margin: 2em 0;
+}
+
+#upload-area {
+     flex-grow: 1;
+     background-color: #EEEEEE;
+     min-width: 12em;
+     max-width: 24em;
+     text-align: center;
+     position: relative;
+}
+
+#upload-area div {
+     position: relative;
+     top: 50%;
+     transform: translateY(-75%); /* Centre the image. */
+}
+
+#upload-area div .icon {
+     font-size: 7em;
+     color: #BDBDBD;
+     display: block;
+}
+
+#upload-area div #upload-drag-description {
+     font-size: 1.5em;
+     color: #757575;
+     letter-spacing: 0.1em;
+     text-transform: uppercase;
+     display: block;
+}
+
+#upload-statuses {
+     display: flex;
+     flex-direction: column;
+     position: relative;
+     background: #fafafa;
+     flex-grow: 1;
+}
+
+.upload-status {
+     flex-grow: 1;
+     display: block;
+     border-bottom: 3px solid #f5f5f5;
+     position: relative;
+     padding-right: 2em;
+}
+
+.upload-file {
+     width: 0.1px;
+     height: 0.1px;
+     opacity: 0;
+     overflow: hidden;
+     position: absolute;
+     z-index: -1;
+}
+
+.upload-file + label:before {
+    content: 'add_circle';
+    color: #2196F3;
+    font-size: 72px;
+    position: relative;
+    left: 0;
+    padding: 12px;
+    top: 36px;
+    cursor: pointer;
+}
+
+.upload-file + label, .upload-subtext {
+    position: relative;
+}
+
+.upload-file + label {
+     top: -28px;
+}
+
+.upload-subtext {
+     top: -36px;
+}
+
+.upload-file + label span {
+    font-size: 1.5em;
+    font-weight: 400;
+    color: #2196F3;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.upload-file + label span em {
+    color: #2196F3;
+    font-weight: 700;
+    font-style: initial;
+}
+
+.upload-file:focus + label span,
+.upload-file + label:hover span,
+.upload-file + label:hover span em,
+.upload-file:focus + label span em,
+.upload-file:focus + label:before,
+.upload-file + label:hover:before {
+    color: #1976D2;
+}
+
+.upload-subtext {
+     display: block;
+     text-transform: uppercase;
+     letter-spacing: 0.1em;
+     color: #bdbdbd;
+     padding-left: 96px;
 }
 
 /* Footer */
