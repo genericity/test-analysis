@@ -9,6 +9,7 @@
     margin: 0;
     padding: 0;
     line-height: 24px;
+    text-decoration: none;
 }
 
 html,
@@ -41,16 +42,20 @@ body {
     width: 85%;
     max-width: 1800px;
     margin: auto;
+    overflow: auto;
+    display: flex;
+    align-items: center;
 }
 
 
 /* Header */
 
 header {
-    background: #ECEFF1;
-    box-shadow: inset 0px -5px 20px 0px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    z-index: 1;
+     background: #ECEFF1;
+     width: 100%;
+     z-index: 1;
+     border-bottom: 1px solid #eaeaea;
+     box-shadow: inset 0px -5px 25px 0px rgba(0, 0, 0, 0.2);
 }
 
 h1,
@@ -73,28 +78,156 @@ h1 {
 header h1 {
     color: #515151;
     display: inline-block;
-    float: left;
     font-size: 54px;
     font-weight: 300;
     padding-left: 0;
     letter-spacing: 3px;
 }
 
-#doc-link {
-    float: right;
-    padding-right: 20px;
-    margin-top: 24px;
+/* Lists */
+header ul, nav ul {
+     list-style-type: none;
+     padding: 0;
+     margin: 0;
 }
 
-#doc-link a i {
-    color: #ffffff;
+header ul li, nav ul li {
+     float: left;
+     vertical-align: middle;
+     text-align: center;
+}
+
+header ul {
+     overflow: auto;
+     margin-left: auto; /* Align to the right. */
+}
+
+.icon-button {
+     padding: 0 20px 0 0;
+}
+
+.icon-button a i {
+     font-size: 44px;
+     color: #B0BEC5;
+     -webkit-transition: color 0.2s ease;
+     -moz-transition: color 0.2s ease;
+     -o-transition: color 0.2s ease;
+     transition: color 0.2s ease;
+}
+
+.icon-button a i:hover {
+     color: #90A4AE;
+     transition: color 0.2s ease,
+}
+
+/* Navigation */
+
+nav {
+     background: #455A64;
+     box-shadow: inset 0px -5px 30px 0px rgba(0, 0, 0, 0.2);
+}
+
+nav ul li {
+     position: relative;
+     padding: 16px 24px;
+}
+
+nav ul li a {
+     color: #fff;
+     display: inline-block;
+     font-size: 20px;
+     font-weight: 400;
+     padding: 8px 12px;
+     -webkit-transition: all 0.2s ease;
+     -moz-transition: all 0.2s ease;
+     -o-transition: all 0.2s ease;
+     transition: all 0.2s ease;
+}
+
+nav ul li a:hover, nav ul li a.selected {
+     color: #455A64;
+     font-weight: 500;
+}
+
+nav ul li a.selected {
+     background: #fff;
+}
+
+nav ul li a:hover {
+     background: #ECEFF1;
+}
+
+nav ul li:after {
+     font-family: 'Material Icons';
+     font-weight: normal;
+     font-style: normal;
+     font-size: 28px;
+     display: inline-block;
+     line-height: 1;
+     text-transform: none;
+     letter-spacing: normal;
+     word-wrap: normal;
+     white-space: nowrap;
+     direction: ltr;
+
+     /* Support for all WebKit browsers. */
+     -webkit-font-smoothing: antialiased;
+     /* Support for Safari and Chrome. */
+     text-rendering: optimizeLegibility;
+     /* Support for Firefox. */
+     -moz-osx-font-smoothing: grayscale;
+     /* Support for IE. */
+     font-feature-settings: 'liga';
+
+     content: 'play_arrow';
+     color: #fff;
+     position: absolute;
+     top: 50%;
+     transform: translateY(-50%);
+     right: -16px;
+}
+
+nav ul li:first-child{
+     padding-left: 0;
+}
+
+nav ul li:last-child:after{
+     content: '';
 }
 
 /* Buttons */
 .button {
      background: #2196F3;
+     border-bottom: 7px solid #1E88E5;
+     border-radius: 7px;
+     cursor: pointer;
+     -webkit-transition: background-color 0.2s ease;
+     -moz-transition: background-color 0.2s ease;
+     -o-transition: background-color 0.2s ease;
+     transition: background-color 0.2s ease;
 }
 
+.button * {
+     color: #fff;
+     padding: 0;
+}
+
+.button-text {
+     font-size: 22px;
+     padding: 0 0 0 18px;
+     display: inline-block;
+     float: left;
+     line-height: 44px;
+}
+
+.button-icon{
+     font-size: 44px;
+     float: right;
+}
+
+.button:hover {
+     background: #1E88E5;
+}
 
 /* Rendered graph */
 
