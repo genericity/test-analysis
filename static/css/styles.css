@@ -1,0 +1,116 @@
+/* Background/Page */
+
+* {
+    background-color: transparent;
+    border: none;
+    font-weight: 400;
+    color: #222;
+    font-family: Roboto, Arial, 'Open Sans', Lucida Sans Unicode, Calibri, Lucida Sans Unicode, Lucida Sans, Lucida Grande, Futura, Source Sans Pro, Helvetica, Arial, Liberation Sans, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 24px;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#content {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    height: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+.inner-wrapper {
+    width: 85%;
+    max-width: 1800px;
+    margin: auto;
+}
+
+
+/* Header */
+
+header {
+    background: #ECEFF1;
+    box-shadow: inset 0px -5px 20px 0px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    z-index: 1;
+}
+
+h1,
+h2,
+h3 {
+    color: #757575;
+    font-weight: 300;
+    line-height: 54px;
+    letter-spacing: -.01em;
+    margin: 40px 0 20px;
+    overflow: hidden;
+    padding: 0;
+    text-overflow: ellipsis;
+}
+
+h1 {
+    margin: 32px 0 32px 0;
+}
+
+header h1 {
+    color: #515151;
+    display: inline-block;
+    float: left;
+    font-size: 54px;
+    font-weight: 300;
+    padding-left: 0;
+    letter-spacing: 3px;
+}
+
+#doc-link {
+    float: right;
+    padding-right: 20px;
+    margin-top: 24px;
+}
+
+#doc-link a i {
+    color: #ffffff;
+}
+
+/* Buttons */
+.button {
+     background: #2196F3;
+}
+
+
+/* Rendered graph */
+
+#graph {
+    width: auto;
+    overflow: hidden;
+    flex-grow: 100;
+    background: #f5f5f5;
+    position: relative;
+    padding: 54px;
+    font-family: Roboto;
+}
+
+
+/* Utility */
+
+.hidden {
+    display: none;
+}
