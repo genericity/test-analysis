@@ -6,8 +6,68 @@
                 Instructions on editing and removing questions. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
             <section id="questions">
+                <table class="sortable-theme-minimal sorted-table" data-sortable>
+                    <thead>
+                        <tr>
+                            <th>Number</th>
+                            <th data-sortable="false">Question data</th>
+                            <th>Difficulty</th>
+                            <th>Discrimination</th>
+                            <th>Usefulness</th>
+                            <th>IRT score</th>
+                            <th data-sortable="false">Keep / Discard</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="poor">
+                            <td>1</td>
+                            <td></td>
+                            <td>0.1</td>
+                            <td>-2.5</td>
+                            <td>Poor</td>
+                            <td>-1.0</td>
+                            <td><i class='material-icons selected toggle toggle-discard'></i></td>
+                        </tr>
+                        <tr class="good">
+                            <td>2</td>
+                            <td></td>
+                            <td>0.6</td>
+                            <td>1.3</td>
+                            <td>Good</td>
+                            <td>1.2</td>
+                            <td><i class='material-icons selected toggle toggle-keep'></i></td>
+                        </tr>
+                        <tr class="neutral">
+                            <td>3</td>
+                            <td></td>
+                            <td>0.8</td>
+                            <td>0.3</td>
+                            <td>Neutral</td>
+                            <td>0.3</td>
+                            <td><i class='material-icons selected toggle toggle-keep'></i></td>
+                        </tr>
+                        <tr class="good">
+                            <td>4</td>
+                            <td></td>
+                            <td>0.9</td>
+                            <td>2.2</td>
+                            <td>Good</td>
+                            <td>2.1</td>
+                            <td><i class='material-icons selected toggle toggle-keep'></i></td>
+                        </tr>
+                        <tr class="neutral">
+                            <td>5</td>
+                            <td></td>
+                            <td>0.5</td>
+                            <td>0.9</td>
+                            <td>Neutral</td>
+                            <td>0.4</td>
+                            <td><i class='material-icons selected toggle toggle-keep'></i></td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
-            <a class="button" id="back-button" href="{{ url_for('upload_page') }}">
+            <a class="button reversed-button" id="back-button" href="{{ url_for('upload_page') }}">
                 <span class="button-icon material-icons">arrow_back</span>
                 <span class="button-text">Back</span>
             </a>

@@ -7,10 +7,20 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"> 
     <link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
-	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"> 
+	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+    {% if questions or review %}
+    <!-- Table sorting scripts and styles. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/sortable.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/sortable.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/tables.css') }}" rel="stylesheet">
+    {% endif %}
+
+    {% if grades %}
+    <!-- Chart and visualization scripts. -->
 	<script type="text/javascript" src="{{ url_for('static', filename='js/chart.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/annotations.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+    {% endif %}
 </head>
 <body>
 	<header>

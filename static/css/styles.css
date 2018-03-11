@@ -308,6 +308,10 @@ nav ul li:last-child:after{
      max-width: 24em;
      text-align: center;
      position: relative;
+     -webkit-user-select: none; /* Safari */        
+     -moz-user-select: none; /* Firefox */
+     -ms-user-select: none; /* IE10+/Edge */
+     user-select: none; /* Standard */
 }
 
 #upload-area div {
@@ -407,6 +411,30 @@ nav ul li:last-child:after{
      letter-spacing: 0.1em;
      color: #bdbdbd;
      padding-left: 96px;
+}
+
+/* Toggleable icons. */
+.toggle {
+     cursor: pointer;
+     font-size: 28px;
+}
+
+.toggle.toggle-discard:after {
+     content: 'cancel';
+     color: #ff6272;
+}
+
+.toggle.toggle-discard:hover:after {
+     color: #f14f5f;
+}
+
+.toggle.toggle-keep:after {
+     content: 'check_circle';
+     color: #4CAF50;
+}
+
+.toggle.toggle-keep:hover:after {
+     color: #43A047;
 }
 
 /* Footer */
