@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Tool title</title>
+	<meta content="initial-scale=1.0" name="viewport">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
+	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"> 
+	<script type="text/javascript" src="{{ url_for('static', filename='js/chart.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/annotations.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+</head>
+<body>
+	<header>
+        <div class="inner-wrapper">
+            <h1 id="title">Tool Title</h1>
+            <ul>
+                <li id="help-button" class="icon-button">
+                    <a href="#" title="Help">
+                        <i class="material-icons">help</i>
+                    </a>
+                </li>
+                <li id="settings-button" class="icon-button">
+                    <a href="#" title="Settings">
+                        <i class="material-icons">settings</i>
+                    </a>
+                </li>
+                <li>
+                    <button class="button">
+                        <span class="button-text">Login</span>
+                        <span class="button-icon material-icons">navigate_next</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <nav>
+        <div class="inner-wrapper">
+          <ul>
+            <li><a href="{{ url_for('upload_page') }}" class="selected">Upload</a></li>
+            <li><a href="{{ url_for('questions_page') }}">Questions</a></li>
+            <li><a href="{{ url_for('grades_page') }}">Grades</a></li>
+            <li><a href="{{ url_for('review_page') }}">Review</a></li>
+            <li><a href="{{ url_for('export_page') }}">Export</a></li>
+          </ul>
+        </div>
+    </nav>
+    <div id="content">
+        <div class="inner-wrapper">
