@@ -1,4 +1,4 @@
-/* Background/Page */
+/* Background/Page. */
 
 * {
     background-color: transparent;
@@ -46,7 +46,7 @@ header .inner-wrapper {
 }
 
 
-/* Header */
+/* Header. */
 
 header {
      background: #ECEFF1;
@@ -89,7 +89,8 @@ header h1 {
     letter-spacing: 3px;
 }
 
-/* Lists */
+/* Lists. */
+
 header ul, nav ul, footer ul {
      list-style-type: none;
      padding: 0;
@@ -130,7 +131,7 @@ header ul li .button .button-icon {
      transition: color 0.2s ease,
 }
 
-/* Navigation */
+/* Navigation. */
 
 nav {
      background: #455A64;
@@ -206,7 +207,8 @@ nav ul li:last-child:after{
      content: '';
 }
 
-/* Buttons */
+/* Buttons. */
+
 .button {
      background: #2196F3;
      border-bottom: 7px solid #1E88E5;
@@ -216,6 +218,7 @@ nav ul li:last-child:after{
      -moz-transition: background-color 0.2s ease;
      -o-transition: background-color 0.2s ease;
      transition: background-color 0.2s ease;
+     display: inline-block;
 }
 
 .button * {
@@ -261,6 +264,15 @@ nav ul li:last-child:after{
      background: #9E9E9E;
 }
 
+.action-button {
+     background: #4caf50;
+     border-color: #43A047;
+}
+
+.action-button:hover {
+     background: #43A047;
+}
+
 #back-button {
      float: left;
 }
@@ -269,7 +281,7 @@ nav ul li:last-child:after{
      float: right;
 }
 
-/* Main area */
+/* Main area. */
 
 #content {
      background: #fff;
@@ -291,7 +303,7 @@ nav ul li:last-child:after{
      margin: 0 0 1em 0;
 }
 
-/* Uploads */
+/* Uploads. */
 
 #upload {
      display: flex;
@@ -308,10 +320,10 @@ nav ul li:last-child:after{
      max-width: 24em;
      text-align: center;
      position: relative;
-     -webkit-user-select: none; /* Safari */        
-     -moz-user-select: none; /* Firefox */
-     -ms-user-select: none; /* IE10+/Edge */
-     user-select: none; /* Standard */
+     -webkit-user-select: none; /* Safari. */        
+     -moz-user-select: none; /* Firefox. */
+     -ms-user-select: none; /* IE10+/Edge. */
+     user-select: none; /* Standard. */
 }
 
 #upload-area div {
@@ -414,6 +426,7 @@ nav ul li:last-child:after{
 }
 
 /* Toggleable icons. */
+
 .toggle {
      cursor: pointer;
      font-size: 28px;
@@ -437,7 +450,45 @@ nav ul li:last-child:after{
      color: #43A047;
 }
 
-/* Footer */
+/* Downloads. */
+
+#export-area {
+     background: #f5f5f5;
+     padding: 24px;
+     margin-bottom: 24px;
+     display: flex;
+     flex-direction: row;
+}
+
+#export-button .button-text {
+     font-size: 36px;
+     line-height: 64px;
+}
+
+#export-button .button-icon {
+     font-size: 50px;
+}
+
+#export-information {
+     margin-left: 1.5em;
+}
+
+#export-name {
+     color: #4caf50;
+     display: block;
+     font-size: 2em;
+     line-height: 1.4em;
+}
+
+#export-subtext {
+     color: #bdbdbd;
+     display: block;
+     letter-spacing: 0.1em;
+     font-size: 1.5em;
+}
+
+/* Footer. */
+
 footer {
      background: #263238;
      border-top: 24px solid #37474F;
@@ -474,7 +525,7 @@ footer ul li a:hover {
      background: #fff;
 }
 
-/* Rendered graph */
+/* Rendered graph. */
 
 #graph {
     width: auto;

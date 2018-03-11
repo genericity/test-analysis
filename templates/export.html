@@ -5,7 +5,17 @@
             <p>
                 Instructions on downloading and using the exported files. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
-            <section id="grades">
+            <section id="export">
+                <div id="export-area">
+                    <a class="button action-button" id="export-button" href="#">
+                        <span class="button-icon material-icons">file_download</span>
+                        <span class="button-text">Download</span>
+                    </a>
+                    <div id="export-information">
+                        <span id="export-name">data.csv</span>
+                        <span id="export-subtext">125 kb</span>
+                    </div>
+                </div>
             </section>
             <a class="button reversed-button" id="back-button" href="{{ url_for('review_page') }}">
                 <span class="button-icon material-icons">arrow_back</span>
