@@ -1,0 +1,18 @@
+{% include "header.html" %}
+            <h2>Select grade boundaries
+                <span>Subtitle describing this page.</span>
+            </h2>
+            <p>
+                Instructions on selecting grade boundaries. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            <section id="grades">
+            </section>
+            <a class="button" id="back-button" href="{{ url_for('questions_page') }}">
+                <span class="button-icon material-icons">arrow_back</span>
+                <span class="button-text">Back</span>
+            </a>
+            <a class="button" id="next-button" href="{{ url_for('review_page') }}">
+                <span class="button-text">Next</span>
+                <span class="button-icon material-icons">arrow_forward</span>
+            </a>
+{% include "footer.html" %}
