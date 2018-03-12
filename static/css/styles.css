@@ -527,14 +527,43 @@ footer ul li a:hover {
 
 /* Rendered graph. */
 
-#graph {
-    width: auto;
-    overflow: hidden;
-    flex-grow: 100;
-    background: #f5f5f5;
-    position: relative;
-    padding: 54px;
-    font-family: Roboto;
+#grades {
+     height: 100%;
+     width: 100%;
+     min-height: 400px;
+     max-height: 600px;
+     margin: 36px 0;
+     display: block;
+}
+
+#grades h3 {
+     font-size: 28px;
+     margin: 0.5em 1em;
+     line-height: 2em;
+}
+
+#grade-boundaries {
+     background: #eee;
+     display: inline-block;
+     box-sizing: border-box;
+     width: 30%;
+     margin: 0;
+     float: left;
+}
+
+#graph-container {
+     min-height: 400px;
+     max-height: 600px;
+     width: 70%;
+     margin: 0;
+     display: inline-block;
+     box-sizing: border-box;
+     float: right;
+}
+
+#graph-canvas {
+     position: relative;
+     font-family: Roboto;
 }
 
 

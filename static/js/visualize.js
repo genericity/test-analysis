@@ -3,8 +3,8 @@ class ChartState {
   * Constructor. Defines some constants.
   */
   constructor() {
-    this.MIN = 0;
-    this.MAX = 100;
+    this.MIN = -5;
+    this.MAX = 5;
     this.MIN_POINTS = 3;
     this.MAX_POINTS = 80;
     this.chart = null;
@@ -16,27 +16,6 @@ class ChartState {
   */
   getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  /**
-  * Generates a list (n = amount) of random points.
-  */
-  generateData(amount) {
-    let data = [];
-    // Validate data.
-    if (!amount || amount < this.MIN_POINTS || amount > this.MAX_POINTS) {
-      return data;
-    }
-
-    for (let i = 0; i < amount; i++) {
-      const newData = {
-        x: this.getRandomInt(this.MIN, this.MAX),
-        y: this.getRandomInt(this.MIN, this.MAX)
-      };
-      data.push(newData);
-    }
-
-    return data;
   }
 
   /**
@@ -57,6 +36,18 @@ class ChartState {
       }
     }
     return colours;
+  }
+
+  /**
+  * Generates a specified amount of fake dotplot data.
+  * @param {number} amount The amount of data points to generate.
+  */
+  generateData(amount) {
+    const data = [];
+    for (let i = 0; i < amount; i++) {
+      data.push(this.getRandomInt(this.MIN, this.MAX));
+    }
+    return data;
   }
 
   /**
@@ -95,58 +86,15 @@ class ChartState {
       this.chart.destroy();
     }
 
-    const title = document.getElementById('input-title').value || 'Sample graph';
-    const amount = document.getElementById('input-points').value || this.getRandomInt(this.MIN_POINTS, this.MAX_POINTS);
+    const title = 'Questions';
+    const amount = this.getRandomInt(this.MIN_POINTS, this.MAX_POINTS);
     const ctx = document.getElementById('graph-canvas').getContext('2d');
     const data = this.generateData(amount);
+
     const options = {
-      type: 'scatter',
-      data: {
-        datasets: [{
-            label: 'Sample dataset',
-            data: data,
-            pointBackgroundColor: this.generateColours(data, this.currentY),
-        }]
-      },
       options: {
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            right: 50
-          }
-        },
         title: {
-          display: true,
-          position: 'top',
-          fontSize: 32,
-          fontColor: '#424242',
-          padding: 24,
-          text: title,
-        },
-        scales: {
-            xAxes: [{
-              type: 'linear',
-              position: 'bottom',
-              display: false,
-            }],
-            yAxes: [{
-              id: 'y'
-            }],
-            ticks: {
-              fontSize: 14,
-            }
-        },
-        elements: {
-          // Hide the line so that the scatterplot is not filled.
-          line: {
-            backgroundColor: 'rgba(0, 0, 0, 0)',
-            borderWidth: 0,
-            borderColor: 'rgba(0, 0, 0, 0)',
-            fill: false
-          }
-        },
-        legend: {
-          display: false,
+          text: 'Students'
         },
         annotation: {
           events: ['click', 'mousemove'],
@@ -170,15 +118,12 @@ class ChartState {
             },
           }]
         }
-      },
+      }
     };
-    // Set font and point radius.
-    Chart.defaults.global.defaultFontFamily = 'Roboto';
-    Chart.defaults.global.elements.point.radius = 5;
-    Chart.defaults.global.defaultFontSize = 15;
 
-    // Create chart.
-    this.chart = new Chart(ctx, options);
+    // Create the dotplot with the fake data.
+    this.dotplot = new DotPlot(ctx, [data]);
+    this.chart = this.dotplot.chart;
     this.chart.chartState = this;
 
     // Listen to mouse move events.
@@ -201,7 +146,7 @@ class ChartState {
       // Update chart.
       this.chart.update();
     }
-    canvas.onmousemove = updateChart;
+    //canvas.onmousemove = updateChart;
   }
 }
 
@@ -209,15 +154,4 @@ class ChartState {
 window.onload = () => {
   const chartState = new ChartState();
   chartState.newChart();
-
-  // Listen to the generate chart button.
-  const generateButton = document.getElementById('generate');
-  generateButton.onclick = () => {
-    chartState.newChart();
-  };
-  // Also listen to the slider.
-  const slider = document.getElementById('input-points');
-  slider.onchange = () => {
-    chartState.newChart();
-  };
 }
