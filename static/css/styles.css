@@ -425,6 +425,22 @@ nav ul li:last-child:after{
      padding-left: 96px;
 }
 
+.upload-file + label.file-selected:before {
+     content: 'check_circle';
+     color: #4CAF50;
+}
+
+.upload-file + label.file-selected span {
+     color: #4CAF50;
+}
+
+.upload-file:focus + label.file-selected span,
+.upload-file + label.file-selected:hover span,
+.upload-file:focus + label.file-selected:before,
+.upload-file + label.file-selected:hover:before {
+    color: #43A047;
+}
+
 /* Toggleable icons. */
 
 .toggle {
