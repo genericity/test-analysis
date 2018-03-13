@@ -9,6 +9,7 @@
             </ul>
         </div>
     </footer>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/utils.js') }}"></script>
     {% if upload %}
     <!-- Scripts for uploading files. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
@@ -17,8 +18,15 @@
     {% if questions or review %}
     <!-- Table sorting scripts and styles. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/sortable.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/row.js') }}"></script>
     <link href="{{ url_for('static', filename='css/sortable.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/tables.css') }}" rel="stylesheet">
+    {% endif %}
+
+    {% if questions %}
+    <!-- Question table scripts. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/question_row.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/questions.js') }}"></script>
     {% endif %}
 
     {% if grades %}

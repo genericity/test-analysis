@@ -29,8 +29,8 @@ class FileHandler {
 
 					// Add this to the set of uploaded files.
 					this.requiredUploaded.add(fileId.input);
-					// Check if the required and the uploaded sets are equal in length.
-					if (this.required.size <= this.requiredUploaded.size) {
+					// Check if the required set is a subset of the uploaded set.
+					if (this.requiredUploaded.isSuperset(this.required)) {
 						this.allowProgress();
 					}
 				}

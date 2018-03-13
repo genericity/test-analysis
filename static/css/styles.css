@@ -443,27 +443,31 @@ nav ul li:last-child:after{
 
 /* Toggleable icons. */
 
+td input[type="checkbox"] {
+     display: none;
+}
+
 .toggle {
      cursor: pointer;
      font-size: 28px;
 }
 
-.toggle.toggle-discard:after {
-     content: 'cancel';
-     color: #ff6272;
-}
-
-.toggle.toggle-discard:hover:after {
-     color: #f14f5f;
-}
-
-.toggle.toggle-keep:after {
+.toggle:after {
      content: 'check_circle';
      color: #4CAF50;
 }
 
-.toggle.toggle-keep:hover:after {
+.toggle:hover:after {
      color: #43A047;
+}
+
+input[type="checkbox"]:checked + label.toggle:after {
+     content: 'cancel';
+     color: #ff6272;
+}
+
+input[type="checkbox"]:checked + label.toggle:hover:after {
+     color: #f14f5f;
 }
 
 /* Downloads. */
