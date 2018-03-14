@@ -5,10 +5,34 @@ class ChartState {
   constructor() {
     this.MIN = -6;
     this.MAX = 6;
+    this.NUMERIC_MIN = -3;
+    this.NUMERIC_MAX = 3;
     this.MIN_POINTS = 50;
     this.MAX_POINTS = 100;
     this.chart = null;
-    this.currentY = 50;
+    this.currentY = 0;
+    this.dividerY = [2, 0, -2];
+
+    this.lineMap = {
+      'A/B': {
+        dividerId: 'line-divider-ab',
+        label: 'A/B',
+        index: 0,
+        fieldId: 'ab-boundary'
+      },
+      'B/C': {
+        dividerId: 'line-divider-bc',
+        label: 'B/C',
+        index: 1,
+        fieldId: 'bc-boundary'
+      },
+      'C/D': {
+        dividerId: 'line-divider-cd',
+        label: 'C/D',
+        index: 2,
+        fieldId: 'cd-boundary'
+      }
+    }
   }
 
   /**
@@ -21,18 +45,34 @@ class ChartState {
   /**
   * Generates a list of colours - points above the y value are red and points below are blue.
   */
-  generateColours(data, y) {
+  generateColours(data, y, scheme) {
     this.currentY = y;
 
-    const blue = '#64B5F6';
-    const red = '#E57373';
+    const colourSchemes = {
+      blue: {
+        a: '#64B5F6',
+        b: '#2196F3',
+        c: '#1976D2',
+        d: '#0D47A1'
+      },
+      red: {
+        a: '#E57373',
+        b: '#F44336',
+        c: '#D32F2F',
+        d: '#B71C1C'
+      }
+    }
 
     let colours = [];
     for (const point of data) {
-      if (point.y <= y) {
-        colours.push(blue);
+      if (point.y > this.dividerY[0]) {
+        colours.push(colourSchemes[scheme].a);
+      } else if (point.y > this.dividerY[1]) {
+        colours.push(colourSchemes[scheme].b);
+      } else if (point.y > this.dividerY[2]) {
+        colours.push(colourSchemes[scheme].c);
       } else {
-        colours.push(red);
+        colours.push(colourSchemes[scheme].d);
       }
     }
     return colours;
@@ -92,29 +132,73 @@ class ChartState {
     const questionData = this.generateData(amount);
 
     const options = {
-      options: {
-        annotation: {
-          events: ['click', 'mousemove'],
-          annotations: [{
-            id: 'line-divider',
-            type: 'line',
-            mode: 'horizontal',
-            value: this.currentY.toString(),
-            scaleID: 'y',
-            borderColor: '#424242',
-            borderWidth: 2,
-            label: {
-              content: this.currentY.toString(),
-              enabled: true,
-              position: 'right',
-              xPadding: 12,
-              yPadding: 12,
-              fontFamily: 'Roboto',
-              fontSize: 18,
-              xAdjust: -50,
-            },
-          }]
+      annotation: {
+        events: ['mousedown'],
+        annotations: [{
+          id: 'line-divider-ab',
+          type: 'line',
+          mode: 'horizontal',
+          value: this.dividerY[0].toString(),
+          scaleID: 'y',
+          borderColor: '#424242',
+          borderWidth: 2,
+          label: {
+            content: 'A/B',
+            enabled: true,
+            position: 'right',
+            xPadding: 12,
+            yPadding: 12,
+            fontFamily: 'Roboto',
+            fontSize: 18,
+            xAdjust: -50,
+          },
+          onMousedown: function(event) {
+            document.body.onmousemove = (event) => { midDrag(event, 'A/B', this.chartInstance.chartState); };
+          },
+        }, {
+          id: 'line-divider-bc',
+          type: 'line',
+          mode: 'horizontal',
+          value: this.dividerY[1].toString(),
+          scaleID: 'y',
+          borderColor: '#424242',
+          borderWidth: 2,
+          label: {
+            content: 'B/C',
+            enabled: true,
+            position: 'right',
+            xPadding: 12,
+            yPadding: 12,
+            fontFamily: 'Roboto',
+            fontSize: 18,
+            xAdjust: -50,
+          },
+          onMousedown: function(event) {
+            document.body.onmousemove = (event) => { midDrag(event, 'B/C', this.chartInstance.chartState); };
+          }
+        }, {
+          id: 'line-divider-cd',
+          type: 'line',
+          mode: 'horizontal',
+          value: this.dividerY[2].toString(),
+          scaleID: 'y',
+          borderColor: '#424242',
+          borderWidth: 2,
+          label: {
+            content: 'C/D',
+            enabled: true,
+            position: 'right',
+            xPadding: 12,
+            yPadding: 12,
+            fontFamily: 'Roboto',
+            fontSize: 18,
+            xAdjust: -50,
+          },
+          onMousedown: function(event) {
+            document.body.onmousemove = (event) => { midDrag(event, 'C/D', this.chartInstance.chartState); };
+          }
         }
+        ]
       }
     };
 
@@ -123,27 +207,80 @@ class ChartState {
     this.chart = this.dotplot.chart;
     this.chart.chartState = this;
 
+    this.regenerateColours();
+    this.chart.update();
+
     // Listen to mouse move events.
     const canvas = document.getElementById('graph-canvas');
-    const updateChart = (event) => {
+
+    // Stops the drag event.
+    function stopDrag() {
+      document.body.onmousemove = null;
+      document.body.onmouseup = null;
+    }
+
+    // Handles the drag event.
+    function midDrag(event, draggerId, chartState) {
+      const dragger = chartState.lineMap[draggerId];
 
       // Convert the canvas event y to a y-value on the graph.
       // Find the y position on chart.
-      const chartY = this.canvasYToGraphY(event.offsetY);
+      const chartY = chartState.canvasYToGraphY(event.offsetY);
+      chartState.currentY = chartY;
+
+      // Update the position of that divider stored.
+      chartState.dividerY[dragger.index] = chartY;
 
       // Regenerate the colours.
-      const dataset = this.chart.data.datasets[0];
-      dataset.pointBackgroundColor = this.chart.chartState.generateColours(dataset.data, chartY);
+      chartState.regenerateColours();
 
       // Move the line divider and update the value of its label.
-      const element = this.chart.annotation.elements['line-divider'];
-      element.options.value = chartY;
-      element.options.label.content = Math.round(chartY);
+      chartState.setGradeBoundary(dragger.dividerId, chartY);
+
+      // Update the input fields for the grade boundaries.
+      document.getElementById(dragger.fieldId).value = roundToPlaces(chartY, 2);
 
       // Update chart.
-      this.chart.update();
+      chartState.chart.update();
+
+      document.body.onmouseup = stopDrag;
     }
-    //canvas.onmousemove = updateChart;
+
+    // Add event listeners so that the grade boundary dividers are updated when the numeric values are changed.
+    for (const dragger of Object.values(this.lineMap)) {
+      const field = document.getElementById(dragger.fieldId);
+      field.oninput = () => {
+        this.setGradeBoundary(dragger.dividerId, field.value);
+      }
+    }
+  }
+
+  /*
+  * Regenerate colours.
+  */
+  regenerateColours() {
+    const datasetQuestions = this.chart.data.datasets[0];
+    datasetQuestions.pointBackgroundColor = this.chart.chartState.generateColours(datasetQuestions.data, this.currentY, "red");
+    const datasetStudents = this.chart.data.datasets[1];
+    datasetStudents.pointBackgroundColor = this.chart.chartState.generateColours(datasetStudents.data, this.currentY, "blue");
+  }
+
+  /*
+  * Sets the value of one of the grade boundary lines.
+  */
+  setGradeBoundary(id, value) {
+    if (!id || !value || !isNumber(value)) {
+      return;
+    }
+
+    // Find the divider.
+    const element = this.chart.annotation.elements[id];
+
+    // Set its value.
+    element.options.value = Math.max(this.NUMERIC_MIN, Math.min(value, this.NUMERIC_MAX));
+
+    // Update the chart.
+    this.chart.update();
   }
 }
 

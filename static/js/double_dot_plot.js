@@ -22,7 +22,7 @@ class DoubleDotPlot {
     const DEFAULT_OPTIONS = {
       type: 'scatter',
       data: {
-		datasets: []
+		    datasets: []
   	  },
       options: {
         maintainAspectRatio: false,
@@ -30,6 +30,7 @@ class DoubleDotPlot {
         layout: {
           padding: {
             left: 50,
+            right: 20
           }
         },
         scales: {
@@ -85,7 +86,7 @@ class DoubleDotPlot {
     }
 
     // Overwrite the default options with the user-selected options.
-    //this.options = Object.assign({}, this.options, options);
+    Object.assign(this.options.options, options);
 
     // Set font and point radius.
     Chart.defaults.global.defaultFontFamily = 'Roboto';

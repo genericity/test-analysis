@@ -734,9 +734,9 @@ module.exports = function(Chart) {
 			model.labelEnabled = options.label.enabled;
 			model.labelContent = options.label.content;
 
-			if (!isNaN(parseFloat(model.labelContent)) && isFinite(model.labelContent)) {
-				model.labelContent = Math.round(model.labelContent).toString();
-			}
+			// if (!isNaN(parseFloat(model.labelContent)) && isFinite(model.labelContent)) {
+			// 	model.labelContent = roundToPlaces(model.labelContent, 1).toString();
+			// }
 
 			ctx.font = chartHelpers.fontString(model.labelFontSize, model.labelFontStyle, model.labelFontFamily);
 			var textWidth = ctx.measureText(model.labelContent).width;

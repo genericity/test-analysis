@@ -18,7 +18,7 @@
 
     {% if questions or review %}
     <!-- Table sorting scripts and styles. -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/sortable.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libraries/sortable.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/row.js') }}"></script>
     <link href="{{ url_for('static', filename='css/sortable.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/tables.css') }}" rel="stylesheet">
@@ -31,15 +31,15 @@
     {% endif %}
 
     {% if review %}
-    <!-- Question table scripts. -->
+    <!-- Student table scripts. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/student_row.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/review.js') }}"></script>
     {% endif %}
 
     {% if grades %}
     <!-- Chart and visualization scripts. -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/chart.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/annotations.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libraries/chart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libraries/annotations.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/double_dot_plot.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/visualize.js') }}"></script>
     {% endif %}

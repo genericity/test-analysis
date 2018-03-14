@@ -35,3 +35,8 @@ function getKeyByValue(obj, value) {
 		}
 	}
 }
+
+// Determines if a value is a rational, non-infinite number.
+function isNumber(num) {
+    return !isNaN(parseFloat(num)) && isFinite(num);
+}
