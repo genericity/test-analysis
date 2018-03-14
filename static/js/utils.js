@@ -26,3 +26,12 @@ function roundToPlaces(num, places) {
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+// Given an object and a value, attempts to find the key for that value.
+function getKeyByValue(obj, value) {
+	for (const key in obj) {
+		if (obj[key] == value) {
+			return key;
+		}
+	}
+}

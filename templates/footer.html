@@ -29,6 +29,12 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/questions.js') }}"></script>
     {% endif %}
 
+    {% if review %}
+    <!-- Question table scripts. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/student_row.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/review.js') }}"></script>
+    {% endif %}
+
     {% if grades %}
     <!-- Chart and visualization scripts. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/chart.js') }}"></script>
