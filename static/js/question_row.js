@@ -33,13 +33,9 @@ class QuestionRow extends Row {
 		const difficulty = this.data[2];
 		const discrimination = this.data[3];
 		const irt = this.data[5];
-		if ((difficulty <= 0.2 || difficulty >= 0.8)
-			&& (discrimination <= -0.5)
-			&& (irt < 0)) {
+		if (irt < -1) {
 			return 'poor';
-		} else if ((difficulty > 0.2 && difficulty < 0.8)
-			&& (discrimination > 0)
-			&& irt > 0) {
+		} else if (irt > 1) {
 			return 'good';
 		} else {
 			return 'neutral';

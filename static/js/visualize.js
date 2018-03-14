@@ -3,10 +3,10 @@ class ChartState {
   * Constructor. Defines some constants.
   */
   constructor() {
-    this.MIN = -5;
-    this.MAX = 5;
-    this.MIN_POINTS = 3;
-    this.MAX_POINTS = 80;
+    this.MIN = -6;
+    this.MAX = 6;
+    this.MIN_POINTS = 50;
+    this.MAX_POINTS = 100;
     this.chart = null;
     this.currentY = 50;
   }
@@ -45,7 +45,7 @@ class ChartState {
   generateData(amount) {
     const data = [];
     for (let i = 0; i < amount; i++) {
-      data.push(this.getRandomInt(this.MIN, this.MAX));
+      data.push(this.getRandomInt(this.MIN, this.MAX) / 2);
     }
     return data;
   }
@@ -86,16 +86,13 @@ class ChartState {
       this.chart.destroy();
     }
 
-    const title = 'Questions';
     const amount = this.getRandomInt(this.MIN_POINTS, this.MAX_POINTS);
     const ctx = document.getElementById('graph-canvas').getContext('2d');
-    const data = this.generateData(amount);
+    const studentData = this.generateData(amount);
+    const questionData = this.generateData(amount);
 
     const options = {
       options: {
-        title: {
-          text: 'Students'
-        },
         annotation: {
           events: ['click', 'mousemove'],
           annotations: [{
@@ -122,7 +119,7 @@ class ChartState {
     };
 
     // Create the dotplot with the fake data.
-    this.dotplot = new DotPlot(ctx, [data]);
+    this.dotplot = new DoubleDotPlot(ctx, {questions: questionData, students: studentData}, options);
     this.chart = this.dotplot.chart;
     this.chart.chartState = this;
 

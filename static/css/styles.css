@@ -558,17 +558,18 @@ footer ul li a:hover {
 
 #grades h3 {
      font-size: 28px;
-     margin: 0.5em 1em;
+     margin: 0 0 0.2em 0;
      line-height: 2em;
 }
 
 #grade-boundaries {
-     background: #eee;
-     display: inline-block;
-     box-sizing: border-box;
-     width: 30%;
-     margin: 0;
-     float: left;
+    background: #f5f5f5;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 30%;
+    margin: 0;
+    float: left;
+    padding: 1em 2em 2em 2em;
 }
 
 #graph-container {
@@ -586,8 +587,45 @@ footer ul li a:hover {
      font-family: Roboto;
 }
 
+#grade-boundaries label {
+    margin: 1em 0 0.5em 0;
+    display: block;
+    color: #757575;
+}
 
-/* Utility */
+/* Input fields. */
+
+.input-field, option {
+     border-bottom: 2px solid #eceff1;
+     box-sizing: border-box;
+     display: block;
+     font-size: 16px;
+     padding: 10px;
+     width: 100%;
+}
+
+input[type="text"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="email"], input[type="month"], input[type="number"], input[type="password"], input[type="search"], input[type="tel"], input[type="text"], input[type="time"], input[type="url"], input[type="week"], select[multiple], select[size], textarea {
+     border-radius: 2px;
+     color: #212121;
+     font: 16px/20px Roboto,sans-serif;
+     margin: 0;
+     max-width: 100%;
+     outline: 0;
+     padding: 7px;
+     transition: border-color .2s;
+     vertical-align: middle;
+     background: #fff;
+}
+
+input[type="text"]:disabled, input[type="date"]:disabled, input[type="datetime"]:disabled, input[type="datetime-local"]:disabled, input[type="email"]:disabled, input[type="month"]:disabled, input[type="number"]:disabled, input[type="password"]:disabled, input[type="search"]:disabled, input[type="tel"]:disabled, input[type="text"]:disabled, input[type="time"]:disabled, input[type="url"]:disabled, input[type="week"]:disabled, select[multiple]:disabled, select[size]:disabled, textarea:disabled {
+     background: #f7f7f7;
+}
+
+.input-field:hover, .input-field:focus {
+border-bottom: 2px solid #607d8b;
+}
+
+/* Utility. */
 
 .hidden {
     display: none;
