@@ -13,7 +13,11 @@
                     <label for="cd-boundary">C/D boundary</label><input type="text" class="input-field" id="cd-boundary" value="-2">
                 </div>
                 <div id="graph-container">
-                    <canvas id="graph-canvas"></canvas>
+                    <h3 id="questions-heading">Questions</h3>
+                    <h3 id="students-heading">Students</h3>
+                    <div id="canvas-container">
+                        <canvas id="graph-canvas"></canvas>
+                    </div>
                 </div>
             </section>
             <a class="button reversed-button" id="back-button" href="{{ url_for('questions_page') }}">

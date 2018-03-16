@@ -573,13 +573,29 @@ footer ul li a:hover {
 }
 
 #graph-container {
-     min-height: 400px;
-     max-height: 600px;
      width: 70%;
      margin: 0;
      display: inline-block;
      box-sizing: border-box;
      float: right;
+     padding-left: 50px;
+}
+
+#canvas-container {
+    min-height: 400px;
+    max-height: 600px;
+    margin-top: 24px;
+    display: block;
+    box-sizing: border-box;
+    clear: both;
+}
+
+#questions-heading {
+    float: left;
+}
+
+#students-heading {
+    float: right;
 }
 
 #graph-canvas {
@@ -591,6 +607,10 @@ footer ul li a:hover {
     margin: 1em 0 0.5em 0;
     display: block;
     color: #757575;
+}
+
+#grades {
+    overflow: hidden;
 }
 
 /* Input fields. */

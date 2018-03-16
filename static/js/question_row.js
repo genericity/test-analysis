@@ -8,7 +8,6 @@ class QuestionRow extends Row {
 	constructor(data, index) {
 		super(data, index);
 		this.data.push(this.generateToggle());
-		this.data[4] = capitalizeFirstLetter(this.status());
 	}
 
 	/*
@@ -32,13 +31,11 @@ class QuestionRow extends Row {
 		// Determine if a question is good, bad, or neutral. This is a fake algorithm.
 		const difficulty = this.data[2];
 		const discrimination = this.data[3];
-		const irt = this.data[5];
-		if (irt < -1) {
+		const weight = this.data[4];
+		if (difficulty == 0 || discrimination < 0) {
 			return 'poor';
-		} else if (irt > 1) {
-			return 'good';
 		} else {
-			return 'neutral';
+			return 'neutral'
 		}
 	}
 }

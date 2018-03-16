@@ -29,7 +29,7 @@ class DoubleDotPlot {
         responsive: true,
         layout: {
           padding: {
-            left: 50,
+            left: 10,
             right: 20
           }
         },
@@ -38,7 +38,8 @@ class DoubleDotPlot {
               type: 'linear',
               position: 'bottom',
               display: false,
-              stepSize: 1
+              stepSize: 1,
+              id: 'x'
             }],
             yAxes: [{
               id: 'y',
