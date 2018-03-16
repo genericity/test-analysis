@@ -551,7 +551,7 @@ footer ul li a:hover {
      height: 100%;
      width: 100%;
      min-height: 400px;
-     max-height: 600px;
+     max-height: 1000px;
      margin: 36px 0;
      display: block;
 }
@@ -564,21 +564,17 @@ footer ul li a:hover {
 
 #grade-boundaries {
     background: #f5f5f5;
-    display: inline-block;
+    display: block;
     box-sizing: border-box;
-    width: 30%;
     margin: 0;
-    float: left;
     padding: 1em 2em 2em 2em;
 }
 
 #graph-container {
-     width: 70%;
-     margin: 0;
-     display: inline-block;
+     width: 100%;
+     margin: 0 0 2.5em 0;
+     display: block;
      box-sizing: border-box;
-     float: right;
-     padding-left: 50px;
 }
 
 #canvas-container {
@@ -604,13 +600,24 @@ footer ul li a:hover {
 }
 
 #grade-boundaries label {
-    margin: 1em 0 0.5em 0;
+    margin: 1em;
     display: block;
     color: #757575;
+    flex-grow: 2;
+    white-space: nowrap;
 }
 
-#grades {
-    overflow: hidden;
+#grade-boundary-numbers label:first-child {
+    margin-left: 0;
+}
+
+#grade-boundary-numbers {
+    display: flex;
+    flex-direction: row;
+}
+
+#grade-boundary-numbers .input-field {
+    flex-grow: 1;
 }
 
 /* Input fields. */

@@ -16,7 +16,7 @@
                         </span>
                     </div>
                 </div>
-                <div id="upload-statuses">
+                <form id="upload-statuses" method="post" action="{{ url_for('questions_page') }}">
                     <div class="upload-status">
                         <input type="file" name="file-student-data" id="file-student-data" class="upload-file" />
                         <label for="file-student-data" id="label-student-data"><span><em>Choose</em> a student test data file</span></label>
@@ -32,10 +32,11 @@
                         <label for="file-question-data" id="label-question-data"><span><em>Choose</em> a question text file</span></label>
                         <span class="upload-subtext">Optional</span>
                     </div>
-                </div>
+                    <input type="submit" id="submit-form" class="hidden" />
+                </form>
             </section>
-            <a class="button disabled-button" id="next-button" href="#upload">
+            <label class="button disabled-button" id="next-button" for="submit-form">
                 <span class="button-text">Next</span>
                 <span class="button-icon material-icons">arrow_forward</span>
-            </a>
+            </label>
 {% include "footer.html" %}
