@@ -16,7 +16,7 @@
                         </span>
                     </div>
                 </div>
-                <form id="upload-statuses" method="post" action="{{ url_for('questions_page') }}">
+                <form id="upload-statuses" method="post" action="{{ url_for('questions_page') }}" enctype="multipart/form-data">
                     <div class="upload-status">
                         <input type="file" name="file-student-data" id="file-student-data" class="upload-file" />
                         <label for="file-student-data" id="label-student-data"><span><em>Choose</em> a student test data file</span></label>

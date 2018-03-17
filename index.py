@@ -1,18 +1,11 @@
-from flask import Flask
-from flask import render_template
-from flask import url_for
-from flask import session
+from flask import Flask, render_template, url_for, session, request
 import rpy2.robjects as robjects
-from flask.ext.session import Session
+import file_processing
 
 # Define the application.
 app = Flask(__name__)
 app.debug = True
-
-# Start the session.
-SESSION_TYPE = 'redis'
-app.config.from_object(__name__)
-Session(app)
+app.secret_key = 'a>Sx9dxf7xdf_xcb84002xdcN?xf6xabj;8?x83abe2j'
 
 # R setup.
 r = robjects.r
@@ -24,13 +17,19 @@ def upload_page():
 
 @app.route('/questions', methods = ['GET', 'POST'])
 def questions_page():
-	# Display the questions page.
-	if request.method == 'GET':
-    	return render_template('questions.html', questions = True)
     # Process the data.
 	if request.method == 'POST':
-		data = request.form
-		return data
+		# The posted data.
+		data = request.files
+		student_data = request.files['file-student-data'].read() or None
+		version_data = request.files['file-version-data'].read() or None
+		question_data = request.files['file-question-data'].read() or None
+
+		# Process. This will set session variables.
+		file_processing.process_raw_data(student_data, version_data, question_data)
+
+	# Display the questions page.
+	return render_template('questions.html', questions = True)
 
 @app.route('/grades')
 def grades_page():
@@ -43,9 +42,3 @@ def review_page():
 @app.route('/export')
 def export_page():
     return render_template('export.html', export = True)
-
-def score_students():
-	return
-
-def is_correct_answer():
-	return False
