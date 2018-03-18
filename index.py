@@ -21,9 +21,17 @@ def questions_page():
 	if request.method == 'POST':
 		# The posted data.
 		data = request.files
-		student_data = request.files['file-student-data'].read() or None
-		version_data = request.files['file-version-data'].read() or None
-		question_data = request.files['file-question-data'].read() or None
+		student_data = None
+		version_data = None
+		question_data = None
+
+		# Read the file data.
+		if 'file-student-data' in request.files and request.files['file-student-data'].filename != '':
+			student_data = request.files['file-student-data'].read()
+		if 'file-version-data' in request.files and request.files['file-version-data'].filename != '':
+			version_data = request.files['file-version-data'].read()
+		if 'file-question-data' in request.files  and request.files['file-question-data'].filename != '':
+			question_data = request.files['file-question-data'].read()
 
 		# Process. This will set session variables.
 		file_processing.process_raw_data(student_data, version_data, question_data)
