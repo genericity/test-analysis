@@ -11,8 +11,8 @@ class DoubleDotPlot {
   * @options {=!Object} options An object containing options for this chart.
   */
   constructor(ctx, data, options = {}) {
-	const blue = '#64B5F6';
-	const red = '#E57373';
+	//const blue = '#64B5F6';
+	//const red = '#E57373';
 
     this.chart = null;
     this.currentY = 50;
@@ -30,7 +30,9 @@ class DoubleDotPlot {
         layout: {
           padding: {
             left: 10,
-            right: 20
+            right: 20,
+            top: 50,
+            bottom: 30,
           }
         },
         scales: {
@@ -79,7 +81,7 @@ class DoubleDotPlot {
     	const newSet = {
     		label: label,
     		data: this.numbersToDotPlot(data[label], i),
-    		pointBackgroundColor: i ? blue : red
+    		//pointBackgroundColor: i ? blue : red
     	}
     	// Add to the chart.
     	this.options.data.datasets.push(newSet);
@@ -93,6 +95,9 @@ class DoubleDotPlot {
     Chart.defaults.global.defaultFontFamily = 'Roboto';
     Chart.defaults.global.elements.point.radius = 5;
     Chart.defaults.global.defaultFontSize = 15;
+
+    // Add a y-axis.
+    this.addYAxis();
 
     // Create chart.
     this.chart = new Chart(ctx, this.options);
@@ -123,13 +128,112 @@ class DoubleDotPlot {
     	// Create a new point.
     	// Alternate between placing points to the left and right of 0.
 		const newPoint = {
-			// Create a gap of ten dots between the two sections.
-			x: (existing[value] + 5) * Math.pow(-1, index),
+			// Create a gap of four dots between the two sections.
+			x: (existing[value] + 2) * Math.pow(-1, index),
 			y: value
 		};
 		points.push(newPoint);
     }
 
     return points;
+  }
+
+  /*
+  * Adds a y-axis to the chart.
+  */
+  addYAxis() {
+    // Add the background for the axis labels.
+    this.options.options.annotation.annotations.push({
+      type: 'box',
+      xScaleID: 'x',
+      yScaleID: 'y',
+      backgroundColor: 'rgba(255, 255, 255, 1)',
+      yMax: 3,
+      yMin: -3,
+      xMin: -1,
+      xMax: 1,
+      borderWidth: 0,
+      borderColor: '#fff',
+      // Draw the axis labels.
+      callback: (ctx) => {
+        ctx.save();
+
+        // Set up fonts.
+        ctx.font = '14px Roboto, sans-serif';
+        ctx.fillStyle = '#757575';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+
+        // Positions to draw the label at.
+        const ticks = [-3, -2, -1, 0, 1, 2, 3];
+        for (let i = 0; i < ticks.length; i++) {
+          // Draw each label in the centre.
+          this.drawAt(ctx, {
+            text: ticks[i],
+            x: 0,
+            y: ticks[i]
+          });
+        }
+
+        ctx.textAlign = 'right';
+        ctx.font = '15px Roboto, sans-serif';
+        ctx.fillStyle = '#424242';
+        ctx.textBaseline = 'bottom';
+        // Draw the hard/easy signs.
+        this.drawAt(ctx, {
+          text: 'Difficulty',
+          x: -1,
+          y: 3.5
+        });
+        this.drawAt(ctx, {
+          text: 'Hard',
+          x: -1,
+          y: 3.2
+        });
+        ctx.textBaseline = 'top';
+        this.drawAt(ctx, {
+          text: 'Easy',
+          x: -1,
+          y: -3.2
+        });
+
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'bottom';
+        // Draw the high/low performance signs.
+        this.drawAt(ctx, {
+          text: 'Performance',
+          x: 1,
+          y: 3.5
+        });
+        this.drawAt(ctx, {
+          text: 'High',
+          x: 1,
+          y: 3.2
+        });
+        ctx.textBaseline = 'top';
+        this.drawAt(ctx, {
+          text: 'Low',
+          x: 1,
+          y: -3.2
+        });
+
+        ctx.restore();
+      }
+    });
+  }
+
+  /*
+  * Draws text at the specified x and y coordinates on the chart.
+  */
+  drawAt(ctx, options) {
+    // Obtain the scales.
+    const yScale = this.chart.chart.scales.y;
+    const xScale = this.chart.chart.scales.x;
+
+    // Convert the chart coordinates to canvas coordinates.
+    const canvasY = yScale.getPixelForValue(options.y || 0);
+    const canvasX = xScale.getPixelForValue(options.x || 0);
+
+    ctx.fillText(options.text, canvasX, canvasY);
   }
 }

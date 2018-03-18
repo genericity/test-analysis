@@ -17,6 +17,7 @@ def upload_page():
 
 @app.route('/questions', methods = ['GET', 'POST'])
 def questions_page():
+	data = []
     # Process the data.
 	if request.method == 'POST':
 		# The posted data.
@@ -37,7 +38,7 @@ def questions_page():
 		file_processing.process_raw_data(student_data, version_data, question_data)
 
 	# Display the questions page.
-	return render_template('questions.html', questions = True)
+	return render_template('questions.html', questions = True, data = data)
 
 @app.route('/grades')
 def grades_page():

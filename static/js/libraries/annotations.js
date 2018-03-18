@@ -601,6 +601,8 @@ module.exports = function(Chart) {
 			model.borderColor = options.borderColor;
 			model.borderWidth = options.borderWidth;
 			model.backgroundColor = options.backgroundColor;
+
+			model.callback = options.callback;
 		},
 		inRange: function(mouseX, mouseY) {
 			var model = this._model;
@@ -629,7 +631,7 @@ module.exports = function(Chart) {
 			return this.getWidth() * this.getHeight();
 		},
 		draw: function() {
-			var view = this._view;
+			var view = this._model;
 			var ctx = this.chartInstance.chart.ctx;
 
 			ctx.save();
@@ -650,6 +652,8 @@ module.exports = function(Chart) {
 			ctx.strokeRect(view.left, view.top, width, height);
 
 			ctx.restore();
+
+			view.callback(ctx);
 		}
 	});
 

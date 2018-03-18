@@ -49,41 +49,17 @@ class ChartState {
     this.currentY = y;
 
     const colourSchemes = {
-      blueOld: {
-        a: '#64B5F6',
-        b: '#2196F3',
-        c: '#1976D2',
+      blue: {
+        a: '#BBDEFB',
+        b: '#64B5F6',
+        c: '#1E88E5',
         d: '#0D47A1'
       },
-      redOld: {
-        a: '#E57373',
-        b: '#F44336',
-        c: '#D32F2F',
-        d: '#B71C1C'
-      },
-      blue: {
-        a: '#82B1FF',
-        b: '#448AFF',
-        c: '#2979FF',
-        d: '#2962FF'
-      },
       red: {
-        a: '#FF9E80',
-        b: '#FF6E40',
-        c: '#FF3D00',
-        d: '#DD2C00'
-      },
-      teal: {
-        a: '#26C6DA',
-        b: '#29B6F6',
-        c: '#42A5F5',
-        d: '#5C6BC0'
-      },
-      orange: {
-        a: '#FF9E80',
-        b: '#FF6E40',
-        c: '#FF3D00',
-        d: '#DD2C00'
+        a: '#FFCDD2',
+        b: '#E57373',
+        c: '#E53935',
+        d: '#820e0e'
       },
     }
 
