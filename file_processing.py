@@ -1,6 +1,7 @@
-from flask import session
+from flask import session, g
 from test import Test
 from student import Student
+import db
 
 # Converts a student data file into an array of student objects.
 def to_student_array(student_data):
@@ -45,11 +46,11 @@ def to_version_dict(version_data, first_column = True):
 
 # Processes raw data and sets session variables.
 def process_raw_data(raw_student_data, raw_version_data, raw_question_data):
-	session['student_data'] = raw_student_data
-	session['version_data'] = raw_version_data
-	session['question_data'] = raw_question_data
+	session['id'] = db.insert_raw(raw_student_data, raw_version_data)
 
 	# Convert the tab-delineated file to an array of actual student objects.
 	students = to_student_array(raw_student_data)
 	versions = to_version_dict(raw_version_data)
 	test = Test(students, versions, raw_question_data)
+
+	print db.get_responses(session['id'])

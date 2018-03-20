@@ -1,6 +1,8 @@
-from flask import Flask, render_template, url_for, session, request
+from flask import Flask, render_template, url_for, session, request, g
 import rpy2.robjects as robjects
 import file_processing
+import sqlite3
+import db
 
 # Define the application.
 app = Flask(__name__)
@@ -51,3 +53,17 @@ def review_page():
 @app.route('/export')
 def export_page():
     return render_template('export.html', export = True)
+
+def init_db():
+    with app.app_context():
+        database = db.get_db()
+        with app.open_resource('schema.sql', mode='r') as f:
+            database.cursor().executescript(f.read())
+        database.commit()
+
+# Closes any current database connections.
+@app.teardown_appcontext
+def close_connection(exception):
+    database = getattr(g, '_database', None)
+    if database is not None:
+        database.close()
