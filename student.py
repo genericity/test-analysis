@@ -9,7 +9,7 @@ class Student:
 	# @param data {string} The student data.
 	def __init__(self, data):
 		# {string} ID number.
-		self.id = data[0:11].strip()
+		self.id = data[2:11].strip()
 		# {string} Last name.
 		self.last_name = data[12:25].strip()
 		# {string} First name.

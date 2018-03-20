@@ -44,13 +44,26 @@ def to_version_dict(version_data, first_column = True):
 
 	return versions
 
-# Processes raw data and sets session variables.
-def process_raw_data(raw_student_data, raw_version_data, raw_question_data):
+# Saves raw data and sets session variables.
+def save_raw_data(raw_student_data, raw_version_data, raw_question_data):
 	session['id'] = db.insert_raw(raw_student_data, raw_version_data)
 
-	# Convert the tab-delineated file to an array of actual student objects.
-	students = to_student_array(raw_student_data)
-	versions = to_version_dict(raw_version_data)
-	test = Test(students, versions, raw_question_data)
+# Outputs question data in a comma-delineated format.
+def get_question_data():
+	if session['id'] is None:
+		return ''
 
-	print db.get_responses(session['id'])
+	# Retrieve data from the database.
+	session_id = session['id']
+	raw_student_data = db.get_responses(session_id)
+	raw_version_data = db.get_answers(session_id)
+
+	if raw_student_data is None:
+		return ''
+
+	# Convert the tab-delineated file to an array of actual student objects.
+	students = to_student_array(raw_student_data['data'])
+	versions = to_version_dict(raw_version_data['data'])
+	test = Test(students, versions)
+
+	return test.to_csv()

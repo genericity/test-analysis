@@ -24,7 +24,7 @@ class Test:
 			student.score(answer_key)
 
 	# Find the difficulty of a question given its index.
-	def get_question_difficulty(self, index):
+	def get_question_percentage_correct(self, index):
 		if index >= TEST_LENGTH:
 			return 0
 
@@ -59,3 +59,31 @@ class Test:
 
 		# Return the first key as a default.
 		return self.versions.keys()[0]
+
+	# Outputs question data in a CSV-like format, comma-delineated.
+	def to_csv(self):
+		# Full array of question data.
+		questions = []
+
+		# Go through all the questions and retrieve information about each one.
+		for i in range(0, TEST_LENGTH):
+			text = ''
+			percentage = self.get_question_percentage_correct(i)
+			discrimination = 0
+			weight = 0
+
+			# Create the question array.
+			question = []
+			question.append(i)
+			question.append(text)
+			question.append(percentage)
+			question.append(discrimination)
+			question.append(weight)
+
+			# Convert to string.
+			question = list(map(str, question))
+
+			questions.append(','.join(question))
+
+		# Return the joined string.
+		return '\n'.join(questions)

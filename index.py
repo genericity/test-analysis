@@ -37,7 +37,7 @@ def questions_page():
 			question_data = request.files['file-question-data'].read()
 
 		# Process. This will set session variables.
-		file_processing.process_raw_data(student_data, version_data, question_data)
+		file_processing.save_raw_data(student_data, version_data, question_data)
 
 	# Display the questions page.
 	return render_template('questions.html', questions = True, data = data)
@@ -54,6 +54,11 @@ def review_page():
 def export_page():
     return render_template('export.html', export = True)
 
+@app.route('/get/questions')
+def question_data():
+	return file_processing.get_question_data()
+
+# Initializes the database. The readme file contains instructions on how to run this at the start of installing the application.
 def init_db():
     with app.app_context():
         database = db.get_db()
