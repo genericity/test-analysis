@@ -10,9 +10,9 @@ get('/get/questions').then((response) => {
 		const split = rawQuestion.split(',');
 		// Convert necessary items to numbers.
 		split[0] = parseInt(split[0], 10);
-		split[2] = parseFloat(split[2]);
-		split[3] = parseFloat(split[3]);
-		split[4] = parseFloat(split[4]);
+		split[2] = roundToPlaces(parseFloat(split[2]), 1);
+		split[3] = roundToPlaces(parseFloat(split[3]), 2);
+		split[4] = roundToPlaces(parseFloat(split[4]), 2);
 		// 0-indexed questions.
 		split[0] += 1;
 		const index = split[0];

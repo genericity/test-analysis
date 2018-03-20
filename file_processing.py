@@ -2,13 +2,22 @@ from flask import session, g
 from test import Test
 from student import Student
 import db
+import re
 
 # Converts a student data file into an array of student objects.
 def to_student_array(student_data):
+	# Clean data of carriage returns first.
+	student_data = re.sub(r'\r', '', student_data)
+	# Substitute tabs with eight spaces to account for empty names.
+	student_data = re.sub(r'\t', '        ', student_data)
+
+	# Student array.
 	students = []
 	raw = student_data.splitlines()
 	for line in raw:
-		students.append(Student(line))
+		# Make sure the line is not empty.
+		if len(line) > 0:
+			students.append(Student(line))
 	return students
 
 # Converts a version answer data file into a dictionary of answer keys.

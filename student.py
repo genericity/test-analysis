@@ -22,11 +22,12 @@ class Student:
 		# Split into chunks of 2, each one is a question response.
 		# Convert them into integers.
 		# {!Array<number>} The raw answers given by the student.
-		self.answers = map(int, process_utils.split_into_chunks(data[45:(45 + 2 * TEST_LENGTH)], 2))
+		self.answers = map(process_utils.int_if_possible, process_utils.split_into_chunks(data[45:(45 + 2 * TEST_LENGTH)], 2))
 
 	# Set this student's scores, given an answer key.
 	def score(self, answer_key):
 		self.scores = []
+		print self.id, self.version
 		for i in range(0, len(answer_key)):
 			if self.answers[i] == answer_key[i]:
 				self.scores.append(True)
