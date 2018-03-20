@@ -32,7 +32,7 @@ class QuestionRow extends Row {
 		const difficulty = this.data[2];
 		const discrimination = this.data[3];
 		const weight = this.data[4];
-		if (difficulty == 0 || discrimination < 0) {
+		if (difficulty == 0 || difficulty == 100 || discrimination < 0) {
 			return 'poor';
 		} else {
 			return 'neutral'

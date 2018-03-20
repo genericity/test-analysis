@@ -7,6 +7,7 @@ import db
 # Define the application.
 app = Flask(__name__)
 app.debug = True
+# This should be locally configured.
 app.secret_key = 'a>Sx9dxf7xdf_xcb84002xdcN?xf6xabj;8?x83abe2j'
 
 # R setup.

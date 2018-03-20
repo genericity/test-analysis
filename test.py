@@ -40,7 +40,7 @@ class Test:
 			return 0
 		else:
 			# Force the answer to be floating point.
-			return right / (len(self.students) * 1.0)
+			return right / (len(self.students) * 1.0) * 100
 
 	# Given a string, guess which version it is most likely to be.
 	def get_version(self, version_string):

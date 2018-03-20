@@ -40,3 +40,33 @@ function getKeyByValue(obj, value) {
 function isNumber(num) {
     return !isNaN(parseFloat(num)) && isFinite(num);
 }
+
+// Makes a GET request to the specified URL. Returned a promise that resolves when the request completes.
+function get(url) {
+  // Return a new promise.
+  return new Promise((resolve, reject) => {
+    // Create the XHR request.
+    var request = new XMLHttpRequest();
+    request.open('GET', url);
+
+    request.onload = () => {
+      // If the request completed successfully:
+      if (request.status == 200) {
+        // Resolve the promise with the response text.
+        resolve(request.response);
+      }
+      else {
+        // Otherwise, reject with the status text.
+        reject(Error(request.statusText));
+      }
+    };
+
+    // Handle network errors
+    request.onerror = () => {
+      reject(Error("Network Error"));
+    };
+
+    // Make the request
+    request.send();
+  });
+}

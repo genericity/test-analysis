@@ -9,7 +9,10 @@
             </ul>
         </div>
     </footer>
+    <!-- Essential libraries and scripts. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libraries/promise_polyfill.js') }}"></script>
+
     {% if upload %}
     <!-- Scripts for uploading files. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/file_handler.js') }}"></script>
