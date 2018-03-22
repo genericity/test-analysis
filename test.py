@@ -1,5 +1,7 @@
 import re
 from student import Student
+import rpy2.robjects as robjects
+from rpy2.robjects.packages import importr
 
 # Constants.
 TEST_LENGTH = 30
@@ -13,6 +15,10 @@ class Test:
 		self.versions = versions
 		# {Array<string>} List of question text strings.
 		self.text = text
+		# {R} R object containing a vector of discriminations.
+		self.discriminations = None
+		# {R} R object containing a vector of item weights.
+		self.item_scores = None
 
 		self.score_all()
 
@@ -24,7 +30,7 @@ class Test:
 			student.score(answer_key)
 
 	# Find the difficulty of a question given its index.
-	def get_question_percentage_correct(self, index):
+	def get_percentage_correct(self, index):
 		if index >= TEST_LENGTH:
 			return 0
 
@@ -68,9 +74,9 @@ class Test:
 		# Go through all the questions and retrieve information about each one.
 		for i in range(0, TEST_LENGTH):
 			text = ''
-			percentage = self.get_question_percentage_correct(i)
-			discrimination = 0
-			weight = 0
+			percentage = self.get_percentage_correct(i)
+			discrimination = self.get_discrimination(i)
+			weight = self.get_item_weight(i)
 
 			# Create the question array.
 			question = []
@@ -87,3 +93,70 @@ class Test:
 
 		# Return the joined string.
 		return '\n'.join(questions)
+
+	# Sets item weights and discriminations for the questions.
+	def calculate_question_stats(self):
+		response_matrix = self.get_response_matrix()
+
+		# Assign to a symbol.
+		robjects.globalenv['response_matrix'] = response_matrix
+
+		# Use ltm.
+		importr('ltm')
+		robjects.r('item_scores <- ltm(response_matrix ~ z1)')
+
+		# Store a row of discrimination coefficients.
+		self.discriminations = robjects.r('item_scores[1]$coefficients[,2]')
+		# Store a row of item weights. This vector contains 'difficulties' from
+		# positions 1 to TEST_LENGTH, then 'discriminations' from positions
+		# TEST_LENGTH + 1 to 2 * TEST_LENGTH.
+		self.item_scores = robjects.r('summary(item_scores)$coefficients[,1]')
+
+		print self.discriminations, self.item_scores
+
+	# Returns the matrix of responses in a dataframe / ltm-usable format.
+	def get_response_matrix(self):
+		matrix = {}
+
+		# For each question:
+		for question_index in range(TEST_LENGTH):
+			question_response_vector = []
+
+			# Retrieve all the responses for each student.
+			for j in range(len(self.students)):
+				question_response_vector.append(self.students[j].is_right(question_index))
+			
+			# Convert to integer values.
+			question_response_vector = map(int, question_response_vector)
+			matrix[question_index] = robjects.IntVector(question_response_vector)
+
+		response_matrix = robjects.DataFrame(matrix)
+		return response_matrix
+
+	# Retrieve the discrimination for a specific question.
+	def get_discrimination(self, index):
+		# Calculate and cache the discrimination row.
+		if self.discriminations is None:
+			self.calculate_question_stats()
+
+		# R vectors are 1-indexed.
+		index += 1
+		if (index < 1 or index > TEST_LENGTH):
+			return 0
+
+		# Retrieve the discrimination.
+		return self.discriminations.rx2(index)[0]
+
+	# Retrieve the item weight for a specific question.
+	def get_item_weight(self, index):
+		# Calculate and cache the item weight row.
+		if self.item_scores is None:
+			self.calculate_question_stats()
+
+		# R vectors are 1-indexed.
+		index += 1
+		if (index < 1 or index > TEST_LENGTH):
+			return 0
+
+		# Retrieve the discrimination.
+		return self.item_scores.rx2(index)[0]

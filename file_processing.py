@@ -75,4 +75,7 @@ def get_question_data():
 	versions = to_version_dict(raw_version_data['data'])
 	test = Test(students, versions)
 
+	for i in range (0, 5):
+		print test.students[i].id, test.students[i].scores
+
 	return test.to_csv()

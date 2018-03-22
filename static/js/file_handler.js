@@ -53,6 +53,7 @@ class FileHandler {
 	allowProgress() {
 		const button = document.getElementById('next-button');
 		button.classList.remove('disabled-button');
+		button.setAttribute('for', 'submit-form');
 		button.href = this.nextPage;
 	}
 }

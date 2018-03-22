@@ -27,7 +27,6 @@ class Student:
 	# Set this student's scores, given an answer key.
 	def score(self, answer_key):
 		self.scores = []
-		print self.id, self.version
 		for i in range(0, len(answer_key)):
 			if self.answers[i] == answer_key[i]:
 				self.scores.append(True)
