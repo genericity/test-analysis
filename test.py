@@ -2,6 +2,7 @@ import re
 from student import Student
 import rpy2.robjects as robjects
 from rpy2.robjects.packages import importr
+import rpy2.rlike.container as rlc
 
 # Constants.
 TEST_LENGTH = 30
@@ -19,6 +20,8 @@ class Test:
 		self.discriminations = None
 		# {R} R object containing a vector of item weights.
 		self.item_scores = None
+		# {R} R object containing a vector of student locations.
+		self.locations = None
 
 		if students and versions:
 			self.score_all()
@@ -113,6 +116,40 @@ class Test:
 		# TEST_LENGTH + 1 to 2 * TEST_LENGTH.
 		self.item_scores = robjects.r('summary(item_scores)$coefficients[,1]')
 
+	# Sets locations for the students.
+	def calculate_student_stats(self, response_matrix = None):
+		response_matrix = response_matrix or self.get_response_matrix()
+
+		# Assign to a symbol.
+		robjects.globalenv['response_matrix'] = response_matrix
+
+		# Use ltm.
+		importr('ltm')
+		robjects.r('item_scores <- ltm(response_matrix ~ z1)')
+		robjects.r('locations <- factor.scores(item_scores)')
+
+		# Store a row of location coefficients.
+		self.locations = robjects.r('locations$score.dat["z1"]')
+
+		print self.locations
+
+	# Find the location for a given student.
+	# The reason this is a method in the test class and not the student class
+	# is speed; loading the ltm package takes up most of the time and should
+	# not be repeated for every student.
+	def get_location(self, index):
+		# Calculate and cache the location row.
+		if self.locations is None:
+			self.calculate_student_stats()
+
+		# R vectors are 1-indexed.
+		index += 1
+		if (index < 1 or index > len(self.students)):
+			return 0
+
+		# Retrieve the discrimination.
+		return self.locations.rx(index, 'z1')[0]
+
 	# Returns the matrix of responses in a dataframe / ltm-usable format.
 	def get_response_matrix(self):
 		matrix = {}
@@ -175,7 +212,7 @@ class Test:
 			raw_percentage = student.raw_percentage()
 			raw_grade = student.percentage_to_grade(raw_percentage)
 			analyzed_percentage = 0
-			analyzed_score = 0
+			analyzed_score = self.get_location(i)
 			recommended_percentage = 0
 			recommended_grade = 0
 
