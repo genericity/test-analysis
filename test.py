@@ -20,7 +20,8 @@ class Test:
 		# {R} R object containing a vector of item weights.
 		self.item_scores = None
 
-		self.score_all()
+		if students and versions:
+			self.score_all()
 
 	# Score all the students.
 	def score_all(self):
@@ -95,8 +96,8 @@ class Test:
 		return '\n'.join(questions)
 
 	# Sets item weights and discriminations for the questions.
-	def calculate_question_stats(self):
-		response_matrix = self.get_response_matrix()
+	def calculate_question_stats(self, response_matrix = None):
+		response_matrix = response_matrix or self.get_response_matrix()
 
 		# Assign to a symbol.
 		robjects.globalenv['response_matrix'] = response_matrix
@@ -111,8 +112,6 @@ class Test:
 		# positions 1 to TEST_LENGTH, then 'discriminations' from positions
 		# TEST_LENGTH + 1 to 2 * TEST_LENGTH.
 		self.item_scores = robjects.r('summary(item_scores)$coefficients[,1]')
-
-		print self.discriminations, self.item_scores
 
 	# Returns the matrix of responses in a dataframe / ltm-usable format.
 	def get_response_matrix(self):
