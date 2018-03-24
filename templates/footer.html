@@ -30,12 +30,14 @@
     {% if questions %}
     <!-- Question table scripts. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/question_row.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/question_handler.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/questions.js') }}"></script>
     {% endif %}
 
     {% if review %}
     <!-- Student table scripts. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/student_row.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/student_handler.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/review.js') }}"></script>
     {% endif %}
 
@@ -45,6 +47,13 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/libraries/annotations.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/divider.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/double_dot_plot.js') }}"></script>
+    <!-- For data processing. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/row.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/question_row.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/question_handler.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/student_row.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/student_handler.js') }}"></script>
+    <!-- For visualization. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/visualize.js') }}"></script>
     {% endif %}
 </body>

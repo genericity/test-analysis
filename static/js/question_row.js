@@ -6,8 +6,19 @@ class QuestionRow extends Row {
 	* @override
 	*/
 	constructor(data, index) {
+		// Convert necessary items to numbers.
+		data[0] = parseInt(data[0], 10);
+		data[2] = roundToPlaces(parseFloat(data[2]), 1);
+		data[3] = roundToPlaces(parseFloat(data[3]), 2);
+		data[4] = roundToPlaces(parseFloat(data[4]), 2);
+
 		super(data, index);
 		this.data.push(this.generateToggle());
+
+		// Set variables.
+		this.percentage_correct = data[2];
+		this.discrimination = data[3];
+		this.item_weight = data[4];
 	}
 
 	/*

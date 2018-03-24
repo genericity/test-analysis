@@ -6,7 +6,21 @@ class StudentRow extends Row {
 	* @override
 	*/
 	constructor(data, index) {
+		// Convert necessary items to numbers.
+		data[0] = parseInt(data[0], 10);
+		data[1] = roundToPlaces(parseFloat(data[1]), 1);
+		data[3] = roundToPlaces(parseFloat(data[3]), 1);
+		data[4] = roundToPlaces(parseFloat(data[4]), 2);
+		data[5] = roundToPlaces(parseFloat(data[5]), 1);
+
 		super(data, index);
+
+		// Set variables.
+		this.id = data[0];
+		this.raw_percentage = data[1];
+		this.analyzed_percentage = data[3];
+		this.location = data[4];
+		this.recommended_percentage = data[5];
 	}
 
 	/*

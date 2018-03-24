@@ -131,8 +131,6 @@ class Test:
 		# Store a row of location coefficients.
 		self.locations = robjects.r('locations$score.dat["z1"]')
 
-		print self.locations
-
 	# Find the location for a given student.
 	# The reason this is a method in the test class and not the student class
 	# is speed; loading the ltm package takes up most of the time and should

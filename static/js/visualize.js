@@ -80,15 +80,11 @@ class ChartState {
   }
 
   /**
-  * Generates a specified amount of fake dotplot data.
-  * @param {number} amount The amount of data points to generate.
+  * Retrieves dotplot data from the server.
+  * @return {!Promise} A promise containing the data once it resolves.
   */
-  generateData(amount) {
-    const data = [];
-    for (let i = 0; i < amount; i++) {
-      data.push(this.getRandomInt(this.MIN, this.MAX) / 2);
-    }
-    return data;
+  getData() {
+    return [];
   }
 
   /**
@@ -129,8 +125,8 @@ class ChartState {
 
     const amount = this.getRandomInt(this.MIN_POINTS, this.MAX_POINTS);
     const ctx = document.getElementById('graph-canvas').getContext('2d');
-    const studentData = this.generateData(amount);
-    const questionData = this.generateData(amount);
+    const studentData = this.getStudentData();
+    const questionData = this.getQuestionData();
     const annotations = [this.dividers[0].annotation, this.dividers[1].annotation, this.dividers[2].annotation];
 
     const options = {

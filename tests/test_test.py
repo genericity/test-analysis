@@ -25,6 +25,7 @@ class TestTestMethods(unittest.TestCase):
 
     # Tests that discriminations are calculated correctly with ltm.
     def test_ltm_discrimination(self):
+        print self.test.discriminations
         # Check the first six questions' discriminations are equal to the pre-calculated ones.
         self.assertAlmostEqual(self.test.get_discrimination(0), 0.4, places = 1)
         self.assertAlmostEqual(self.test.get_discrimination(1), 1.45, places = 1)

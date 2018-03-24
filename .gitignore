@@ -1,0 +1,23 @@
+# Files for git to ignore.
+
+# History files.
+.Rhistory
+.Rapp.history
+
+# Session data files.
+.RData
+
+# Byte-compiled / optimized / DLL files.
+__pycache__/
+*.py[cod]
+*.db
+
+# Flask files.
+instance/
+.webassets-cache
+
+# Mac-specific hidden files.
+*.DS_Store
+
+# Python virtualenv.
+**/flask_project_env
