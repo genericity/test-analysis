@@ -32,6 +32,7 @@ body {
     max-width: 1800px;
     margin: auto;
     overflow: auto;
+    overflow-x: hidden;
     position: relative;
 }
 

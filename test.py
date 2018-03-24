@@ -68,7 +68,7 @@ class Test:
 		return self.versions.keys()[0]
 
 	# Outputs question data in a CSV-like format, comma-delineated.
-	def to_csv(self):
+	def to_question_csv(self):
 		# Full array of question data.
 		questions = []
 
@@ -159,3 +159,40 @@ class Test:
 
 		# Retrieve the discrimination.
 		return self.item_scores.rx2(index)[0]
+
+	# Outputs question data in a CSV-like format, comma-delineated.
+	def to_student_csv(self):
+		# Full array of student data.
+		students = []
+
+		# Go through all the students and retrieve information about each one.
+		# Limit the range to 50 to avoid freezing up.
+		# for i in range (0, len(self.students)):
+		for i in range(0, 50):
+			student = self.students[i]
+
+			student_id = student.id
+			raw_percentage = student.raw_percentage()
+			raw_grade = 0
+			analyzed_percentage = 0
+			analyzed_score = 0
+			recommended_percentage = 0
+			recommended_grade = 0
+
+			# Create the question array.
+			student_array = []
+			student_array.append(student_id)
+			student_array.append(raw_percentage)
+			student_array.append(raw_grade)
+			student_array.append(analyzed_percentage)
+			student_array.append(analyzed_score)
+			student_array.append(recommended_percentage)
+			student_array.append(recommended_grade)
+
+			# Convert to string.
+			student_array = list(map(str, student_array))
+
+			students.append(','.join(student_array))
+
+		# Return the joined string.
+		return '\n'.join(students)

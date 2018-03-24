@@ -59,6 +59,10 @@ def export_page():
 def question_data():
 	return file_processing.get_question_data()
 
+@app.route('/get/students')
+def student_data():
+	return file_processing.get_student_data()
+
 # Initializes the database. The readme file contains instructions on how to run this at the start of installing the application.
 def init_db():
     with app.app_context():

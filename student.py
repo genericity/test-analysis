@@ -37,3 +37,16 @@ class Student:
 	# Returns if a student was right for a question number.
 	def is_right(self, index):
 		return self.scores[index]
+
+	# Returns the raw percentage of questions correct.
+	def raw_percentage(self):
+		num_correct = 0
+		for i in range(0, len(self.scores)):
+			if self.scores[i]:
+				num_correct += 1
+
+		# Check for division by zero errors, and force the percentage to be a float.
+		if len(self.scores) == 0:
+			return 0
+		else:
+			return num_correct / (len(self.scores) * 1.0) * 100

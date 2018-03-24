@@ -57,8 +57,8 @@ def to_version_dict(version_data, first_column = True):
 def save_raw_data(raw_student_data, raw_version_data, raw_question_data):
 	session['id'] = db.insert_raw(raw_student_data, raw_version_data)
 
-# Outputs question data in a comma-delineated format.
-def get_question_data():
+# Loads test data based on the session ID.
+def load_test():
 	if session['id'] is None:
 		return ''
 
@@ -75,4 +75,14 @@ def get_question_data():
 	versions = to_version_dict(raw_version_data['data'])
 	test = Test(students, versions)
 
-	return test.to_csv()
+	return test
+
+# Outputs question data in a comma-delineated format.
+def get_question_data():
+	test = load_test()
+	return test.to_question_csv()
+
+# Outputs student data in a comma-delineated format.
+def get_student_data():
+	test = load_test()
+	return test.to_student_csv()
