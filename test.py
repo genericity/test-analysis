@@ -173,7 +173,7 @@ class Test:
 
 			student_id = student.id
 			raw_percentage = student.raw_percentage()
-			raw_grade = 0
+			raw_grade = student.percentage_to_grade(raw_percentage)
 			analyzed_percentage = 0
 			analyzed_score = 0
 			recommended_percentage = 0

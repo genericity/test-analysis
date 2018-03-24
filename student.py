@@ -38,6 +38,67 @@ class Student:
 	def is_right(self, index):
 		return self.scores[index]
 
+	# Returns a numeric grade from a percentage given a dictionary of grade boundaries.
+	def percentage_to_grade(self, percentage, grade_boundaries = None):
+		if not grade_boundaries:
+			# Standard University of Auckland grade boundaries.
+			grade_boundaries = [
+			{
+				'grade': 'A+',
+				'percentage': 90
+			},
+			{
+				'grade': 'A',
+				'percentage': 85
+			},
+			{
+				'grade': 'A-',
+				'percentage': 80
+			},
+			{
+				'grade': 'B+',
+				'percentage': 75
+			},
+			{
+				'grade': 'B',
+				'percentage': 70
+			},
+			{
+				'grade': 'B-',
+				'percentage': 65
+			},
+			{
+				'grade': 'C+',
+				'percentage': 60
+			},
+			{
+				'grade': 'C',
+				'percentage': 55
+			},
+			{
+				'grade': 'C-',
+				'percentage': 50
+			},
+			{
+				'grade': 'D+',
+				'percentage': 45
+			},
+			{
+				'grade': 'D',
+				'percentage': 40
+			},
+			{
+				'grade': 'D-',
+				'percentage': 0
+			},
+			]
+
+		for grade in grade_boundaries:
+			if percentage >= grade['percentage']:
+				return grade['grade']
+
+		return 'D-'
+
 	# Returns the raw percentage of questions correct.
 	def raw_percentage(self):
 		num_correct = 0
