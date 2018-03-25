@@ -83,8 +83,34 @@ class ChartState {
   * Retrieves dotplot data from the server.
   * @return {!Promise} A promise containing the data once it resolves.
   */
-  getData() {
-    return [];
+  getStudentData() {
+    return studentHandler().then((students) => {
+      const locations = [];
+
+      for (const student of students) {
+        // Round to one decimal place for better clustering.
+        locations.push(roundToPlaces(student.location, 1));
+      }
+
+      return locations;
+    });
+  }
+
+  /**
+  * Retrieves dotplot data from the server.
+  * @return {!Promise} A promise containing the data once it resolves.
+  */
+  getQuestionData() {
+    return questionHandler().then((questions) => {
+      const weights = [];
+
+      for (const question of questions) {
+        // Round to one decimal place for better clustering.
+        weights.push(roundToPlaces(question.item_weight, 1));
+      }
+
+      return weights;
+    });
   }
 
   /**
@@ -125,24 +151,29 @@ class ChartState {
 
     const amount = this.getRandomInt(this.MIN_POINTS, this.MAX_POINTS);
     const ctx = document.getElementById('graph-canvas').getContext('2d');
-    const studentData = this.getStudentData();
-    const questionData = this.getQuestionData();
-    const annotations = [this.dividers[0].annotation, this.dividers[1].annotation, this.dividers[2].annotation];
 
-    const options = {
-      annotation: {
-        events: ['mousedown'],
-        annotations: annotations
-      }
-    };
+    // Wait until both student and question data has been retrieved.
+    Promise.all([this.getQuestionData(), this.getStudentData()]).then((values) => {
+      const studentData = values[0];
+      const questionData = values[1];
 
-    // Create the dotplot with the fake data.
-    this.dotplot = new DoubleDotPlot(ctx, {questions: questionData, students: studentData}, options);
-    this.chart = this.dotplot.chart;
-    this.chart.chartState = this;
+      const annotations = [this.dividers[0].annotation, this.dividers[1].annotation, this.dividers[2].annotation];
 
-    this.regenerateColours();
-    this.chart.update();
+      const options = {
+        annotation: {
+          events: ['mousedown'],
+          annotations: annotations
+        }
+      };
+
+      // Create the dotplot with the fake data.
+      this.dotplot = new DoubleDotPlot(ctx, {questions: questionData, students: studentData}, options);
+      this.chart = this.dotplot.chart;
+      this.chart.chartState = this;
+
+      this.regenerateColours();
+      this.chart.update();
+    });
   }
 
   /*
@@ -150,9 +181,9 @@ class ChartState {
   */
   regenerateColours() {
     const datasetQuestions = this.chart.data.datasets[0];
-    datasetQuestions.pointBackgroundColor = this.chart.chartState.generateColours(datasetQuestions.data, this.currentY, "red");
+    datasetQuestions.pointBackgroundColor = this.chart.chartState.generateColours(datasetQuestions.data, this.currentY, "blue");
     const datasetStudents = this.chart.data.datasets[1];
-    datasetStudents.pointBackgroundColor = this.chart.chartState.generateColours(datasetStudents.data, this.currentY, "blue");
+    datasetStudents.pointBackgroundColor = this.chart.chartState.generateColours(datasetStudents.data, this.currentY, "red");
   }
 
   /*

@@ -41,6 +41,18 @@ function isNumber(num) {
     return !isNaN(parseFloat(num)) && isFinite(num);
 }
 
+// Generates a range of integers from min to max. For example, [-3, -2, -1, 0, 1, 2, 3].
+function generateRange(min, max) {
+  min = Math.floor(min);
+  max = Math.ceil(max);
+
+  const list = [];
+  for (let i = min; i <= max; i++) {
+      list.push(i);
+  }
+  return list;
+}
+
 // Makes a GET request to the specified URL. Returned a promise that resolves when the request completes.
 function get(url) {
   // Return a new promise.
@@ -69,4 +81,15 @@ function get(url) {
     // Make the request
     request.send();
   });
+}
+
+// Returns the maximum element in an array.
+function arrayMax(array) {
+  return array.reduce((a, b) => Math.max(a, b));
+}
+
+
+// Returns the minimum element in an array.
+function arrayMin(array) {
+  return array.reduce((a, b) => Math.min(a, b));
 }

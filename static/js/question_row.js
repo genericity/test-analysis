@@ -8,17 +8,25 @@ class QuestionRow extends Row {
 	constructor(data, index) {
 		// Convert necessary items to numbers.
 		data[0] = parseInt(data[0], 10);
-		data[2] = roundToPlaces(parseFloat(data[2]), 1);
-		data[3] = roundToPlaces(parseFloat(data[3]), 2);
-		data[4] = roundToPlaces(parseFloat(data[4]), 2);
+		data[2] = parseFloat(data[2]);
+		data[3] = parseFloat(data[3]);
+		data[4] = parseFloat(data[4]);
+
+		// Make a copy of the original values.
+		const original = data.slice();
+
+		// Round some values.
+		data[2] = roundToPlaces(data[2], 1);
+		data[3] = roundToPlaces(data[3], 2);
+		data[4] = roundToPlaces(data[4], 2);
 
 		super(data, index);
 		this.data.push(this.generateToggle());
 
 		// Set variables.
-		this.percentage_correct = data[2];
-		this.discrimination = data[3];
-		this.item_weight = data[4];
+		this.percentage_correct = original[2];
+		this.discrimination = original[3];
+		this.item_weight = original[4];
 	}
 
 	/*

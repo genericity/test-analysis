@@ -202,8 +202,8 @@ class Test:
 
 		# Go through all the students and retrieve information about each one.
 		# Limit the range to 50 to avoid freezing up.
-		# for i in range (0, len(self.students)):
-		for i in range(0, 50):
+		for i in range (0, len(self.students)):
+		# for i in range(0, 50):
 			student = self.students[i]
 
 			student_id = student.id

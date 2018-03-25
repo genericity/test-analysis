@@ -11,8 +11,6 @@ class DoubleDotPlot {
   * @options {=!Object} options An object containing options for this chart.
   */
   constructor(ctx, data, options = {}) {
-	//const blue = '#64B5F6';
-	//const red = '#E57373';
 
     this.chart = null;
     this.currentY = 50;
@@ -40,7 +38,6 @@ class DoubleDotPlot {
               type: 'linear',
               position: 'bottom',
               display: false,
-              stepSize: 1,
               id: 'x'
             }],
             yAxes: [{
@@ -75,16 +72,28 @@ class DoubleDotPlot {
 
     this.options = DEFAULT_OPTIONS;
 
+    let yMin = 0;
+    let yMax = 0;
     let i = 0;
     // Convert each dataset to points on the chart.
     for (const label of Object.keys(data)) {
     	const newSet = {
     		label: label,
     		data: this.numbersToDotPlot(data[label], i),
-    		//pointBackgroundColor: i ? blue : red
     	}
     	// Add to the chart.
     	this.options.data.datasets.push(newSet);
+
+      // Update the minimum and maximum y values.
+      const dataMin = arrayMin(data[label]);
+      if (dataMin < yMin) {
+        yMin = dataMin;
+      }
+      const dataMax = arrayMax(data[label]);
+      if (dataMax > yMax) {
+        yMax = dataMax;
+      }
+
     	i++;
     }
 
@@ -97,7 +106,9 @@ class DoubleDotPlot {
     Chart.defaults.global.defaultFontSize = 15;
 
     // Add a y-axis.
-    this.addYAxis();
+    yMin = Math.floor(yMin);
+    yMax = Math.ceil(yMax);
+    this.addYAxis(yMin, yMax);
 
     // Create chart.
     this.chart = new Chart(ctx, this.options);
@@ -141,15 +152,18 @@ class DoubleDotPlot {
   /*
   * Adds a y-axis to the chart.
   */
-  addYAxis() {
+  addYAxis(yMin, yMax) {
+    yMin = yMin || -3;
+    yMax = yMax || 3;
+
     // Add the background for the axis labels.
     this.options.options.annotation.annotations.push({
       type: 'box',
       xScaleID: 'x',
       yScaleID: 'y',
       backgroundColor: 'rgba(255, 255, 255, 1)',
-      yMax: 3,
-      yMin: -3,
+      yMax: yMax,
+      yMin: yMin,
       xMin: -1,
       xMax: 1,
       borderWidth: 0,
@@ -165,7 +179,7 @@ class DoubleDotPlot {
         ctx.textAlign = 'center';
 
         // Positions to draw the label at.
-        const ticks = [-3, -2, -1, 0, 1, 2, 3];
+        const ticks = generateRange(yMin, yMax);
         for (let i = 0; i < ticks.length; i++) {
           // Draw each label in the centre.
           this.drawAt(ctx, {
@@ -183,18 +197,18 @@ class DoubleDotPlot {
         this.drawAt(ctx, {
           text: 'Difficulty',
           x: -1,
-          y: 3.5
+          y: yMax + 0.5
         });
         this.drawAt(ctx, {
           text: 'Hard',
           x: -1,
-          y: 3.2
+          y: yMax + 0.2
         });
         ctx.textBaseline = 'top';
         this.drawAt(ctx, {
           text: 'Easy',
           x: -1,
-          y: -3.2
+          y: yMin - 0.2
         });
 
         ctx.textAlign = 'left';
@@ -203,18 +217,18 @@ class DoubleDotPlot {
         this.drawAt(ctx, {
           text: 'Performance',
           x: 1,
-          y: 3.5
+          y: yMax + 0.5
         });
         this.drawAt(ctx, {
           text: 'High',
           x: 1,
-          y: 3.2
+          y: yMax + 0.2
         });
         ctx.textBaseline = 'top';
         this.drawAt(ctx, {
           text: 'Low',
           x: 1,
-          y: -3.2
+          y: yMin - 0.2
         });
 
         ctx.restore();
