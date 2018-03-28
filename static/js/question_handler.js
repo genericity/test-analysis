@@ -11,10 +11,10 @@ function questionHandler() {
 			const split = rawQuestion.split(',');
 			
 			// 0-indexed questions.
+			split[0] = parseInt(split[0], 10);
 			split[0] += 1;
-			const index = split[0];
 			// Create a new QuestionRow.
-			const question = new QuestionRow(split, index);
+			const question = new QuestionRow(split, split[0]);
 			questions.push(question);
 		}
 

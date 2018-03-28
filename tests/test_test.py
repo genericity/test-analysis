@@ -18,7 +18,7 @@ class TestTestMethods(unittest.TestCase):
     def setUp(self):
         self.test = Test(None, None)
         # Read the data from the test data directory.
-        exam_data = DataFrame.from_csvfile('test_data/raw_exam.csv')
+        exam_data = DataFrame.from_csvfile('test_data/raw_exam.csv', header = False)
         # Run ltm on the response matrix.
         self.test.calculate_question_stats(exam_data)
         self.test.calculate_student_stats(exam_data)

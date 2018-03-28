@@ -37,8 +37,8 @@ class DoubleDotPlot {
             xAxes: [{
               type: 'linear',
               position: 'bottom',
-              display: false,
-              id: 'x'
+              id: 'x',
+              display: false
             }],
             yAxes: [{
               id: 'y',
@@ -128,6 +128,9 @@ class DoubleDotPlot {
 	let existing = {};
 
     for (const value of data) {
+      if (isNaN(value)) {
+        continue;
+      }
     	if (existing[value] != undefined) {
     		// Increment the existing counter.
     		existing[value]++;
@@ -138,12 +141,12 @@ class DoubleDotPlot {
 
     	// Create a new point.
     	// Alternate between placing points to the left and right of 0.
-		const newPoint = {
-			// Create a gap of four dots between the two sections.
-			x: (existing[value] + 2) * Math.pow(-1, index),
-			y: value
-		};
-		points.push(newPoint);
+		  const newPoint = {
+  			// Create a gap of 6 dots between the two sections.
+  			x: (existing[value] + 3) * Math.pow(-1, index),
+  			y: value
+  		};
+  		points.push(newPoint);
     }
 
     return points;
@@ -153,8 +156,11 @@ class DoubleDotPlot {
   * Adds a y-axis to the chart.
   */
   addYAxis(yMin, yMax) {
-    yMin = yMin || -3;
-    yMax = yMax || 3;
+    yMin = Math.min(yMin, -3) || -3;
+    yMax = Math.max(yMax, 3) || 3;
+
+    let xMin = -2;
+    let xMax = 2;
 
     // Add the background for the axis labels.
     this.options.options.annotation.annotations.push({
@@ -164,8 +170,8 @@ class DoubleDotPlot {
       backgroundColor: 'rgba(255, 255, 255, 1)',
       yMax: yMax,
       yMin: yMin,
-      xMin: -1,
-      xMax: 1,
+      xMin: xMin,
+      xMax: xMax,
       borderWidth: 0,
       borderColor: '#fff',
       // Draw the axis labels.
@@ -196,18 +202,18 @@ class DoubleDotPlot {
         // Draw the hard/easy signs.
         this.drawAt(ctx, {
           text: 'Difficulty',
-          x: -1,
+          x: xMin,
           y: yMax + 0.5
         });
         this.drawAt(ctx, {
           text: 'Hard',
-          x: -1,
+          x: xMin,
           y: yMax + 0.2
         });
         ctx.textBaseline = 'top';
         this.drawAt(ctx, {
           text: 'Easy',
-          x: -1,
+          x: xMin,
           y: yMin - 0.2
         });
 
@@ -216,18 +222,18 @@ class DoubleDotPlot {
         // Draw the high/low performance signs.
         this.drawAt(ctx, {
           text: 'Performance',
-          x: 1,
+          x: xMax,
           y: yMax + 0.5
         });
         this.drawAt(ctx, {
           text: 'High',
-          x: 1,
+          x: xMax,
           y: yMax + 0.2
         });
         ctx.textBaseline = 'top';
         this.drawAt(ctx, {
           text: 'Low',
-          x: 1,
+          x: xMax,
           y: yMin - 0.2
         });
 
@@ -249,5 +255,22 @@ class DoubleDotPlot {
     const canvasX = xScale.getPixelForValue(options.x || 0);
 
     ctx.fillText(options.text, canvasX, canvasY);
+  }
+
+  /*
+  * Returns the conversion factor between scales and pixels - i.e. factor * pixels desired = scale value.
+  */
+  getXScaleFactor() {
+    if (!this.chart) {
+      return 0.05;
+    }
+    const xScale = this.chart.chart.scales.x;
+
+    // Calculate the distance between points at 0 and 20.
+    const distance = 20;
+    const point0 = xScale.getPixelForValue(0);
+    const point20 = xScale.getPixelForValue(distance);
+    const pixels = point20 - point0;
+    return distance / pixels;
   }
 }

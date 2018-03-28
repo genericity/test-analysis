@@ -3,14 +3,15 @@ class ChartState {
   * Constructor. Defines some constants.
   */
   constructor() {
-    this.MIN = -6;
-    this.MAX = 6;
     this.NUMERIC_MIN = -3;
     this.NUMERIC_MAX = 3;
-    this.MIN_POINTS = 50;
-    this.MAX_POINTS = 100;
+    /* {Chart} The underlying chart. */
     this.chart = null;
-    this.currentY = 0;
+    /* {Array<StudentRow>} An array of student objects. */
+    this.students = [];
+    /* {Array<QuestionRow>} An array of question objects. */
+    this.questions = [];
+    /* {Array<Divider>} An array of divider objects to drag on the chart. */
     this.dividers = [
     new Divider({
       dividerId: 'line-divider-ab',
@@ -44,11 +45,9 @@ class ChartState {
   }
 
   /**
-  * Generates a list of colours - points above the y value are red and points below are blue.
+  * Generates a list of colours - points above the y value of each divider have different colours.
   */
-  generateColours(data, y, scheme) {
-    this.currentY = y;
-
+  generateColours(data, scheme) {
     const colourSchemes = {
       blue: {
         a: '#BBDEFB',
@@ -85,6 +84,8 @@ class ChartState {
   */
   getStudentData() {
     return studentHandler().then((students) => {
+      this.students = students;
+
       const locations = [];
 
       for (const student of students) {
@@ -102,6 +103,8 @@ class ChartState {
   */
   getQuestionData() {
     return questionHandler().then((questions) => {
+      this.questions = questions;
+
       const weights = [];
 
       for (const question of questions) {
@@ -149,7 +152,6 @@ class ChartState {
       this.chart.destroy();
     }
 
-    const amount = this.getRandomInt(this.MIN_POINTS, this.MAX_POINTS);
     const ctx = document.getElementById('graph-canvas').getContext('2d');
 
     // Wait until both student and question data has been retrieved.
@@ -163,6 +165,67 @@ class ChartState {
         annotation: {
           events: ['mousedown'],
           annotations: annotations
+        },
+        tooltips: {
+          callbacks: {
+            // Use the callback to display student and question information in the title of the tooltip.
+            title: (tooltipArray, data) => {
+              // Display the ID, or the question number.
+              const tooltipItem = tooltipArray[0];
+
+              // If the object is a student or a question.
+              const isStudent = tooltipItem.xLabel > 0;
+              if (isStudent) {
+                const student = this.students[tooltipItem.index];
+                return 'ID: ' + student.id;
+              } else {
+                return 'Question ' + (tooltipItem.index + 1);
+              }
+            },
+            // Use the callback to display student and question information in the label of the tooltip.
+            label: (tooltipItem, data) => {
+              // Display the score, if this is a student, or the percentage correct.
+
+              // If the object is a student or a question.
+              const isStudent = tooltipItem.xLabel > 0;
+              if (isStudent) {
+                // The dataset that contains this object.
+                const student = this.students[tooltipItem.index];
+                return student.getPercentage();
+              } else {
+                const question = this.questions[tooltipItem.index];
+                return question.getPercentage();
+              }
+            },
+            afterLabel: (tooltipItem, data) => {
+              // Display the location, if this is a student, or the question weight.
+
+              // If the object is a student or a question.
+              const isStudent = tooltipItem.xLabel > 0;
+              if (isStudent) {
+                return 'Location: ' + tooltipItem.yLabel; 
+              } else {
+                return 'Weight: ' + tooltipItem.yLabel; 
+              }
+            },
+            // The label colour of the tooltip.
+            labelColor: (tooltipItem, chart) => {
+              // Create the point.
+              const chartY = tooltipItem.yLabel;
+              const chartX = tooltipItem.xLabel;
+              const point = {
+                x: chartX,
+                y: chartY,
+              };
+
+              // Select a colour scheme.
+              const scheme = chartX > 0 ? 'blue': 'red';
+              const color = this.generateColours([point], scheme)[0]
+              return {
+                backgroundColor: color
+              };
+            }
+          }
         }
       };
 
@@ -181,9 +244,9 @@ class ChartState {
   */
   regenerateColours() {
     const datasetQuestions = this.chart.data.datasets[0];
-    datasetQuestions.pointBackgroundColor = this.chart.chartState.generateColours(datasetQuestions.data, this.currentY, "blue");
+    datasetQuestions.pointBackgroundColor = this.chart.chartState.generateColours(datasetQuestions.data, "blue");
     const datasetStudents = this.chart.data.datasets[1];
-    datasetStudents.pointBackgroundColor = this.chart.chartState.generateColours(datasetStudents.data, this.currentY, "red");
+    datasetStudents.pointBackgroundColor = this.chart.chartState.generateColours(datasetStudents.data, "red");
   }
 
   /*

@@ -3,9 +3,7 @@ from student import Student
 import rpy2.robjects as robjects
 from rpy2.robjects.packages import importr
 import rpy2.rlike.container as rlc
-
-# Constants.
-TEST_LENGTH = 30
+from collections import defaultdict
 
 # Represents an entire test.
 class Test:
@@ -22,9 +20,14 @@ class Test:
 		self.item_scores = None
 		# {R} R object containing a vector of student locations.
 		self.locations = None
+		# {number} The length of the test.
+		self.test_length = 0
 
 		if students and versions:
 			self.score_all()
+
+		if students:
+			self.test_length = len(self.students[0].scores)
 
 	# Score all the students.
 	def score_all(self):
@@ -35,7 +38,7 @@ class Test:
 
 	# Find the difficulty of a question given its index.
 	def get_percentage_correct(self, index):
-		if index >= TEST_LENGTH:
+		if index >= self.test_length:
 			return 0
 
 		# Number of students that were right for this question..
@@ -76,7 +79,7 @@ class Test:
 		questions = []
 
 		# Go through all the questions and retrieve information about each one.
-		for i in range(0, TEST_LENGTH):
+		for i in range(self.test_length):
 			text = ''
 			percentage = self.get_percentage_correct(i)
 			discrimination = self.get_discrimination(i)
@@ -108,7 +111,7 @@ class Test:
 		# Use ltm.
 		importr('ltm')
 		robjects.r('item_scores <- ltm(response_matrix ~ z1)')
-
+		
 		# Store a row of discrimination coefficients.
 		self.discriminations = robjects.r('item_scores[1]$coefficients[,2]')
 		# Store a row of item weights. This vector contains 'difficulties' from
@@ -126,7 +129,7 @@ class Test:
 		# Use ltm.
 		importr('ltm')
 		robjects.r('item_scores <- ltm(response_matrix ~ z1)')
-		robjects.r('locations <- factor.scores(item_scores)')
+		robjects.r('locations <- factor.scores(item_scores, resp.patterns = response_matrix)')
 
 		# Store a row of location coefficients.
 		self.locations = robjects.r('locations$score.dat["z1"]')
@@ -142,7 +145,7 @@ class Test:
 
 		# R vectors are 1-indexed.
 		index += 1
-		if (index < 1 or index > len(self.students)):
+		if (index < 1 or (self.students and index > len(self.students))):
 			return 0
 
 		# Retrieve the discrimination.
@@ -153,7 +156,7 @@ class Test:
 		matrix = {}
 
 		# For each question:
-		for question_index in range(TEST_LENGTH):
+		for question_index in range(self.test_length):
 			question_response_vector = []
 
 			# Retrieve all the responses for each student.
@@ -162,9 +165,10 @@ class Test:
 			
 			# Convert to integer values.
 			question_response_vector = map(int, question_response_vector)
-			matrix[question_index] = robjects.IntVector(question_response_vector)
+			matrix[question_index + 1] = robjects.IntVector(question_response_vector)
 
 		response_matrix = robjects.DataFrame(matrix)
+
 		return response_matrix
 
 	# Retrieve the discrimination for a specific question.
@@ -175,7 +179,7 @@ class Test:
 
 		# R vectors are 1-indexed.
 		index += 1
-		if (index < 1 or index > TEST_LENGTH):
+		if (index < 1 or (self.test_length and index > self.test_length)):
 			return 0
 
 		# Retrieve the discrimination.
@@ -189,7 +193,7 @@ class Test:
 
 		# R vectors are 1-indexed.
 		index += 1
-		if (index < 1 or index > TEST_LENGTH):
+		if (index < 1 or (self.test_length and index > self.test_length)):
 			return 0
 
 		# Retrieve the discrimination.

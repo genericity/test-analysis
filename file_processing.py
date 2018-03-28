@@ -5,7 +5,7 @@ import db
 import re
 
 # Converts a student data file into an array of student objects.
-def to_student_array(student_data):
+def to_student_array(student_data, prescored = False):
 	# Clean data of carriage returns first.
 	student_data = re.sub(r'\r', '', student_data)
 	# Substitute tabs with eight spaces to account for empty names.
@@ -17,7 +17,7 @@ def to_student_array(student_data):
 	for line in raw:
 		# Make sure the line is not empty.
 		if len(line) > 0:
-			students.append(Student(line))
+			students.append(Student(line, prescored))
 	return students
 
 # Converts a version answer data file into a dictionary of answer keys.
@@ -70,9 +70,20 @@ def load_test():
 	if raw_student_data is None:
 		return ''
 
-	# Convert the tab-delineated file to an array of actual student objects.
-	students = to_student_array(raw_student_data['data'])
-	versions = to_version_dict(raw_version_data['data'])
+	# Student objects in an array.
+	students = None
+	# Version data.
+	versions = None
+
+	# Determine if the data is prescored or not by if version data was uploaded.
+	if raw_student_data['data'] and not raw_version_data['data']:
+		# Convert the tab-delineated file to an array of actual student objects.
+		students = to_student_array(raw_student_data['data'], prescored = True)
+	else:
+		# Convert the version data if it exists.
+		students = to_student_array(raw_student_data['data'], prescored = False)
+		versions = to_version_dict(raw_version_data['data'])
+
 	test = Test(students, versions)
 
 	return test

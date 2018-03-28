@@ -57,4 +57,12 @@ class QuestionRow extends Row {
 			return 'neutral'
 		}
 	}
+
+	/*
+	* Generates a string with the percentage correct.
+	* @return {string} A string representing the percentage of correct students answering this question.
+	*/
+	getPercentage() {
+		return this.percentage_correct + '% correct';
+	}
 }

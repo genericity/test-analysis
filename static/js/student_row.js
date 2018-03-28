@@ -7,7 +7,6 @@ class StudentRow extends Row {
 	*/
 	constructor(data, index) {
 		// Convert necessary items to numbers.
-		data[0] = parseInt(data[0], 10);
 		data[1] = parseFloat(data[1]);
 		data[3] = parseFloat(data[3]);
 		data[4] = parseFloat(data[4]);
@@ -17,7 +16,6 @@ class StudentRow extends Row {
 		const original = data.slice();
 
 		// Round some values.
-		data[0] = parseInt(data[0], 10);
 		data[1] = roundToPlaces(data[1], 1);
 		data[3] = roundToPlaces(data[3], 1);
 		data[4] = roundToPlaces(data[4], 2);
@@ -71,5 +69,13 @@ class StudentRow extends Row {
 		} else {
 			return 'neutral';
 		}
+	}
+
+	/*
+	* Generates a string with the percentage correct.
+	* @return {string} A string representing the percentage of correct answers.
+	*/
+	getPercentage() {
+		return 'Raw percentage: ' + this.raw_percentage + '%';
 	}
 }

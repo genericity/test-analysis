@@ -7,7 +7,7 @@ new FileHandler([{
 	}, {
 		input: 'file-version-data',
 		label: 'label-version-data',
-		required: true,
+		required: false,
 	}, {
 		input: 'file-question-data',
 		label: 'label-question-data',
