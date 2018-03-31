@@ -23,6 +23,21 @@ def insert_raw(raw_student_data, raw_version_data):
  	query_db('insert into answers (session_id, data) values (?, ?);', [session_id, raw_version_data])
  	return session_id
 
+# Inserts the list of discarded questions into the database.
+def insert_or_update_discarded(session_id, discarded_str):
+ 	cursor = get_db().cursor()
+
+ 	# If the session ID is not set, return.
+ 	if not session_id:
+ 		return
+
+ 	# If there are no existing rows in the database, insert.
+ 	if not get_discarded(session_id):
+ 		query_db('insert into discarded (session_id, questions) values (?,?);', [session_id, discarded_str], cursor = cursor)
+ 	# Otherwise, update the existing entry.
+ 	else:
+ 		query_db('update discarded set questions = ? where session_id = ? limit 1;', [discarded_str, session_id], cursor = cursor)
+
 # Retrieves response data from the database given a session id.
 def get_responses(session_id):
 	result = query_db('select * from responses where ROWID = ?;', [session_id], one = True)
@@ -31,6 +46,11 @@ def get_responses(session_id):
 # Retrieves answer data from the database given a session id.
 def get_answers(session_id):
 	result = query_db('select * from answers where session_id = ?;', [session_id], one = True)
+	return result
+
+# Retrieves the list of discarded questions from the database given a session id.
+def get_discarded(session_id):
+	result = query_db('select * from discarded where session_id = ?;', [session_id], one = True)
 	return result
 
 # Queries the database.

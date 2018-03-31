@@ -88,8 +88,18 @@ function arrayMax(array) {
   return array.reduce((a, b) => Math.max(a, b));
 }
 
-
 // Returns the minimum element in an array.
 function arrayMin(array) {
   return array.reduce((a, b) => Math.min(a, b));
 }
+
+// Attempts to convert a string into a boolean value.
+function strToBool(string) {
+  string = string.toLowerCase().trim();
+  if (string == 'false' || string == '0') {
+    return false;
+  } else {
+    return Boolean(string);
+  }
+}
+ 

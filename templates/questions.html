@@ -5,7 +5,7 @@
             <p>
                 Instructions on editing and removing questions. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
-            <section id="questions">
+            <form id="questions" method="post" action="{{ url_for('grades_page') }}" enctype="multipart/form-data">
                 <table class="sortable-theme-minimal sorted-table" data-sortable>
                     <thead>
                         <tr>
@@ -20,13 +20,14 @@
                     <tbody id="question-body">
                     </tbody>
                 </table>
-            </section>
+                <input type="submit" id="submit-form" class="hidden" />
+            </form>
             <a class="button reversed-button" id="back-button" href="{{ url_for('upload_page') }}">
                 <span class="button-icon material-icons">arrow_back</span>
                 <span class="button-text">Back</span>
             </a>
-            <a class="button" id="next-button" href="{{ url_for('grades_page') }}">
+            <label class="button" id="next-button" for="submit-form">
                 <span class="button-text">Next</span>
                 <span class="button-icon material-icons">arrow_forward</span>
-            </a>
+            </label>
 {% include "footer.html" %}

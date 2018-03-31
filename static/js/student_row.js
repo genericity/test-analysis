@@ -76,6 +76,6 @@ class StudentRow extends Row {
 	* @return {string} A string representing the percentage of correct answers.
 	*/
 	getPercentage() {
-		return 'Raw percentage: ' + this.raw_percentage + '%';
+		return 'Raw percentage: ' + roundToPlaces(this.raw_percentage, 2) + '%';
 	}
 }

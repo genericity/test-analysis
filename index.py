@@ -37,15 +37,25 @@ def questions_page():
 		if 'file-question-data' in request.files  and request.files['file-question-data'].filename != '':
 			question_data = request.files['file-question-data'].read()
 
+		session['hasAnalyzedQuestions'] = False
+
 		# Process. This will set session variables.
 		file_processing.save_raw_data(student_data, version_data, question_data)
 
 	# Display the questions page.
 	return render_template('questions.html', questions = True, data = data)
 
-@app.route('/grades')
+@app.route('/grades', methods = ['GET', 'POST'])
 def grades_page():
-    return render_template('grades.html', grades = True)
+	discard = []
+	# Process the data.
+	if request.method == 'POST':
+		# All the questions that were checked, i.e. need to be discarded.
+		discard = request.form.getlist('question')
+		# Process the discarded questions.
+		file_processing.save_discarded_questions(discard)
+
+	return render_template('grades.html', grades = True)
 
 @app.route('/review')
 def review_page():

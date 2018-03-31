@@ -57,6 +57,11 @@ def to_version_dict(version_data, first_column = True):
 def save_raw_data(raw_student_data, raw_version_data, raw_question_data):
 	session['id'] = db.insert_raw(raw_student_data, raw_version_data)
 
+# Saves the list of discarded questions.
+def save_discarded_questions(discarded_list):
+	raw_discarded = ','.join(discarded_list)
+	db.insert_or_update_discarded(session['id'], raw_discarded)
+
 # Loads test data based on the session ID.
 def load_test():
 	if session['id'] is None:
@@ -67,7 +72,7 @@ def load_test():
 	raw_student_data = db.get_responses(session_id)
 	raw_version_data = db.get_answers(session_id)
 
-	if raw_student_data is None:
+	if raw_student_data['data'] is None:
 		return ''
 
 	# Student objects in an array.
@@ -84,7 +89,15 @@ def load_test():
 		students = to_student_array(raw_student_data['data'], prescored = False)
 		versions = to_version_dict(raw_version_data['data'])
 
-	test = Test(students, versions)
+	# Check if there are any discarded questions stored in the database.
+	raw_discarded = db.get_discarded(session_id)
+	discarded = []
+	# If there is, convert it into a list of integers.
+	if raw_discarded and not raw_discarded['questions'] is None:
+		discarded = raw_discarded['questions'].split(',')
+		discarded = map(int, discarded)
+
+	test = Test(students, versions, discarded = discarded)
 
 	return test
 

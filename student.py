@@ -7,7 +7,9 @@ TEST_LENGTH = 30
 class Student:
 	# Initialize and retrieve student data from the data string.
 	# @param data {string} The student data.
-	def __init__(self, data, prescored):
+	def __init__(self, data, prescored, test = None):
+		# {!Test} The test containing this question.
+		self.test = test
 		# {string} ID number.
 		self.id = 'ID not given'
 		# {string} Last name.
@@ -20,6 +22,8 @@ class Student:
 		self.scores = []
 		# {!Array<number>} The raw answers given by the student.
 		self.answers = None
+		# {number} The student's location.
+		self.location = None
 
 		if prescored:
 			self.init_prescored(data)
@@ -134,3 +138,11 @@ class Student:
 			return 0
 		else:
 			return num_correct / (len(self.scores) * 1.0) * 100
+
+	# Finds the location for this student..
+	def get_location(self):
+		# Calculate and cache the location.
+		if self.location is None:
+			self.test.calculate_student_stats()
+
+		return self.location

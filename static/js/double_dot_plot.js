@@ -15,6 +15,8 @@ class DoubleDotPlot {
     this.chart = null;
     this.currentY = 50;
     this.originalData = data;
+    this.yMin = 0;
+    this.yMax = 0;
 
     // Default options.
     const DEFAULT_OPTIONS = {
@@ -158,6 +160,8 @@ class DoubleDotPlot {
   addYAxis(yMin, yMax) {
     yMin = Math.min(yMin, -3) || -3;
     yMax = Math.max(yMax, 3) || 3;
+    this.yMin = yMin;
+    this.yMax = yMax;
 
     let xMin = -2;
     let xMax = 2;

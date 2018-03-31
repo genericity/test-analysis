@@ -18,14 +18,14 @@ class ChartState {
       text: 'A/B',
       index: 0,
       fieldId: 'ab-boundary',
-      y: 2
+      y: 0.5
     }, this),
     new Divider({
       dividerId: 'line-divider-bc',
       text: 'B/C',
       index: 1,
       fieldId: 'bc-boundary',
-      y: 0
+      y: -0.5
     }, this),
     new Divider({
       dividerId: 'line-divider-cd',
@@ -233,6 +233,8 @@ class ChartState {
       this.dotplot = new DoubleDotPlot(ctx, {questions: questionData, students: studentData}, options);
       this.chart = this.dotplot.chart;
       this.chart.chartState = this;
+      this.NUMERIC_MIN = this.dotplot.yMin;
+      this.NUMERIC_MAX = this.dotplot.yMax;
 
       this.regenerateColours();
       this.chart.update();

@@ -1,33 +1,30 @@
 import re
 from student import Student
+from question import Question
 import rpy2.robjects as robjects
 from rpy2.robjects.packages import importr
-import rpy2.rlike.container as rlc
-from collections import defaultdict
 
 # Represents an entire test.
 class Test:
-	def __init__(self, students, versions, text = None):
+	def __init__(self, students, versions, text = None, discarded = []):
 		# {!Array<!Student>} An array of students.
 		self.students = students
 		# {Object<string, !Array<number>>} Dictionary mapping the version names to their answer keys.
 		self.versions = versions
-		# {Array<string>} List of question text strings.
-		self.text = text
-		# {R} R object containing a vector of discriminations.
-		self.discriminations = None
-		# {R} R object containing a vector of item weights.
-		self.item_scores = None
-		# {R} R object containing a vector of student locations.
-		self.locations = None
-		# {number} The length of the test.
-		self.test_length = 0
 
 		if students and versions:
 			self.score_all()
 
 		if students:
 			self.test_length = len(self.students[0].scores)
+			# Store a reference to this test in each student object.
+			for i in range(len(self.students)):
+				self.students[i].test = self
+
+		# {!Array<!Question>} The array of questions within the test.
+		self.questions = self.init_questions(text, discarded)
+		# {number} The length of the test.
+		self.test_length = len(self.questions)
 
 	# Score all the students.
 	def score_all(self):
@@ -55,6 +52,25 @@ class Test:
 			# Force the answer to be floating point.
 			return right / (len(self.students) * 1.0) * 100
 
+	# Initializes the array of question objects.
+	def init_questions(self, text_array, discard_array):
+		questions = []
+
+		for i in range(self.test_length):
+			# The percentage of students that got this question correct.
+			percentage = self.get_percentage_correct(i)
+			# The text for the question, if it exists.
+			text = text_array[i] if text_array and len(text_array) - 1 >= i else ''
+			# If this question was marked as to discard or not.
+			discard = ((i + 1) in discard_array)
+
+			# Create the question.
+			question = Question(self, percentage_correct = percentage, text = text, discard = discard)
+
+			questions.append(question)
+
+		return questions
+
 	# Given a string, guess which version it is most likely to be.
 	def get_version(self, version_string):
 		# Start by trying out a direct comparison.
@@ -65,8 +81,8 @@ class Test:
 		# Strip the non-numeric characters from the versions we have.
 		for version_name in self.versions.keys():
 			version_stripped = int(re.sub("\D", "", version_name))
-			# Compare it to the integer value of the last 5 letters of the version given.
-			version_cutoff = int(version_string[-5:])
+			# Compare it to the integer value of the version given without the course code (first three characters).
+			version_cutoff = int(version_string[3:])
 			if version_stripped == version_cutoff:
 				return version_name
 
@@ -80,23 +96,26 @@ class Test:
 
 		# Go through all the questions and retrieve information about each one.
 		for i in range(self.test_length):
-			text = ''
-			percentage = self.get_percentage_correct(i)
-			discrimination = self.get_discrimination(i)
-			weight = self.get_item_weight(i)
+			question = self.questions[i]
+			text = question.text
+			percentage = question.percentage_correct
+			discrimination = question.get_discrimination()
+			weight = question.get_item_weight()
+			kept = not question.discard
 
 			# Create the question array.
-			question = []
-			question.append(i)
-			question.append(text)
-			question.append(percentage)
-			question.append(discrimination)
-			question.append(weight)
+			question_array = []
+			question_array.append(i)
+			question_array.append(text)
+			question_array.append(percentage)
+			question_array.append(discrimination)
+			question_array.append(weight)
+			question_array.append(kept)
 
 			# Convert to string.
-			question = list(map(str, question))
+			question_array = list(map(str, question_array))
 
-			questions.append(','.join(question))
+			questions.append(','.join(question_array))
 
 		# Return the joined string.
 		return '\n'.join(questions)
@@ -110,14 +129,23 @@ class Test:
 
 		# Use ltm.
 		importr('ltm')
-		robjects.r('item_scores <- ltm(response_matrix ~ z1)')
+		robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
 		
 		# Store a row of discrimination coefficients.
-		self.discriminations = robjects.r('item_scores[1]$coefficients[,2]')
-		# Store a row of item weights. This vector contains 'difficulties' from
-		# positions 1 to TEST_LENGTH, then 'discriminations' from positions
-		# TEST_LENGTH + 1 to 2 * TEST_LENGTH.
-		self.item_scores = robjects.r('summary(item_scores)$coefficients[,1]')
+		discriminations = robjects.r('item_weights[1]$coefficients[,2]')
+		# Store a row of item weights.
+		item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
+
+		# Store inside the questions.
+		for i in range(len(self.questions)):
+			question = self.questions[i]
+
+			# Cache the discrimination.
+			# R vectors are 1-indexed.
+			question.discrimination = discriminations.rx2(i + 1)[0]
+			# Cache the item weight.
+			# R vectors are 1-indexed.
+			question.item_weight = item_weights.rx2(i + 1)[0]
 
 	# Sets locations for the students.
 	def calculate_student_stats(self, response_matrix = None):
@@ -128,28 +156,19 @@ class Test:
 
 		# Use ltm.
 		importr('ltm')
-		robjects.r('item_scores <- ltm(response_matrix ~ z1)')
+		robjects.r('item_scores <- ltm(response_matrix ~ z1, na.action = NULL)')
 		robjects.r('locations <- factor.scores(item_scores, resp.patterns = response_matrix)')
 
 		# Store a row of location coefficients.
-		self.locations = robjects.r('locations$score.dat["z1"]')
+		locations = robjects.r('locations$score.dat["z1"]')
 
-	# Find the location for a given student.
-	# The reason this is a method in the test class and not the student class
-	# is speed; loading the ltm package takes up most of the time and should
-	# not be repeated for every student.
-	def get_location(self, index):
-		# Calculate and cache the location row.
-		if self.locations is None:
-			self.calculate_student_stats()
+		# Store inside the questions.
+		for i in range(len(self.students)):
+			student = self.students[i]
 
-		# R vectors are 1-indexed.
-		index += 1
-		if (index < 1 or (self.students and index > len(self.students))):
-			return 0
-
-		# Retrieve the discrimination.
-		return self.locations.rx(index, 'z1')[0]
+			# Cache the discrimination.
+			# R vectors are 1-indexed.
+			student.location = locations.rx(i + 1, 'z1')[0]
 
 	# Returns the matrix of responses in a dataframe / ltm-usable format.
 	def get_response_matrix(self):
@@ -159,45 +178,25 @@ class Test:
 		for question_index in range(self.test_length):
 			question_response_vector = []
 
-			# Retrieve all the responses for each student.
-			for j in range(len(self.students)):
-				question_response_vector.append(self.students[j].is_right(question_index))
-			
-			# Convert to integer values.
-			question_response_vector = map(int, question_response_vector)
-			matrix[question_index + 1] = robjects.IntVector(question_response_vector)
+			question = self.questions[question_index]
 
+			# Cannot have questions where either 100% or 0% were correct, as ltm will crash.
+			# This also excludes questions the user has opted to discard.
+			if not question.discard:
+				# Retrieve all the responses for each student.
+				for j in range(len(self.students)):
+					question_response_vector.append(self.students[j].is_right(question_index))
+			else:
+				# Otherwise, create a vector of NA objects.
+				question_response_vector = [robjects.NA_Logical] * len(self.students)
+
+			# Convert to a vector.
+			matrix[question_index + 1] = robjects.BoolVector(question_response_vector)
+
+		# Convert the dictionary of vectors to a dataframe.
 		response_matrix = robjects.DataFrame(matrix)
 
 		return response_matrix
-
-	# Retrieve the discrimination for a specific question.
-	def get_discrimination(self, index):
-		# Calculate and cache the discrimination row.
-		if self.discriminations is None:
-			self.calculate_question_stats()
-
-		# R vectors are 1-indexed.
-		index += 1
-		if (index < 1 or (self.test_length and index > self.test_length)):
-			return 0
-
-		# Retrieve the discrimination.
-		return self.discriminations.rx2(index)[0]
-
-	# Retrieve the item weight for a specific question.
-	def get_item_weight(self, index):
-		# Calculate and cache the item weight row.
-		if self.item_scores is None:
-			self.calculate_question_stats()
-
-		# R vectors are 1-indexed.
-		index += 1
-		if (index < 1 or (self.test_length and index > self.test_length)):
-			return 0
-
-		# Retrieve the discrimination.
-		return self.item_scores.rx2(index)[0]
 
 	# Outputs question data in a CSV-like format, comma-delineated.
 	def to_student_csv(self):
@@ -214,7 +213,7 @@ class Test:
 			raw_percentage = student.raw_percentage()
 			raw_grade = student.percentage_to_grade(raw_percentage)
 			analyzed_percentage = 0
-			analyzed_score = self.get_location(i)
+			analyzed_score = student.get_location()
 			recommended_percentage = 0
 			recommended_grade = 0
 

@@ -20,26 +20,73 @@ class QuestionRow extends Row {
 		data[3] = roundToPlaces(data[3], 2);
 		data[4] = roundToPlaces(data[4], 2);
 
+		// Check if this question was kept or not.
+		const isKept = strToBool(data.pop());
+		// Mark removed questions as removed.
+		if (!isKept) {
+			data[3] = 'Removed';
+			data[4] = 'Removed';
+		}
+
+		// Ensure questions with 100% or 0% are excluded.
+		if (original[2] == 100 || original[2] == 0 || original[3] < 0) {
+			data[3] = 'Invalid';
+			data[4] = 'Invalid';
+		}
+
 		super(data, index);
-		this.data.push(this.generateToggle());
+		
+		// Generate a checkbox based on if this question was kept.
+		this.data.push(this.generateToggle(isKept));
 
 		// Set variables.
-		this.percentage_correct = original[2];
+		this.percentageCorrect = original[2];
 		this.discrimination = original[3];
-		this.item_weight = original[4];
+		this.itemWeight = original[4];
+		this.isKept = isKept;
 	}
 
 	/*
 	* Generates the markup for a toggle icon.
+	* @param {boolean} Whether this question was marked as kept (true) or discarded (false).
 	* @return {string} The HTML representation of the toggle icon.
 	*/
-	generateToggle() {
+	generateToggle(isKept) {
+		// The label for toggling the checkbox.
+		const togglableLabel = '<label class="material-icons toggle" for="question-' + this.index + '">';
+		const untogglableLabel = '<label class="material-icons toggle">';
+
+		// Difficulty and invalidity checks.
+		const invalidDifficulty = (this.percentageCorrect == 0 || this.percentageCorrect == 100);
+
+		// Whether the box was checked (discard) or not.
+		// If this is their first visit to the page, this is based on the status (and if it is invalid). Otherwise, it is based on the isKept value.
+		let checked = true;
+		if (sessionStorage.getItem('hasAnalyzedQuestions')) {
+			checked = !isKept;
+		} else {
+			sessionStorage.setItem('hasAnalyzedQuestions', true);
+			checked = (this.status() == 'poor' ? true : false);
+		}
+		// If the question is invalid, it is never marked as 'keep'.
+		if (invalidDifficulty) {
+			checked = true;
+		}
+
 		// Check the checkbox to discard it if the question is poor.
-		let markup = '<input type="checkbox" ' + (this.status() == 'poor' ? 'checked' : '');
+		let markup = '<input type="checkbox" ' + (checked ? 'checked' : '');
 		// Add the rest of the checkbox markup and label markup.
-		markup += ' name="question-' + this.index;
+		markup += ' name="question" value="' + this.index;
 		markup += '" id="question-' + this.index;
-		markup += '"><label class="material-icons toggle" for="question-' + this.index + '">';
+		markup += '">';
+
+		// Only allow toggling if this was not an invalid question.
+		if (!invalidDifficulty) {
+			markup += togglableLabel;
+		} else {
+			markup += untogglableLabel;
+		}
+
 		return markup;
 	}
 
@@ -47,14 +94,13 @@ class QuestionRow extends Row {
 	* @override
 	*/
 	status() {
-		// Determine if a question is good, bad, or neutral. This is a fake algorithm.
-		const difficulty = this.data[2];
-		const discrimination = this.data[3];
-		const weight = this.data[4];
-		if (difficulty == 0 || difficulty == 100 || discrimination < 0) {
+		// Determine if a question is good, bad, or neutral.
+		if (this.percentageCorrect == 0 || this.percentageCorrect == 100 || this.discrimination < 0) {
 			return 'poor';
+		} else if (!this.isKept) {
+			return 'removed';
 		} else {
-			return 'neutral'
+			return 'neutral';
 		}
 	}
 
@@ -63,6 +109,6 @@ class QuestionRow extends Row {
 	* @return {string} A string representing the percentage of correct students answering this question.
 	*/
 	getPercentage() {
-		return this.percentage_correct + '% correct';
+		return roundToPlaces(this.percentageCorrect, 2) + '% correct';
 	}
 }
