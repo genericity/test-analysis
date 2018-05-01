@@ -1,9 +1,17 @@
 {% include "header.html" %}
             <h2>Analyze questions
-                <span>Subtitle describing this page.</span>
+                <span>Describing the statistical quality of each test question.</span>
             </h2>
             <p>
-                Instructions on editing and removing questions. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Your items have been automatically analysed and poor quality items have been identified.
+                <ul>
+                    <li>Any items with negative discrimination are flagged in RED. You have the right to over-ride the recommendation to remove the item, but this would be considered unusual and not normal practice.</li>
+
+                    <li>Any items that 100% of students got right OR wrong, have already been removed from further analysis.  You may not add them back into the test.</li>
+                </ul>
+            </p>
+            <p>
+                Once you select NEXT, student performance and item difficulty will be re-calculated without the poor quality items.
             </p>
             <form id="questions" method="post" action="{{ url_for('grades_page') }}" enctype="multipart/form-data">
                 <table class="sortable-theme-minimal sorted-table" data-sortable>

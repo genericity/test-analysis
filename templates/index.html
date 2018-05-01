@@ -1,9 +1,21 @@
 {% include "header.html" %}
             <h2>Upload files
-                <span>Subtitle describing this page.</span>
+                <span>Preparing your test for analysis.</span>
             </h2>
             <p>
-                Instructions on uploading student data files. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                You can drag &amp; drop files or select files from your computer.
+            </p>
+            <p>
+                Two files are required:
+                <ol>
+                    <li><b>Student test data</b> file contains answers each student gave for each item. Use a CSV format. Each student goes on a separate row and each answer is separated by commas from the next question.
+                    </li>
+                    <li><b>Test version/Answer</b> file contains the correct answers for each item. Use a CSV format. If your test was scanned by the examination office the answer file should be in the format A=01, B=02, C=04, D=08, E=16, with a comma separating each question. If the items are already pre-scored as (0=wrong, 1=right), your answer key will be 1,1,1,… for each item in the test.
+                    </li>
+                </ol>
+            </p>
+            <p>
+                <b>Question text</b> is an optional file that contains the text for each item.
             </p>
             <section id="upload">
                 <div id="upload-area">

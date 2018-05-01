@@ -666,3 +666,13 @@ border-bottom: 2px solid #607d8b;
 .hidden {
     display: none;
 }
+
+b {
+    font-weight: 700;
+}
+
+#content ul li, #content ol li {
+    list-style-type: initial;
+    margin-left: 1em;
+    list-style-position: inside;
+}
