@@ -90,6 +90,12 @@ header h1 {
     letter-spacing: 3px;
 }
 
+header h1 em {
+    font-weight: 500;
+    font-style: normal;
+    color: #455A64;
+}
+
 /* Lists. */
 
 header ul, nav ul, footer ul {

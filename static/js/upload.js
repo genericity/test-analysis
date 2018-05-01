@@ -1,5 +1,8 @@
 // Initiate file upload handling.
 
+// TODO: move this
+sessionStorage.setItem('hasAnalyzedQuestions', false);
+
 new FileHandler([{
 		input: 'file-student-data',
 		label: 'label-student-data',

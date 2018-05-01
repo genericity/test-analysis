@@ -18,21 +18,21 @@ class ChartState {
       text: 'A/B',
       index: 0,
       fieldId: 'ab-boundary',
-      y: 0.5
+      y: parseFloat(document.getElementById('ab-boundary').value)
     }, this),
     new Divider({
       dividerId: 'line-divider-bc',
       text: 'B/C',
       index: 1,
       fieldId: 'bc-boundary',
-      y: -0.5
+      y: parseFloat(document.getElementById('bc-boundary').value)
     }, this),
     new Divider({
       dividerId: 'line-divider-cd',
       text: 'C/D',
       index: 2,
       fieldId: 'cd-boundary',
-      y: -2
+      y: parseFloat(document.getElementById('cd-boundary').value)
     }, this)
     ];
   }
@@ -108,8 +108,12 @@ class ChartState {
       const weights = [];
 
       for (const question of questions) {
-        // Round to one decimal place for better clustering.
-        weights.push(roundToPlaces(question.item_weight, 1));
+        if (question.isKept) {
+          // Round to one decimal place for better clustering.
+          weights.push(roundToPlaces(question.itemWeight, 1));
+        } else {
+          weights.push(NaN);
+        }
       }
 
       return weights;

@@ -9,6 +9,9 @@ app = Flask(__name__)
 app.debug = True
 # This should be locally configured.
 app.secret_key = 'a>Sx9dxf7xdf_xcb84002xdcN?xf6xabj;8?x83abe2j'
+DEFAULT_AB_BOUNDARY = 0.5
+DEFAULT_BC_BOUNDARY = -0.5
+DEFAULT_CD_BOUNDARY = -2
 
 # R setup.
 r = robjects.r
@@ -37,8 +40,6 @@ def questions_page():
 		if 'file-question-data' in request.files  and request.files['file-question-data'].filename != '':
 			question_data = request.files['file-question-data'].read()
 
-		session['hasAnalyzedQuestions'] = False
-
 		# Process. This will set session variables.
 		file_processing.save_raw_data(student_data, version_data, question_data)
 
@@ -55,11 +56,25 @@ def grades_page():
 		# Process the discarded questions.
 		file_processing.save_discarded_questions(discard)
 
-	return render_template('grades.html', grades = True)
+	boundaries = db.get_grade_boundaries(session['id'])
+	if boundaries:
+		return render_template('grades.html', grades = True, ab = boundaries[0], bc = boundaries[1], cd = boundaries[2])
+	else:
+		return render_template('grades.html', grades = True, ab = DEFAULT_AB_BOUNDARY, bc = DEFAULT_BC_BOUNDARY, cd = DEFAULT_CD_BOUNDARY)
 
-@app.route('/review')
+@app.route('/review', methods = ['GET', 'POST'])
 def review_page():
-    return render_template('review.html', review = True)
+	# The result of submitting the previous grades page.
+	# Process the data.
+	if request.method == 'POST':
+		# All the grade boundaries.
+		ab_boundary = request.form.get('ab-boundary') or DEFAULT_AB_BOUNDARY
+		bc_boundary = request.form.get('bc-boundary') or DEFAULT_BC_BOUNDARY
+		cd_boundary = request.form.get('cd-boundary') or DEFAULT_CD_BOUNDARY
+		# Save the boundaries into the database.
+		file_processing.save_boundaries(ab_boundary, bc_boundary, cd_boundary)
+
+	return render_template('review.html', review = True)
 
 @app.route('/export')
 def export_page():
@@ -77,7 +92,7 @@ def student_data():
 def init_db():
     with app.app_context():
         database = db.get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
+        with app.open_resource('schema.sql', mode = 'r') as f:
             database.cursor().executescript(f.read())
         database.commit()
 
@@ -87,3 +102,7 @@ def close_connection(exception):
     database = getattr(g, '_database', None)
     if database is not None:
         database.close()
+
+if __name__ == "__main__":
+	app.debug = False
+	app.run(host = "0.0.0.0", port = 80, threaded = True)

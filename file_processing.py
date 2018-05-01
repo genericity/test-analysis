@@ -62,6 +62,10 @@ def save_discarded_questions(discarded_list):
 	raw_discarded = ','.join(discarded_list)
 	db.insert_or_update_discarded(session['id'], raw_discarded)
 
+# Saves the grade boundaries.
+def save_boundaries(ab, bc, cd):
+	db.insert_or_update_boundaries(session['id'], ab, bc, cd)
+
 # Loads test data based on the session ID.
 def load_test():
 	if session['id'] is None:
@@ -93,11 +97,14 @@ def load_test():
 	raw_discarded = db.get_discarded(session_id)
 	discarded = []
 	# If there is, convert it into a list of integers.
-	if raw_discarded and not raw_discarded['questions'] is None:
+	if raw_discarded and not raw_discarded['questions'] is None and not len(raw_discarded['questions']) == 0:
 		discarded = raw_discarded['questions'].split(',')
 		discarded = map(int, discarded)
 
-	test = Test(students, versions, discarded = discarded)
+	# Retrieve grade boundaries if it exists.
+	boundaries = db.get_grade_boundaries(session_id)
+
+	test = Test(students, versions, discarded = discarded, boundaries = boundaries)
 
 	return test
 

@@ -38,6 +38,35 @@ def insert_or_update_discarded(session_id, discarded_str):
  	else:
  		query_db('update discarded set questions = ? where session_id = ? limit 1;', [discarded_str, session_id], cursor = cursor)
 
+# Inserts or updates the selected grade boundaries into the database.
+def insert_or_update_boundaries(session_id, ab, bc, cd):
+ 	cursor = get_db().cursor()
+
+ 	if not session_id:
+ 		return
+
+ 	boundaries_str = str(ab) + ',' + str(bc) + ',' + str(cd)
+
+ 	# If there are no existing rows in the database, insert.
+ 	if not get_grade_boundaries(session_id):
+ 		query_db('insert into boundaries (session_id, boundaries) values (?,?);', [session_id, boundaries_str], cursor = cursor)
+ 	# Otherwise, update the existing entry.
+ 	else:
+ 		query_db('update boundaries set boundaries = ? where session_id = ? limit 1;', [boundaries_str, session_id], cursor = cursor)
+
+# Retrieves the grade boundaries from the database.
+def get_grade_boundaries(session_id):
+ 	result = query_db('select * from boundaries where session_id = ?', [session_id], one = True)
+
+ 	if result:
+	 	# Split into the three boundaries.
+	 	boundaries = result['boundaries'].split(',')
+	 	# Convert to numeric values and return.
+	 	return [float(i) for i in boundaries]
+
+	# Return None if there were no results.
+	return None
+
 # Retrieves response data from the database given a session id.
 def get_responses(session_id):
 	result = query_db('select * from responses where ROWID = ?;', [session_id], one = True)

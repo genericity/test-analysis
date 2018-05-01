@@ -20,9 +20,6 @@ class Question:
 		if self.discrimination is None:
 			self.test.calculate_question_stats()
 
-		# Update if this question should be discarded.
-		self.discard = (self.discrimination < 0) or self.discard
-
 		return self.discrimination
 
 	# Retrieve the item weight for a specific question.

@@ -131,6 +131,8 @@ class DoubleDotPlot {
 
     for (const value of data) {
       if (isNaN(value)) {
+        // Insert a placeholder.
+        points.push({});
         continue;
       }
     	if (existing[value] != undefined) {

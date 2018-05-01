@@ -19,7 +19,6 @@ function studentHandler() {
 
 			i += 1
 		}
-
 		return students;
 	});
 }

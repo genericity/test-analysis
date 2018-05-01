@@ -18,6 +18,21 @@ View instructions on how to install Python for your operating system here: [http
 
 Select the latest version of Python 2 to install.
 
+## Install pip
+
+Ensure you can run pip from the command-line.
+
+View instructions on how to install pip here: [https://packaging.python.org/tutorials/installing-packages/](https://packaging.python.org/tutorials/installing-packages/#ensure-you-can-run-pip-from-the-command-line)
+
+For Ubuntu, python-pip is in the universe repository.
+
+```
+sudo apt-get install software-properties-common
+sudo apt-add-repository universe
+sudo apt-get update
+sudo apt-get install python-pip
+```
+
 ## Install Flask
 
 View instructions on how to install Flask here: [http://flask.pocoo.org/docs/0.12/installation/](http://flask.pocoo.org/docs/0.12/installation/)
@@ -27,7 +42,6 @@ View instructions on how to install Flask here: [http://flask.pocoo.org/docs/0.1
 Select a mirror to install R here:
 [https://cran.r-project.org/mirrors.html](https://cran.r-project.org/mirrors.html)
 
-
 ## Install rpy2
 
 Run `pip install rpy2==2.8.6` to install rpy2.  
@@ -35,15 +49,17 @@ An older version is required as rpy2 does not support Python 2 anymore.
 
 See also: [http://rpy.sourceforge.net/rpy2/doc-dev/html/overview.html](http://rpy.sourceforge.net/rpy2/doc-dev/html/overview.html)
 
+Ubuntu users may wish to try `sudo apt install python-rpy2`.
+
 ## Install the ltm package
 
 
-Open R (type `r` from the commandline) and type:  
+Open R (type `r` or `R` from the commandline) and type:  
 
 `install.packages("ltm")`
 
 Select a mirror to install the ltm package and all dependencies.  
-Type `quit()` to exit R.
+Type `quit()` to exit R. Type `y` to save your changes.
 
 ## Download this project
 
@@ -55,7 +71,7 @@ Extract [the downloaded files](https://github.com/genericity/test-analysis/archi
 
 Open Python (type `python` from the commandline) and type:  
   
-`from db import init_db`  
+`from index import init_db`  
 `init_db()`
 
 This sets up the SQLite database.  
@@ -63,10 +79,15 @@ Type `quit()` to exit Python.
 
 ## Run the tool
 
-Type into the command-line:
+To run in development mode, type into the command-line:
 
 `export FLASK_APP=index.py`  
 `python -m flask run`
 
+To run in production mode, type into the commandline:  
+  
+`sudo python index.py &`  or, to log:   
+`sudo python index.py >> log.txt 2>&1 &`  
+  
 Unit tests can be run by navigating to the test directory (`cd test`) and running:  
 `python -m unittest -v test_test`

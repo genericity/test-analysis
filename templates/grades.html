@@ -15,19 +15,20 @@
                 </div>
                 <div id="grade-boundaries">
                     <h3>Grades</h3>
-                    <div id="grade-boundary-numbers">
-                        <label for="ab-boundary">A/B boundary</label><input type="text" class="input-field" id="ab-boundary" value="2">
-                        <label for="bc-boundary">B/C boundary</label><input type="text" class="input-field" id="bc-boundary" value="0">
-                        <label for="cd-boundary">C/D boundary</label><input type="text" class="input-field" id="cd-boundary" value="-2">
-                    </div>
+                    <form id="grade-boundary-numbers" method="post" action="{{ url_for('review_page') }}" enctype="multipart/form-data">
+                        <label for="ab-boundary">A/B boundary</label><input type="text" class="input-field" id="ab-boundary" name="ab-boundary" value="{{ ab }}">
+                        <label for="bc-boundary">B/C boundary</label><input type="text" class="input-field" id="bc-boundary" name="bc-boundary" value="{{ bc }}">
+                        <label for="cd-boundary">C/D boundary</label><input type="text" class="input-field" id="cd-boundary" name="cd-boundary" value="{{ cd }}">
+                        <input type="submit" id="submit-form" class="hidden" />
+                    </form>
                 </div>
             </section>
             <a class="button reversed-button" id="back-button" href="{{ url_for('questions_page') }}">
                 <span class="button-icon material-icons">arrow_back</span>
                 <span class="button-text">Back</span>
             </a>
-            <a class="button" id="next-button" href="{{ url_for('review_page') }}">
+            <label class="button" id="next-button" for="submit-form">
                 <span class="button-text">Next</span>
                 <span class="button-icon material-icons">arrow_forward</span>
-            </a>
+            </label>
 {% include "footer.html" %}

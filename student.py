@@ -65,63 +65,141 @@ class Student:
 	def is_right(self, index):
 		return self.scores[index]
 
-	# Returns a numeric grade from a percentage given a dictionary of grade boundaries.
-	def percentage_to_grade(self, percentage, grade_boundaries = None):
+	# Converts an array with the A/B, B/C, and C/D grade boundaries to find a grade boundary key in item score terms.
+	# min and max are the minimum and maximum scores scored.
+	def item_score_to_grade_boundaries(self, scores, min_score, max_score):
+		ab_lowest = scores[0]
+		bc_lowest = scores[1]
+		cd_lowest = scores[2]
+
+		# Get the range of each 'section'.
+		range_a = max(max_score - ab_lowest, 0)
+		range_b = max(ab_lowest - bc_lowest, 0)
+		range_c = max(bc_lowest - cd_lowest, 0)
+		range_d = max(cd_lowest - min_score, 0)
+
+		# Check for ranges of 0.
+		grade_boundaries = [
+		{
+			'grade': 'A+',
+			# If the range is 0, everyone should get A so no-one gets A+. This is set to the top 33% of scores in the A range.
+			'value': ab_lowest + (range_a / 3) * 2 if (range_a != 0) else max_score + 1
+		},
+		{
+			'grade': 'A',
+			# This is the default value if the range is 0. This is set to the middle 33% of scores in the A range.
+			'value': ab_lowest + (range_a / 3) * 1
+		},
+		{
+			'grade': 'A-',
+			# This is set to the bottom 33% of scores in the A range.
+			'value': ab_lowest + (range_a / 3) * 0
+		},
+		{
+			'grade': 'B+',
+			# If the range is 0, everyone should get B so no-one gets B+. This is set to the top 33% of scores in the B range.
+			'value': bc_lowest + (range_b / 3) * 2 if (range_b != 0) else max_score + 1
+		},
+		{
+			'grade': 'B',
+			# This is the default value if the range is 0. This is set to the middle 33% of scores in the B range.
+			'value': bc_lowest + (range_b / 3) * 1
+		},
+		{
+			'grade': 'B-',
+			# This is set to the bottom 33% of scores in the A range.
+			'value': bc_lowest + (range_b / 3) * 0
+		},
+		{
+			'grade': 'C+',
+			# If the range is 0, everyone should get C so no-one gets C+. This is set to the top 33% of scores in the C range.
+			'value': cd_lowest + (range_c / 3) * 2 if (range_c != 0) else max_score + 1
+		},
+		{
+			'grade': 'C',
+			# This is the default value if the range is 0. This is set to the middle 33% of scores in the C range.
+			'value': cd_lowest + (range_c / 3) * 1
+		},
+		{
+			'grade': 'C-',
+			# This is set to the bottom 33% of scores in the C range.
+			'value': cd_lowest + (range_c / 3) * 0
+		},
+		{
+			'grade': 'D+',
+			# If the range is 0, everyone should get D so no-one gets D+. This is set to the top 33% of scores in the D range.
+			'value': min_score + (range_d / 3) * 2 if (range_d != 0) else max_score + 1
+		},
+		{
+			'grade': 'D',
+			# This is the default value if the range is 0. This is set to the middle 33% of scores in the C range.
+			'value': min_score + (range_d / 3) * 1
+		},
+		{
+			'grade': 'D-',
+			'value': min_score
+		},
+		]
+
+		return grade_boundaries
+
+	# Returns a numeric grade from a value (either percentage or item score) given a dictionary of grade boundaries.
+	def grade_key_to_grade(self, value, grade_boundaries = None):
 		if not grade_boundaries:
 			# Standard University of Auckland grade boundaries.
 			grade_boundaries = [
 			{
 				'grade': 'A+',
-				'percentage': 90
+				'value': 90
 			},
 			{
 				'grade': 'A',
-				'percentage': 85
+				'value': 85
 			},
 			{
 				'grade': 'A-',
-				'percentage': 80
+				'value': 80
 			},
 			{
 				'grade': 'B+',
-				'percentage': 75
+				'value': 75
 			},
 			{
 				'grade': 'B',
-				'percentage': 70
+				'value': 70
 			},
 			{
 				'grade': 'B-',
-				'percentage': 65
+				'value': 65
 			},
 			{
 				'grade': 'C+',
-				'percentage': 60
+				'value': 60
 			},
 			{
 				'grade': 'C',
-				'percentage': 55
+				'value': 55
 			},
 			{
 				'grade': 'C-',
-				'percentage': 50
+				'value': 50
 			},
 			{
 				'grade': 'D+',
-				'percentage': 45
+				'value': 45
 			},
 			{
 				'grade': 'D',
-				'percentage': 40
+				'value': 40
 			},
 			{
 				'grade': 'D-',
-				'percentage': 0
+				'value': 0
 			},
 			]
 
 		for grade in grade_boundaries:
-			if percentage >= grade['percentage']:
+			if value >= grade['value']:
 				return grade['grade']
 
 		return 'D-'

@@ -6,7 +6,7 @@ from rpy2.robjects.packages import importr
 
 # Represents an entire test.
 class Test:
-	def __init__(self, students, versions, text = None, discarded = []):
+	def __init__(self, students, versions, text = None, discarded = [], boundaries = None):
 		# {!Array<!Student>} An array of students.
 		self.students = students
 		# {Object<string, !Array<number>>} Dictionary mapping the version names to their answer keys.
@@ -25,6 +25,18 @@ class Test:
 		self.questions = self.init_questions(text, discarded)
 		# {number} The length of the test.
 		self.test_length = len(self.questions)
+
+		# {number} The grade boundary between A and B.
+		self.ab = None
+		# {number} The grade boundary between B and C.
+		self.bc = None
+		# {number} The grade boundary between C and D.
+		self.cd = None
+
+		if boundaries:
+			self.ab = boundaries[0]
+			self.bc = boundaries[1]
+			self.cd = boundaries[2]
 
 	# Score all the students.
 	def score_all(self):
@@ -130,7 +142,7 @@ class Test:
 		# Use ltm.
 		importr('ltm')
 		robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
-		
+
 		# Store a row of discrimination coefficients.
 		discriminations = robjects.r('item_weights[1]$coefficients[,2]')
 		# Store a row of item weights.
@@ -198,10 +210,39 @@ class Test:
 
 		return response_matrix
 
+	def min_student_location(self):
+		min_score = 100000
+		for i in range (len(self.students)):
+			location = self.students[i].get_location()
+			if location < min_score and not location == None:
+				min_score = location
+
+		return min_score
+
+	def max_student_location(self):
+		max_score = -100000
+		for i in range (len(self.students)):
+			location = self.students[i].get_location()
+			if location > max_score and not location == None:
+				max_score = location
+
+		return max_score
+
 	# Outputs question data in a CSV-like format, comma-delineated.
 	def to_student_csv(self):
+		if (len(self.students) == 0):
+			return ''
+
 		# Full array of student data.
 		students = []
+
+		# Grade boundary key.
+		boundaries = [self.ab, self.bc, self.cd]
+		min_location = self.min_student_location()
+		max_location = self.max_student_location()
+		print boundaries, min_location, max_location
+		grade_boundaries = self.students[0].item_score_to_grade_boundaries(boundaries, min_location, max_location)
+		print grade_boundaries
 
 		# Go through all the students and retrieve information about each one.
 		# Limit the range to 50 to avoid freezing up.
@@ -211,11 +252,11 @@ class Test:
 
 			student_id = student.id
 			raw_percentage = student.raw_percentage()
-			raw_grade = student.percentage_to_grade(raw_percentage)
+			raw_grade = student.grade_key_to_grade(raw_percentage)
 			analyzed_percentage = 0
 			analyzed_score = student.get_location()
 			recommended_percentage = 0
-			recommended_grade = 0
+			recommended_grade = student.grade_key_to_grade(student.get_location(), grade_boundaries)
 
 			# Create the question array.
 			student_array = []
