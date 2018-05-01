@@ -108,7 +108,7 @@ class ChartState {
       const weights = [];
 
       for (const question of questions) {
-        if (question.isKept) {
+        if (!question.removed) {
           // Round to one decimal place for better clustering.
           weights.push(roundToPlaces(question.itemWeight, 1));
         } else {
