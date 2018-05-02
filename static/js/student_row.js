@@ -38,6 +38,7 @@ class StudentRow extends Row {
 	*/
 	gradeToNum(grade) {
 		const gradeMap = {
+			// Arbitrary values. The only restriction is that they are in descending order.
 			9: 'A+',
 			8: 'A',
 			7: 'A-',
@@ -47,7 +48,9 @@ class StudentRow extends Row {
 			3: 'C+',
 			2: 'C',
 			1: 'C-',
-			0: 'D'
+			0.8: 'D+',
+			0.5: 'D',
+			0.2: 'D-'
 		};
 
 		return parseInt(getKeyByValue(gradeMap, grade), 10);

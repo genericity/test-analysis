@@ -253,8 +253,8 @@ class Test:
 			raw_grade = student.grade_key_to_grade(raw_percentage)
 			analyzed_percentage = 0
 			analyzed_score = student.get_location()
-			recommended_percentage = 0
-			recommended_grade = student.grade_key_to_grade(student.get_location(), grade_boundaries)
+			recommended_percentage = student.grade_key_to_percentage(student.get_location(), min_location, max_location, grade_boundaries = grade_boundaries)
+			recommended_grade = student.grade_key_to_grade(student.get_location(), grade_boundaries = grade_boundaries)
 
 			# Create the question array.
 			student_array = []

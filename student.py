@@ -2,6 +2,77 @@ import process_utils
 
 # Constants.
 TEST_LENGTH = 30
+# Standard University of Auckland grade boundaries.
+DEFAULT_GRADE_BOUNDARIES = [
+{
+	'grade': 'A+',
+	'value': 90
+},
+{
+	'grade': 'A',
+	'value': 85
+},
+{
+	'grade': 'A-',
+	'value': 80
+},
+{
+	'grade': 'B+',
+	'value': 75
+},
+{
+	'grade': 'B',
+	'value': 70
+},
+{
+	'grade': 'B-',
+	'value': 65
+},
+{
+	'grade': 'C+',
+	'value': 60
+},
+{
+	'grade': 'C',
+	'value': 55
+},
+{
+	'grade': 'C-',
+	'value': 50
+},
+{
+	'grade': 'D+',
+	'value': 45
+},
+{
+	'grade': 'D',
+	'value': 40
+},
+{
+	'grade': 'D-',
+	'value': 0
+},
+]
+
+# Standard UoA grade ranges.
+DEFAULT_UOA_GRADE_RANGES = {
+	'A': {
+		'range': 20,
+		'lowest': 80
+	},
+	'B': {
+		'range': 15,
+		'lowest': 65
+	},
+	'C': {
+		'range': 15,
+		'lowest': 50
+	},
+	'D': {
+		'range': 50,
+		'lowest': 15
+	}
+}
 
 # Class representing a single student.
 class Student:
@@ -83,8 +154,7 @@ class Student:
 		{
 			'grade': 'A+',
 			# If the range is 0, everyone should get A so no-one gets A+. This is set to the top 33% of scores in the A range.
-			'value': ab_lowest + (range_a / 3) * 2 if (range_a != 0) else max_score + 1
-		},
+			'value': ab_lowest + (range_a / 3) * 2 if (range_a != 0) else max_score + 1		},
 		{
 			'grade': 'A',
 			# This is the default value if the range is 0. This is set to the middle 33% of scores in the A range.
@@ -144,60 +214,7 @@ class Student:
 		return grade_boundaries
 
 	# Returns a numeric grade from a value (either percentage or item score) given a dictionary of grade boundaries.
-	def grade_key_to_grade(self, value, grade_boundaries = None):
-		if not grade_boundaries:
-			# Standard University of Auckland grade boundaries.
-			grade_boundaries = [
-			{
-				'grade': 'A+',
-				'value': 90
-			},
-			{
-				'grade': 'A',
-				'value': 85
-			},
-			{
-				'grade': 'A-',
-				'value': 80
-			},
-			{
-				'grade': 'B+',
-				'value': 75
-			},
-			{
-				'grade': 'B',
-				'value': 70
-			},
-			{
-				'grade': 'B-',
-				'value': 65
-			},
-			{
-				'grade': 'C+',
-				'value': 60
-			},
-			{
-				'grade': 'C',
-				'value': 55
-			},
-			{
-				'grade': 'C-',
-				'value': 50
-			},
-			{
-				'grade': 'D+',
-				'value': 45
-			},
-			{
-				'grade': 'D',
-				'value': 40
-			},
-			{
-				'grade': 'D-',
-				'value': 0
-			},
-			]
-
+	def grade_key_to_grade(self, value, grade_boundaries = DEFAULT_GRADE_BOUNDARIES):
 		for grade in grade_boundaries:
 			if value >= grade['value']:
 				return grade['grade']
@@ -224,3 +241,31 @@ class Student:
 			self.test.calculate_student_stats()
 
 		return self.location
+
+	# Returns a percentage grade from a value given a dictionary of grade boundaries.
+	def grade_key_to_percentage(self, value, min_score, max_score, grade_boundaries = DEFAULT_GRADE_BOUNDARIES):
+		ranges = DEFAULT_UOA_GRADE_RANGES
+		# The highest and lowest values for this range.
+		highest = max_score
+		lowest = min_score
+		# For each grade.
+		for grade in grade_boundaries:
+			letter_grade = grade['grade']
+			# Check if the value is in the grade boundaries.
+			if value >= grade['value'] and len(letter_grade) > 1 and letter_grade[1] == '-':
+				lowest = grade['value']
+				# Set the letter grade, and lowest possible value.
+				# Cut the letter grade to one character.
+				if len(letter_grade) > 1:
+					letter_grade = letter_grade[0]
+				grade_range = highest - lowest
+				# Factor converting between the value range and the percentage range.
+				factor = ranges[letter_grade]['range'] / grade_range
+				part_in_grade_range = (value - lowest)
+				# The lowest percentage of that grade, plus the percentage * the range.
+				return ranges[letter_grade]['lowest'] + (factor * part_in_grade_range)
+			elif len(letter_grade) > 1 and letter_grade == '-':
+				# Change the highest boundary to the previous grade.
+				highest = grade['value']
+
+		return 0
