@@ -27,11 +27,11 @@ class Test:
 		self.test_length = len(self.questions)
 
 		# {number} The grade boundary between A and B.
-		self.ab = None
+		self.ab = 0.5
 		# {number} The grade boundary between B and C.
-		self.bc = None
+		self.bc = -0.5
 		# {number} The grade boundary between C and D.
-		self.cd = None
+		self.cd = -2
 
 		if boundaries:
 			self.ab = boundaries[0]
@@ -240,9 +240,7 @@ class Test:
 		boundaries = [self.ab, self.bc, self.cd]
 		min_location = self.min_student_location()
 		max_location = self.max_student_location()
-		print boundaries, min_location, max_location
 		grade_boundaries = self.students[0].item_score_to_grade_boundaries(boundaries, min_location, max_location)
-		print grade_boundaries
 
 		# Go through all the students and retrieve information about each one.
 		# Limit the range to 50 to avoid freezing up.

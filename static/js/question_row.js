@@ -51,9 +51,6 @@ class QuestionRow extends Row {
 		this.notRecommended = notRecommended;
 		this.removed = removed;
 
-		// Generate a checkbox based on if this question was kept.
-		this.data.push(this.generateToggle(this.removed));
-
 		if (this.discrimination < 0) {
 			this.notRecommended = true;
 		}
@@ -61,6 +58,9 @@ class QuestionRow extends Row {
 		if (this.percentageCorrect == 0 || this.percentageCorrect == 100) {
 			this.invalidDifficulty = true;
 		}
+
+		// Generate a checkbox based on if this question was kept.
+		this.data.push(this.generateToggle(this.removed));
 	}
 
 	/*
@@ -79,7 +79,6 @@ class QuestionRow extends Row {
 		if (sessionStorage.getItem('hasAnalyzedQuestions') == 'true') {
 			checked = removed;
 		} else {
-			sessionStorage.setItem('hasAnalyzedQuestions', true);
 			checked = (this.invalidDifficulty || this.notRecommended ? true : false);
 		}
 

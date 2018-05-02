@@ -279,4 +279,6 @@ class ChartState {
 window.onload = () => {
   const chartState = new ChartState();
   chartState.newChart();
+  // Mark the user as being finished with analysis.
+  sessionStorage.setItem('hasAnalyzedQuestions', true);
 }

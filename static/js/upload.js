@@ -2,6 +2,7 @@
 
 // TODO: move this
 sessionStorage.setItem('hasAnalyzedQuestions', false);
+console.log(sessionStorage.getItem('hasAnalyzedQuestions'))
 
 new FileHandler([{
 		input: 'file-student-data',
