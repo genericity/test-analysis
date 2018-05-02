@@ -58,8 +58,8 @@ class StudentRow extends Row {
 	*/
 	status() {
 		// Determine if the change to the student is good, bad, or neutral.
-		const newGrade = this.data[5];
-		const oldGrade = this.data[4];
+		const newGrade = this.data[6];
+		const oldGrade = this.data[2];
 
 		// The new grade is better than the old grade.
 		if (this.gradeToNum(newGrade) > this.gradeToNum(oldGrade)) {
