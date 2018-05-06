@@ -9,6 +9,8 @@ let numNeutralPercent = 0;
 let numDownOnePercent = 0;
 let numDownTwoPercent = 0;
 
+const spinner = new Spinner(document.getElementById('students-table'));
+
 studentHandler().then((students) => {
 	// Generate the entire block.
 	let all_students = '';
@@ -58,4 +60,6 @@ studentHandler().then((students) => {
 	document.getElementById('percentage-0').innerHTML = numNeutralPercent;
 	document.getElementById('percentage--1').innerHTML = numDownOnePercent;
 	document.getElementById('percentage--2').innerHTML = numDownTwoPercent;
+
+	spinner.hide();
 });

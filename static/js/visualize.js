@@ -35,6 +35,9 @@ class ChartState {
       y: parseFloat(document.getElementById('cd-boundary').value)
     }, this)
     ];
+
+    /* {!Spinner} A spinner to display while the graph loads. */
+    this.spinner = new Spinner(document.getElementById('canvas-container'));
   }
 
   /**
@@ -242,6 +245,10 @@ class ChartState {
 
       this.regenerateColours();
       this.chart.update();
+
+      if (this.spinner) {
+        this.spinner.hide();
+      }
     });
   }
 
@@ -276,9 +283,7 @@ class ChartState {
 }
 
 // Initialization when the window loads.
-window.onload = () => {
-  const chartState = new ChartState();
-  chartState.newChart();
-  // Mark the user as being finished with analysis.
-  sessionStorage.setItem('hasAnalyzedQuestions', true);
-}
+const chartState = new ChartState();
+chartState.newChart();
+// Mark the user as being finished with analysis.
+sessionStorage.setItem('hasAnalyzedQuestions', true);
