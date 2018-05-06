@@ -222,17 +222,17 @@ class Student:
 		return 'D-'
 
 	# Returns the raw percentage of questions correct.
-	def raw_percentage(self):
+	def raw_percentage(self, discarded = []):
 		num_correct = 0
 		for i in range(0, len(self.scores)):
-			if self.scores[i]:
+			if self.scores[i] and i not in discarded:
 				num_correct += 1
 
 		# Check for division by zero errors, and force the percentage to be a float.
 		if len(self.scores) == 0:
 			return 0
 		else:
-			return num_correct / (len(self.scores) * 1.0) * 100
+			return num_correct / ((len(self.scores) - len(discarded)) * 1.0) * 100
 
 	# Finds the location for this student..
 	def get_location(self):

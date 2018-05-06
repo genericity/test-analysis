@@ -23,6 +23,8 @@ class Test:
 
 		# {!Array<!Question>} The array of questions within the test.
 		self.questions = self.init_questions(text, discarded)
+		# {!Array<number>} Question indexes that are discarded.
+		self.discarded = discarded
 		# {number} The length of the test.
 		self.test_length = len(self.questions)
 
@@ -243,15 +245,13 @@ class Test:
 		grade_boundaries = self.students[0].item_score_to_grade_boundaries(boundaries, min_location, max_location)
 
 		# Go through all the students and retrieve information about each one.
-		# Limit the range to 50 to avoid freezing up.
 		for i in range (0, len(self.students)):
-		# for i in range(0, 50):
 			student = self.students[i]
 
 			student_id = student.id
 			raw_percentage = student.raw_percentage()
 			raw_grade = student.grade_key_to_grade(raw_percentage)
-			analyzed_percentage = 0
+			analyzed_percentage = student.raw_percentage(discarded = self.discarded)
 			analyzed_score = student.get_location()
 			recommended_percentage = student.grade_key_to_percentage(student.get_location(), min_location, max_location, grade_boundaries = grade_boundaries)
 			recommended_grade = student.grade_key_to_grade(student.get_location(), grade_boundaries = grade_boundaries)
