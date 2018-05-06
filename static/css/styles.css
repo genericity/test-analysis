@@ -81,6 +81,10 @@ h1 {
     margin: 32px 0 32px 0;
 }
 
+h3 {
+    font-size: 28px;
+}
+
 header h1 {
     color: #424242;
     display: inline-block;

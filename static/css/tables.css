@@ -1,10 +1,10 @@
-table.sorted-table {
+table.sorted-table, #statistics-table {
 	margin: 2em 0;
 	display: block;
 	width: 100%;
 }
 
-table.sorted-table th, table.sorted-table td {
+table.sorted-table th, table.sorted-table td, #statistics-table td {
 	text-align: center;
 	color: #424242;
 	width: 2000px; /* Ensure tables take up all of the width. */
@@ -93,7 +93,7 @@ table[data-sortable] th:after {
 }
 
 /* Reset table styles. */
-table[data-sortable].sorted-table th:after {
+table[data-sortable].sorted-table th:after, #statistics-table th:after {
 	content: '';
 	border: none;
 	height: initial;
@@ -121,4 +121,70 @@ table[data-sortable] th[data-sorted-direction="ascending"]:after {
 
 table[data-sortable] th[data-sorted-direction="descending"]:after {
 	content: 'expand_more';
+}
+
+/* Statistics table styles. */
+#statistics-table {
+	border-collapse: collapse;
+}
+
+#statistics-table .table-icon {
+	padding-left: 0.8em;
+}
+
+#statistics-table .good.table-icon {
+	border-left: 5px solid #7dd77d;
+	color: #7dd77d;
+}
+
+#statistics-table .neutral.table-icon {
+	border-left: 5px solid transparent;
+}
+
+#statistics-table .poor.table-icon {
+	border-left: 5px solid #ff818d;
+	color: #ff818d;
+}
+
+#statistics-table td {
+	text-align: left;
+	color: #777;
+	padding-top: 0.8em;
+	padding-bottom: 0.8em;
+}
+
+.table-statistic-number {
+	font-size: 24px;
+	padding: 0 8px;
+	color: #444;
+}
+
+.table-statistic-number:after {
+	content: 'students';
+	padding-left: 8px;
+}
+
+#statistics-table .table-icon, #statistics-table .table-grade, #statistics-table .table-percentage {
+	font-family: 'Material Icons', 'Roboto';
+	font-weight: normal;
+	font-style: normal;
+	line-height: 1;
+	text-transform: none;
+	letter-spacing: normal;
+	word-wrap: normal;
+	white-space: nowrap;
+	direction: ltr;
+
+	/* Support for all WebKit browsers. */
+	-webkit-font-smoothing: antialiased;
+	/* Support for Safari and Chrome. */
+	text-rendering: optimizeLegibility;
+	/* Support for Firefox. */
+	-moz-osx-font-smoothing: grayscale;
+	/* Support for IE. */
+	font-feature-settings: 'liga';
+	visibility: visible;
+	font-size: 28px;
+	width: 2em;
+	padding-right: 0.6em;
 }

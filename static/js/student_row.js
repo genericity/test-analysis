@@ -25,10 +25,12 @@ class StudentRow extends Row {
 
 		// Set variables.
 		this.id = original[0];
-		this.raw_percentage = original[1];
-		this.analyzed_percentage = data[3];
+		this.rawPercentage = original[1];
+		this.analyzedPercentage = original[3];
 		this.location = original[4];
-		this.recommended_percentage = original[5];
+		this.recommendedPercentage = original[5];
+		this.oldGrade = original[2];
+		this.newGrade = original[6];
 	}
 
 	/*
@@ -48,10 +50,10 @@ class StudentRow extends Row {
 			3: 'C+',
 			2: 'C',
 			1: 'C-',
-			0.8: 'D+',
-			0.5: 'D',
-			0.2: 'D-'
+			0: 'D+',
 		};
+		gradeMap[-1] = 'D';
+		gradeMap[-2] = 'D-'
 
 		return parseInt(getKeyByValue(gradeMap, grade), 10);
 	}
@@ -61,8 +63,8 @@ class StudentRow extends Row {
 	*/
 	status() {
 		// Determine if the change to the student is good, bad, or neutral.
-		const newGrade = this.data[6];
-		const oldGrade = this.data[2];
+		const newGrade = this.newGrade;
+		const oldGrade = this.oldGrade;
 
 		// The new grade is better than the old grade.
 		if (this.gradeToNum(newGrade) > this.gradeToNum(oldGrade)) {
@@ -79,6 +81,6 @@ class StudentRow extends Row {
 	* @return {string} A string representing the percentage of correct answers.
 	*/
 	getPercentage() {
-		return 'Raw percentage: ' + roundToPlaces(this.raw_percentage, 2) + '%';
+		return 'Raw percentage: ' + roundToPlaces(this.rawPercentage, 2) + '%';
 	}
 }
