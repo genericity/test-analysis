@@ -56,5 +56,10 @@
     <!-- For visualization. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/visualize.js') }}"></script>
     {% endif %}
+
+    {% if export %}
+    <!-- Download scripts. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/export.js') }}"></script>
+    {% endif %}
 </body>
 </html>

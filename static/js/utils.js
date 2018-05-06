@@ -102,4 +102,33 @@ function strToBool(string) {
     return Boolean(string);
   }
 }
- 
+
+const Utils = {
+  // Allow a file to be downloaded whenever a user clicks on a certain element.
+  downloadLink: function (element, data, filename) {
+    // Whenever the element is clicked.
+    element.onclick = (e) => {
+      // Stop the link from firing.
+      e.preventDefault();
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = data;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      delete link;
+    };
+  },
+
+  // Converts bytes to a human-readable size.
+  bytesToSize: function(bytes) {
+    // Sizes.
+    const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+    // 0 bytes.
+    if (bytes == 0) {
+      return '0 bytes';
+    }
+    const largest = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, largest), 2) + ' ' + sizes[largest];
+  }
+}
