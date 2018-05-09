@@ -18,31 +18,47 @@
                 <b>Question text</b> is an optional file that contains the text for each item.
             </p>
             <section id="upload">
-                <div id="upload-area">
-                    <div>
-                        <i class="icon">
-                            cloud_upload
-                        </i>
-                        <span id="upload-drag-description">
-                            Drop files here
-                        </span>
-                    </div>
-                </div>
                 <form id="upload-statuses" method="post" action="{{ url_for('questions_page') }}" enctype="multipart/form-data">
-                    <div class="upload-status">
-                        <input type="file" name="file-student-data" id="file-student-data" class="upload-file" />
-                        <label for="file-student-data" id="label-student-data"><span><em>Choose</em> a student test data file</span></label>
-                        <span class="upload-subtext">Required</span>
+                    <h3>Choose your format</h3>
+                    <div id="upload-formats">
+                        <input type="radio" class="upload-format-box" id="file-type-prescored" name="file-type" value="prescored" checked>
+                        <label for="file-type-prescored" class="upload-card upload-format">
+                            <h4>Prescored CSV</h4>
+                            <p>One prescored CSV file with question right/wrong only.</p>
+                        </label>
+                        <input type="radio" class="upload-format-box" id="file-type-answer-response" name="file-type" value="response-answer">
+                        <label for="file-type-answer-response" class="upload-card upload-format">
+                            <h4>Response &amp; answer</h4>
+                            <p>One fixed-width student response file.</p>
+                            <p>One tab-delimited answer file.</p>
+                        </label>
+                        <input type="radio" class="upload-format-box" id="file-type-other" name="file-type" value="">
+                        <label for="file-type-other" class="upload-card upload-format">
+                            <h4>[Pending format]</h4>
+                            <p>Description of a pending format here.</p>
+                        </label>
                     </div>
-                    <div class="upload-status">
-                        <input type="file" name="file-version-data" id="file-version-data" class="upload-file" />
-                        <label for="file-version-data" id="label-version-data"><span><em>Choose</em> a test version/answer file</span></label>
-                        <span class="upload-subtext">Required</span>
-                    </div>
-                    <div class="upload-status">
-                        <input type="file" name="file-question-data" id="file-question-data" class="upload-file" />
-                        <label for="file-question-data" id="label-question-data"><span><em>Choose</em> a question text file</span></label>
-                        <span class="upload-subtext">Optional</span>
+                    <div id="upload-cards">
+                        <div class="upload-status upload-card">
+                            <input type="file" name="file-prescored-data" id="file-prescored-data" class="upload-file" />
+                            <label for="file-prescored-data" id="label-prescored-data"><span><em>Choose</em> a prescored CSV file</span></label>
+                            <span class="upload-subtext">Required</span>
+                        </div>
+                        <div class="upload-status upload-card hidden">
+                            <input type="file" name="file-student-data" id="file-student-data" class="upload-file" />
+                            <label for="file-student-data" id="label-student-data"><span><em>Choose</em> a student response file</span></label>
+                            <span class="upload-subtext">Required</span>
+                        </div>
+                        <div class="upload-status upload-card hidden">
+                            <input type="file" name="file-version-data" id="file-version-data" class="upload-file" />
+                            <label for="file-version-data" id="label-version-data"><span><em>Choose</em> an answer file</span></label>
+                            <span class="upload-subtext">Required</span>
+                        </div>
+                        <div class="upload-status upload-card">
+                            <input type="file" name="file-question-data" id="file-question-data" class="upload-file" />
+                            <label for="file-question-data" id="label-question-data"><span><em>Choose</em> a question text file</span></label>
+                            <span class="upload-subtext">Optional</span>
+                        </div>
                     </div>
                     <input type="submit" id="submit-form" class="hidden" />
                 </form>

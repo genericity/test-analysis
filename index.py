@@ -32,13 +32,26 @@ def questions_page():
 		version_data = None
 		question_data = None
 
-		# Read the file data.
-		if 'file-student-data' in request.files and request.files['file-student-data'].filename != '':
-			student_data = request.files['file-student-data'].read()
-		if 'file-version-data' in request.files and request.files['file-version-data'].filename != '':
-			version_data = request.files['file-version-data'].read()
+		# Type of data format.
+		file_type = request.form['file-type']
+
+		# Response and answer files.
+		if file_type == 'response-answer':
+			# Read the file data.
+			if 'file-student-data' in request.files and request.files['file-student-data'].filename != '':
+				student_data = request.files['file-student-data'].read()
+			if 'file-version-data' in request.files and request.files['file-version-data'].filename != '':
+				version_data = request.files['file-version-data'].read()
+		# Prescored file.
+		if file_type == 'prescored':
+			# Read the file data.
+			if 'file-prescored-data' in request.files and request.files['file-prescored-data'].filename != '':
+				student_data = request.files['file-prescored-data'].read()
+
+		# Read the question text regardless.
 		if 'file-question-data' in request.files  and request.files['file-question-data'].filename != '':
 			question_data = request.files['file-question-data'].read()
+		
 
 		# Process. This will set session variables.
 		file_processing.save_raw_data(student_data, version_data, question_data)

@@ -59,7 +59,8 @@ header {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
     color: #424242;
     font-weight: 400;
     line-height: 54px;
@@ -317,63 +318,43 @@ nav ul li:last-child:after{
 /* Uploads. */
 
 #upload {
-     display: flex;
-     flex-direction: row;
      position: relative;
      width: 100%;
-     margin: 2em 0;
 }
 
-#upload-area {
-     flex-grow: 1;
-     background-color: #EEEEEE;
-     min-width: 12em;
-     max-width: 24em;
-     text-align: center;
-     position: relative;
-     -webkit-user-select: none; /* Safari. */        
-     -moz-user-select: none; /* Firefox. */
-     -ms-user-select: none; /* IE10+/Edge. */
-     user-select: none; /* Standard. */
+#upload-cards, #upload-formats {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    position: relative;
+    margin: 0 0 2em 0;
 }
 
-#upload-area div {
-     position: relative;
-     top: 50%;
-     transform: translateY(-75%); /* Centre the image. */
+.upload-card {
+    background: #fafafa;
+    cursor: pointer;
+    padding: 24px;
+    display: block;
+    margin: 0 1em;
+    width: 33%;
+    flex: 1;
+    border-bottom: 5px solid #f1f1f1;
 }
 
-#upload-area div .icon {
-     font-size: 7em;
-     color: #BDBDBD;
-     display: block;
+.upload-format {
+    padding-bottom: 36px;
 }
 
-#upload-area div #upload-drag-description {
-     font-size: 1.5em;
-     color: #757575;
-     letter-spacing: 0.1em;
-     text-transform: uppercase;
-     display: block;
+.upload-card:first-child {
+    margin-left: 0;
 }
 
-#upload-statuses {
-     display: flex;
-     flex-direction: column;
-     position: relative;
-     background: #fafafa;
-     flex-grow: 1;
+.upload-card:last-child {
+    margin-right: 0;
 }
 
-.upload-status {
-     flex-grow: 1;
-     display: block;
-     border-bottom: 3px solid #f5f5f5;
-     position: relative;
-     padding-right: 2em;
-}
-
-.upload-file {
+.upload-file, .upload-format-box {
      width: 0.1px;
      height: 0.1px;
      opacity: 0;
@@ -382,35 +363,35 @@ nav ul li:last-child:after{
      z-index: -1;
 }
 
+.upload-file + label {
+    cursor: pointer;
+    padding: 24px;
+    overflow: auto;
+    display: block;
+}
+
 .upload-file + label:before {
     content: 'add_circle';
     color: #2196F3;
     font-size: 72px;
     position: relative;
-    left: 0;
-    padding: 12px;
-    top: 36px;
     cursor: pointer;
+    width: 100%;
+    text-align: center;
 }
 
 .upload-file + label, .upload-subtext {
     position: relative;
 }
 
-.upload-file + label {
-     top: -28px;
-}
-
-.upload-subtext {
-     top: -36px;
-}
-
 .upload-file + label span {
     font-size: 1.5em;
     font-weight: 400;
     color: #2196F3;
-    display: inline-block;
+    display: block;
     cursor: pointer;
+    text-align: center; 
+    width: 100%;
 }
 
 .upload-file + label span em {
@@ -428,12 +409,17 @@ nav ul li:last-child:after{
     color: #1976D2;
 }
 
+.upload-status.upload-card {
+    padding: 0;
+}
+
 .upload-subtext {
      display: block;
      text-transform: uppercase;
      letter-spacing: 0.1em;
      color: #bdbdbd;
-     padding-left: 96px;
+     text-align: center;
+     margin-bottom: 2em;
 }
 
 .upload-file + label.file-selected:before {
@@ -451,6 +437,28 @@ nav ul li:last-child:after{
 .upload-file + label.file-selected:hover:before {
     color: #43A047;
 }
+
+.upload-card h4 {
+    font-size: 28px;
+    line-height: 1;
+    margin-top: 1em;
+    text-align: center;
+}
+
+#content .upload-format p {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.upload-format-box:checked + .upload-format {
+    background: #efefef;
+}
+
+.upload-format:hover {
+    background: #f5f5f5;
+}
+
 
 /* Toggleable icons. */
 
