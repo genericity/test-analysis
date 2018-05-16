@@ -14,10 +14,11 @@ def to_student_array(student_data, prescored = False):
 	# Student array.
 	students = []
 	raw = student_data.splitlines()
-	for line in raw:
+	for i in len(raw):
+		line = raw[i]
 		# Make sure the line is not empty.
 		if len(line) > 0:
-			students.append(Student(line, prescored))
+			students.append(Student(line, prescored, position = i))
 	return students
 
 # Converts a version answer data file into a dictionary of answer keys.

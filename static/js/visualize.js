@@ -190,7 +190,7 @@ class ChartState {
               }
             },
             // Use the callback to display student and question information in the label of the tooltip.
-            label: (tooltipItem, data) => {
+            beforeLabel: (tooltipItem, data) => {
               // Display the score, if this is a student, or the percentage correct.
 
               // If the object is a student or a question.
@@ -199,13 +199,23 @@ class ChartState {
                 // The dataset that contains this object.
                 const student = this.students[tooltipItem.index];
                 return student.getPercentage();
+              }
+            },
+            label: (tooltipItem, data) => {
+              // Display the question weight or the student percentage.
+
+              // If the object is a student or a question.
+              const isStudent = tooltipItem.xLabel > 0;
+              if (isStudent) {
+                const student = this.students[tooltipItem.index];
+                return student.getAnalyzedPercentage();
               } else {
                 const question = this.questions[tooltipItem.index];
                 return question.getPercentage();
               }
             },
             afterLabel: (tooltipItem, data) => {
-              // Display the location, if this is a student, or the question weight.
+              // Display the location, if this is a student.
 
               // If the object is a student or a question.
               const isStudent = tooltipItem.xLabel > 0;

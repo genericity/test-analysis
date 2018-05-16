@@ -78,11 +78,11 @@ DEFAULT_UOA_GRADE_RANGES = {
 class Student:
 	# Initialize and retrieve student data from the data string.
 	# @param data {string} The student data.
-	def __init__(self, data, prescored, test = None):
+	def __init__(self, data, prescored, test = None, position = None):
 		# {!Test} The test containing this question.
 		self.test = test
 		# {string} ID number.
-		self.id = 'ID not given'
+		self.id = position or 'ID not given'
 		# {string} Last name.
 		self.last_name = 'Last name'
 		# {string} First name.
