@@ -199,6 +199,9 @@ class ChartState {
                 // The dataset that contains this object.
                 const student = this.students[tooltipItem.index];
                 return student.getPercentage();
+              } else {
+                const question = this.questions[tooltipItem.index];
+                return question.getText();
               }
             },
             label: (tooltipItem, data) => {

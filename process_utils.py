@@ -17,3 +17,13 @@ def int_if_possible(str):
 		return 0
 	else:
 		return int(str)
+
+# Safely escapes a string into encoded HTML characters, converting commas, <, >, etc. to safe characters.
+def html_encode(str):
+	str = re.sub('&', '&amp;', str)
+	str = re.sub(',', '&comma;', str)
+	str = re.sub('<', '&lt;', str)
+	str = re.sub('>', '&gt;', str)
+	str = re.sub('\'', '&apos;', str)
+	str = re.sub('"', '&quot;', str)
+	return str

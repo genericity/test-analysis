@@ -16,11 +16,18 @@ def make_dicts(cursor, row):
 	return dict((cursor.description[idx][0], value) for idx, value in enumerate(row))
 
 # Inserts raw student and question data into the database.
-def insert_raw(raw_student_data, raw_version_data):
+def insert_raw(raw_student_data, raw_version_data, raw_question_data):
  	cursor = get_db().cursor()
  	query_db('insert into responses (data) values (?);', [raw_student_data], cursor = cursor)
  	session_id = cursor.lastrowid
- 	query_db('insert into answers (session_id, data) values (?, ?);', [session_id, raw_version_data])
+ 	# Answer/version data.
+ 	if raw_version_data:
+ 		query_db('insert into answers (session_id, data) values (?, ?);', [session_id, raw_version_data])
+ 	# Question text.
+ 	if raw_question_data:
+ 		query_db('insert into texts (session_id, data) values (?, ?);', [session_id, raw_question_data])
+
+ 	# Return the session id, the last dataset uploaded.
  	return session_id
 
 # Inserts the list of discarded questions into the database.
@@ -75,6 +82,11 @@ def get_responses(session_id):
 # Retrieves answer data from the database given a session id.
 def get_answers(session_id):
 	result = query_db('select * from answers where session_id = ?;', [session_id], one = True)
+	return result
+
+# Retrieves question text data from the database given a session id.
+def get_texts(session_id):
+	result = query_db('select * from texts where session_id = ?;', [session_id], one = True)
 	return result
 
 # Retrieves the list of discarded questions from the database given a session id.

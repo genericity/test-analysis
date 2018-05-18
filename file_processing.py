@@ -54,9 +54,13 @@ def to_version_dict(version_data, first_column = True):
 
 	return versions
 
+# Converts raw question text data into an array.
+def to_text_array(raw_question_data):
+	return raw_question_data.splitlines()
+
 # Saves raw data and sets session variables.
 def save_raw_data(raw_student_data, raw_version_data, raw_question_data):
-	session['id'] = db.insert_raw(raw_student_data, raw_version_data)
+	session['id'] = db.insert_raw(raw_student_data, raw_version_data, raw_question_data)
 
 	# Set the number of files.
 	session['num_files'] = 0
@@ -94,7 +98,9 @@ def load_test():
 	session_id = session['id']
 	raw_student_data = db.get_responses(session_id)
 	raw_version_data = db.get_answers(session_id)
+	raw_question_data = db.get_texts(session_id)
 
+	# This should not happen. But prepare for it anyway.
 	if raw_student_data['data'] is None:
 		return ''
 
@@ -102,6 +108,8 @@ def load_test():
 	students = None
 	# Version data.
 	versions = None
+	# Question text data.
+	texts = None
 
 	# Determine if the data is prescored or not by if version data was uploaded.
 	if raw_student_data['data'] and not raw_version_data['data']:
@@ -111,6 +119,10 @@ def load_test():
 		# Convert the version data if it exists.
 		students = to_student_array(raw_student_data['data'], prescored = False)
 		versions = to_version_dict(raw_version_data['data'])
+
+	# Convert the question texts if it exists.
+	if raw_question_data['data']:
+		texts = to_text_array(raw_question_data['data'])
 
 	# Check if there are any discarded questions stored in the database.
 	raw_discarded = db.get_discarded(session_id)
@@ -123,14 +135,14 @@ def load_test():
 	# Retrieve grade boundaries if it exists.
 	boundaries = db.get_grade_boundaries(session_id)
 
-	test = Test(students, versions, discarded = discarded, boundaries = boundaries)
+	test = Test(students, versions, discarded = discarded, boundaries = boundaries, texts = texts)
 
 	return test
 
 # Outputs question data in a comma-delineated format.
 def get_question_data():
 	test = load_test()
-	return test.to_question_csv()
+	return test.to_question_csv(encode = True)
 
 # Outputs student data in a comma-delineated format.
 def get_student_data():

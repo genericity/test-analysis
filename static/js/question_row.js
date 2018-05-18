@@ -45,6 +45,7 @@ class QuestionRow extends Row {
 		this.percentageCorrect = original[2];
 		this.discrimination = original[3];
 		this.itemWeight = original[4];
+		this.text = original[1];
 
 		// Difficulty and invalidity checks.
 		this.invalidDifficulty = invalidDifficulty;
@@ -124,5 +125,19 @@ class QuestionRow extends Row {
 	*/
 	getPercentage() {
 		return roundToPlaces(this.percentageCorrect, 2) + '% correct';
+	}
+
+	/*
+	* Generates a truncated string with the question text.
+	* @return {string} The truncated question text string.
+	*/
+	getText() {
+		// The number of characters is arbitrary.
+		const MAXIMUM_LENGTH_BEFORE_TRUNCATION = 100;
+		if (this.text.length <= MAXIMUM_LENGTH_BEFORE_TRUNCATION) {
+			return this.text;
+		} else {
+			return this.text.substring(0, MAXIMUM_LENGTH_BEFORE_TRUNCATION) + '...';
+		}
 	}
 }

@@ -1,12 +1,13 @@
 import re
 from student import Student
 from question import Question
+import process_utils
 import rpy2.robjects as robjects
 from rpy2.robjects.packages import importr
 
 # Represents an entire test.
 class Test:
-	def __init__(self, students, versions, text = None, discarded = [], boundaries = None):
+	def __init__(self, students, versions, discarded = [], boundaries = None, texts = None):
 		# {!Array<!Student>} An array of students.
 		self.students = students
 		# {Object<string, !Array<number>>} Dictionary mapping the version names to their answer keys.
@@ -22,7 +23,7 @@ class Test:
 				self.students[i].test = self
 
 		# {!Array<!Question>} The array of questions within the test.
-		self.questions = self.init_questions(text, discarded)
+		self.questions = self.init_questions(texts, discarded)
 		# {!Array<number>} Question indexes that are discarded.
 		self.discarded = discarded
 		# {number} The length of the test.
@@ -104,14 +105,14 @@ class Test:
 		return self.versions.keys()[0]
 
 	# Outputs question data in a CSV-like format, comma-delineated.
-	def to_question_csv(self):
+	def to_question_csv(self, encode = False):
 		# Full array of question data.
 		questions = []
 
 		# Go through all the questions and retrieve information about each one.
 		for i in range(self.test_length):
 			question = self.questions[i]
-			text = question.text
+			text = question.text if not encode else process_utils.html_encode(question.text)
 			percentage = question.percentage_correct
 			discrimination = question.get_discrimination()
 			weight = question.get_item_weight()
