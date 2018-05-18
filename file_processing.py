@@ -14,7 +14,7 @@ def to_student_array(student_data, prescored = False):
 	# Student array.
 	students = []
 	raw = student_data.splitlines()
-	for i in len(raw):
+	for i in range(len(raw)):
 		line = raw[i]
 		# Make sure the line is not empty.
 		if len(line) > 0:
@@ -57,6 +57,24 @@ def to_version_dict(version_data, first_column = True):
 # Saves raw data and sets session variables.
 def save_raw_data(raw_student_data, raw_version_data, raw_question_data):
 	session['id'] = db.insert_raw(raw_student_data, raw_version_data)
+
+	# Set the number of files.
+	session['num_files'] = 0
+	if raw_student_data:
+		session['num_files'] += 1
+	if raw_version_data:
+		session['num_files'] += 1
+	if raw_question_data:
+		session['num_files'] += 1
+
+
+def populate_metadata():
+	test = load_test()
+	session['num_questions'] = test.test_length
+	session['num_students'] = len(test.students)
+	session['first_student'] = test.students[0].id
+	session['last_student'] = test.students[-1].id
+
 
 # Saves the list of discarded questions.
 def save_discarded_questions(discarded_list):

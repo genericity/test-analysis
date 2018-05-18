@@ -188,3 +188,21 @@ table[data-sortable] th[data-sorted-direction="descending"]:after {
 	width: 2em;
 	padding-right: 0.6em;
 }
+
+.summary-table .table-statistic-number:after {
+	content: initial;
+	padding-left: 0;
+}
+
+.summary-table .table-statistic-number {
+	padding-left: 4px;
+	padding-right: 0;
+}
+
+.summary-table td {
+	font-size: 22px;
+}
+
+#statistics-table.summary-table .table-icon.good.table-icon-up {
+	color: #4CAF50;
+}

@@ -2,6 +2,19 @@
             <h2>Analyze questions
                 <span>Describing the statistical quality of each test question.</span>
             </h2>
+            {% if data %}
+            <table id="statistics-table" class="summary-table">
+                <tr class="neutral">
+                    <td class="table-icon good table-icon-up">check_circle</td><td>You've uploaded <span class="table-statistic-number" id="num-files">{{ data['num_files'] }}</span><span class="table-statistic-number">files</span></td>
+                </tr>
+                <tr class="neutral">
+                    <td class="table-icon good table-icon-up">check_circle</td><td>Analysis has been done on <span class="table-statistic-number" id="num-students">{{ data['num_students'] }}</span> <span class="table-statistic-number">students</span> and <span class="table-statistic-number" id="num-questions">{{ data['num_questions'] }}</span> <span class="table-statistic-number">questions</span></td>
+                </tr>
+                <tr class="neutral">
+                    <td class="table-icon good table-icon-up">check_circle</td><td>Students are from <span class="table-statistic-number" id="first-student">{{ data['first_student'] }}</span> to <span class="table-statistic-number" id="last-student">{{ data['last_student'] }}</span></td>
+                </tr>
+            </table>
+            {% endif %}
             <p>
                 Your items have been automatically analysed and poor quality items have been identified.
                 <ul>

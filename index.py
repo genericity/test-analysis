@@ -23,7 +23,6 @@ def upload_page():
 
 @app.route('/questions', methods = ['GET', 'POST'])
 def questions_page():
-	data = []
     # Process the data.
 	if request.method == 'POST':
 		# The posted data.
@@ -49,15 +48,30 @@ def questions_page():
 				student_data = request.files['file-prescored-data'].read()
 
 		# Read the question text regardless.
-		if 'file-question-data' in request.files  and request.files['file-question-data'].filename != '':
+		if 'file-question-data' in request.files and request.files['file-question-data'].filename != '':
 			question_data = request.files['file-question-data'].read()
 		
 
 		# Process. This will set session variables.
 		file_processing.save_raw_data(student_data, version_data, question_data)
 
+	metadata = None
+
+	# Populate the metadata if it doesn't exist.
+	file_processing.populate_metadata()
+
+	# Set metadata.
+	if session.get('num_files'):
+		metadata = {
+			'num_files': session['num_files'],
+			'num_students': session['num_students'],
+			'num_questions': session['num_questions'],
+			'first_student': session['first_student'],
+			'last_student': session['last_student']
+		}
+
 	# Display the questions page.
-	return render_template('questions.html', questions = True, data = data)
+	return render_template('questions.html', questions = True, data = metadata)
 
 @app.route('/grades', methods = ['GET', 'POST'])
 def grades_page():
