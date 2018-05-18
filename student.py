@@ -1,7 +1,6 @@
 import process_utils
 
 # Constants.
-TEST_LENGTH = 30
 # Standard University of Auckland grade boundaries.
 DEFAULT_GRADE_BOUNDARIES = [
 {
@@ -82,7 +81,7 @@ class Student:
 		# {!Test} The test containing this question.
 		self.test = test
 		# {string} ID number.
-		self.id = position or 'ID not given'
+		self.id = position if position != None else 'ID not given'
 		# {string} Last name.
 		self.last_name = 'Last name'
 		# {string} First name.
@@ -114,7 +113,7 @@ class Student:
 		# Split into chunks of 2, each one is a question response.
 		# Convert them into integers.
 		# These are the raw answers given by the student.
-		self.answers = map(process_utils.int_if_possible, process_utils.split_into_chunks(data[45:(45 + 2 * TEST_LENGTH)], 2))
+		self.answers = map(process_utils.int_if_possible, process_utils.split_into_chunks(data[45:], 2))
 
 	def init_prescored(self, data):
 		# Split into component answers.

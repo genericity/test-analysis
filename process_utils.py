@@ -27,3 +27,8 @@ def html_encode(str):
 	str = re.sub('\'', '&apos;', str)
 	str = re.sub('"', '&quot;', str)
 	return str
+
+# Returns the mean for an array of numbers.
+def mean(numbers):
+	print numbers
+	return float(sum(numbers)) / max(len(numbers), 1)

@@ -23,6 +23,8 @@ def upload_page():
 
 @app.route('/questions', methods = ['GET', 'POST'])
 def questions_page():
+	metadata = None
+
     # Process the data.
 	if request.method == 'POST':
 		# The posted data.
@@ -55,10 +57,11 @@ def questions_page():
 		# Process. This will set session variables.
 		file_processing.save_raw_data(student_data, version_data, question_data)
 
-	metadata = None
-
-	# Populate the metadata if it doesn't exist.
-	file_processing.populate_metadata()
+		test = file_processing.load_test()
+		# Populate the metadata as it doesn't exist.
+		file_processing.populate_metadata(test)
+		# Populate the default boundaries as it doesn't exist.
+		file_processing.populate_default_boundaries(test)
 
 	# Set metadata.
 	if session.get('num_files'):
@@ -87,7 +90,7 @@ def grades_page():
 	if boundaries:
 		return render_template('grades.html', grades = True, ab = boundaries[0], bc = boundaries[1], cd = boundaries[2])
 	else:
-		return render_template('grades.html', grades = True, ab = DEFAULT_AB_BOUNDARY, bc = DEFAULT_BC_BOUNDARY, cd = DEFAULT_CD_BOUNDARY)
+		return render_template('grades.html', grades = True, ab = session['natural_ab'], bc = session['natural_bc'], cd = session['natural_cd'])
 
 @app.route('/review', methods = ['GET', 'POST'])
 def review_page():
@@ -95,9 +98,9 @@ def review_page():
 	# Process the data.
 	if request.method == 'POST':
 		# All the grade boundaries.
-		ab_boundary = request.form.get('ab-boundary') or DEFAULT_AB_BOUNDARY
-		bc_boundary = request.form.get('bc-boundary') or DEFAULT_BC_BOUNDARY
-		cd_boundary = request.form.get('cd-boundary') or DEFAULT_CD_BOUNDARY
+		ab_boundary = request.form.get('ab-boundary') or session['natural_ab']
+		bc_boundary = request.form.get('bc-boundary') or session['natural_bc']
+		cd_boundary = request.form.get('cd-boundary') or session['natural_cd']
 		# Save the boundaries into the database.
 		file_processing.save_boundaries(ab_boundary, bc_boundary, cd_boundary)
 

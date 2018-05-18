@@ -3,13 +3,14 @@ from test import Test
 from student import Student
 import db
 import re
+import process_utils
 
 # Converts a student data file into an array of student objects.
-def to_student_array(student_data, prescored = False):
+def to_student_array(student_data, prescored = False, test_length = 30):
 	# Clean data of carriage returns first.
 	student_data = re.sub(r'\r', '', student_data)
-	# Substitute tabs with eight spaces to account for empty names.
-	student_data = re.sub(r'\t', '        ', student_data)
+	# Substitute tabs with seven spaces to account for empty names.
+	student_data = re.sub(r'\t', '       ', student_data)
 
 	# Student array.
 	students = []
@@ -18,7 +19,7 @@ def to_student_array(student_data, prescored = False):
 		line = raw[i]
 		# Make sure the line is not empty.
 		if len(line) > 0:
-			students.append(Student(line, prescored, position = i))
+			students.append(Student(line, prescored, test_length, position = i))
 	return students
 
 # Converts a version answer data file into a dictionary of answer keys.
@@ -71,14 +72,35 @@ def save_raw_data(raw_student_data, raw_version_data, raw_question_data):
 	if raw_question_data:
 		session['num_files'] += 1
 
-
-def populate_metadata():
-	test = load_test()
+# Populates session metadata about the test.
+def populate_metadata(preloaded_test = None):
+	test = preloaded_test or load_test()
 	session['num_questions'] = test.test_length
 	session['num_students'] = len(test.students)
 	session['first_student'] = test.students[0].id
 	session['last_student'] = test.students[-1].id
 
+# Populates default grade boundaries about the test.
+def populate_default_boundaries(preloaded_test = None):
+	test = preloaded_test or load_test()
+	ab_student_locations = []
+	bc_student_locations = []
+	cd_student_locations = []
+	# Get the mean location of students with a raw percentage of between 75 - 85%.
+	# Why not just 80% precisely? Some tests may have an odd number of questions, non-multiple of 5, etc., so that no students get exactly 80% on the test.
+	for student in test.students:
+		percentage = student.raw_percentage()
+		if percentage >= 75 and percentage < 85:
+			ab_student_locations.append(student.get_location())
+		# Do the same with B/C students (60 - 70%).
+		elif percentage >= 60 and percentage < 70:
+			bc_student_locations.append(student.get_location())
+		# And with C/D students (45 - 55%).
+		elif percentage >= 45 and percentage < 55:
+			cd_student_locations.append(student.get_location())
+	session['natural_ab'] = process_utils.mean(ab_student_locations)
+	session['natural_bc'] = process_utils.mean(bc_student_locations)
+	session['natural_cd'] = process_utils.mean(cd_student_locations)
 
 # Saves the list of discarded questions.
 def save_discarded_questions(discarded_list):
@@ -112,7 +134,7 @@ def load_test():
 	texts = None
 
 	# Determine if the data is prescored or not by if version data was uploaded.
-	if raw_student_data['data'] and not raw_version_data['data']:
+	if raw_student_data and not raw_version_data:
 		# Convert the tab-delineated file to an array of actual student objects.
 		students = to_student_array(raw_student_data['data'], prescored = True)
 	else:
@@ -121,7 +143,7 @@ def load_test():
 		versions = to_version_dict(raw_version_data['data'])
 
 	# Convert the question texts if it exists.
-	if raw_question_data['data']:
+	if raw_question_data:
 		texts = to_text_array(raw_question_data['data'])
 
 	# Check if there are any discarded questions stored in the database.
