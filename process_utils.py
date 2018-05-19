@@ -30,5 +30,4 @@ def html_encode(str):
 
 # Returns the mean for an array of numbers.
 def mean(numbers):
-	print numbers
 	return float(sum(numbers)) / max(len(numbers), 1)

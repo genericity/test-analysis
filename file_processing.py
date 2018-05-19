@@ -5,6 +5,10 @@ import db
 import re
 import process_utils
 
+DEFAULT_AB_BOUNDARY = 0.5
+DEFAULT_BC_BOUNDARY = -0.5
+DEFAULT_CD_BOUNDARY = -2
+
 # Converts a student data file into an array of student objects.
 def to_student_array(student_data, prescored = False, test_length = 30):
 	# Clean data of carriage returns first.
@@ -98,9 +102,9 @@ def populate_default_boundaries(preloaded_test = None):
 		# And with C/D students (45 - 55%).
 		elif percentage >= 45 and percentage < 55:
 			cd_student_locations.append(student.get_location())
-	session['natural_ab'] = process_utils.mean(ab_student_locations)
-	session['natural_bc'] = process_utils.mean(bc_student_locations)
-	session['natural_cd'] = process_utils.mean(cd_student_locations)
+	session['natural_ab'] = process_utils.mean(ab_student_locations) if len(ab_student_locations) != 0 else DEFAULT_AB_BOUNDARY
+	session['natural_bc'] = process_utils.mean(bc_student_locations) if len(bc_student_locations) != 0 else DEFAULT_BC_BOUNDARY
+	session['natural_cd'] = process_utils.mean(cd_student_locations) if len(cd_student_locations) != 0 else DEFAULT_CD_BOUNDARY
 
 # Saves the list of discarded questions.
 def save_discarded_questions(discarded_list):

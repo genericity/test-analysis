@@ -41,18 +41,6 @@ function isNumber(num) {
     return !isNaN(parseFloat(num)) && isFinite(num);
 }
 
-// Generates a range of integers from min to max. For example, [-3, -2, -1, 0, 1, 2, 3].
-function generateRange(min, max) {
-  min = Math.floor(min);
-  max = Math.ceil(max);
-
-  const list = [];
-  for (let i = min; i <= max; i++) {
-      list.push(i);
-  }
-  return list;
-}
-
 // Makes a GET request to the specified URL. Returned a promise that resolves when the request completes.
 function get(url) {
   // Return a new promise.
@@ -81,16 +69,6 @@ function get(url) {
     // Make the request
     request.send();
   });
-}
-
-// Returns the maximum element in an array.
-function arrayMax(array) {
-  return array.reduce((a, b) => Math.max(a, b));
-}
-
-// Returns the minimum element in an array.
-function arrayMin(array) {
-  return array.reduce((a, b) => Math.min(a, b));
 }
 
 // Attempts to convert a string into a boolean value.
@@ -130,5 +108,78 @@ const Utils = {
     }
     const largest = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, largest), 2) + ' ' + sizes[largest];
+  },
+
+  // Returns the maximum element in an array.
+  arrayMax: function(array) {
+    if (array.length == 0) {
+      return 0;
+    }
+    let largest = array[0];
+    for (const num of array) {
+      if (!isNaN(num) && isNumber(num) && num > largest) {
+        largest = num;
+      }
+    }
+    return largest;
+  },
+
+  // Returns the minimum element in an array.
+  arrayMin: function(array) {
+    if (array.length == 0) {
+      return 0;
+    }
+    let smallest = array[0];
+    for (const num of array) {
+      if (!isNaN(num) && isNumber(num) && num < smallest) {
+        smallest = num;
+      }
+    }
+    return smallest;
+  },
+
+  // Generates a range of integers from min to max. For example, [-3, -2, -1, 0, 1, 2, 3].
+  generateRange: function(min, max, stepSize) {
+    min = Math.floor(min);
+    max = Math.ceil(max);
+
+    const list = [];
+    for (let i = min; i <= max; i+= stepSize) {
+        list.push(i);
+    }
+    return list;
+  },
+
+  // Rounds to a step size, away from zero.
+  roundTo: function(num, stepSize) {
+    if (num > 0) {
+      return parseInt(Math.ceil(num / stepSize) * stepSize);
+    } else {
+      return parseInt(Math.floor(num / stepSize) * stepSize);
+    }
+  },
+
+  // Finds the mode of an array and counts how many times it occurs. O(n).
+  modeCount: function(array) {
+    if (array.length == 0) {
+      return null;
+    }
+        
+    let modeMap = {};
+    let currentMode = array[0];
+    let maxCount = 1;
+    for (let i = 0; i < array.length; i++) {
+        let element = array[i];
+        if (modeMap[element] == null) {
+          modeMap[element] = 1;
+        } else {
+          modeMap[element]++;
+        }
+        if (modeMap[element] > maxCount) {
+          currentMode = element;
+          maxCount = modeMap[element];
+        }
+    }
+    return maxCount;
   }
 }

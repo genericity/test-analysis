@@ -17,6 +17,7 @@ class DoubleDotPlot {
     this.originalData = data;
     this.yMin = 0;
     this.yMax = 0;
+    this.ctx = ctx;
 
     // Default options.
     const DEFAULT_OPTIONS = {
@@ -76,27 +77,40 @@ class DoubleDotPlot {
 
     let yMin = 0;
     let yMax = 0;
+    let pointWidth = 0;
     let i = 0;
+    // Two loops. First to find the mode (this one), then to actually set the datasets.
+    // This is because the width of the axis is needed to set the positions of the data points.
+    for (const label of Object.keys(data)) {
+      // Count how many points across this will be at widest.
+      // Add it to the count of points.
+      pointWidth += Utils.modeCount(data[label]);
+    }
+
+    // Width of the chart in terms of numerical points.
+    const axisPixelWidth = 80;
+    const width = this.findAxisWidth(axisPixelWidth, pointWidth);
+
     // Convert each dataset to points on the chart.
     for (const label of Object.keys(data)) {
-    	const newSet = {
-    		label: label,
-    		data: this.numbersToDotPlot(data[label], i),
-    	}
-    	// Add to the chart.
-    	this.options.data.datasets.push(newSet);
+      const newSet = {
+        label: label,
+        data: this.numbersToDotPlot(data[label], i, width),
+      }
+      // Add to the chart.
+      this.options.data.datasets.push(newSet);
 
       // Update the minimum and maximum y values.
-      const dataMin = arrayMin(data[label]);
+      const dataMin = Utils.arrayMin(data[label]);
       if (dataMin < yMin) {
         yMin = dataMin;
       }
-      const dataMax = arrayMax(data[label]);
+      const dataMax = Utils.arrayMax(data[label]);
       if (dataMax > yMax) {
         yMax = dataMax;
       }
 
-    	i++;
+      i++;
     }
 
     // Overwrite the default options with the user-selected options.
@@ -108,13 +122,25 @@ class DoubleDotPlot {
     Chart.defaults.global.defaultFontSize = 15;
 
     // Add a y-axis.
-    yMin = Math.floor(yMin);
-    yMax = Math.ceil(yMax);
-    this.addYAxis(yMin, yMax);
+    this.addYAxis(yMin, yMax, width);
 
     // Create chart.
     this.chart = new Chart(ctx, this.options);
     }
+
+  /*
+  * Finds the numerical width of the axis given the width it needs to be in pixels.
+  * Takes into accounts how many points the graph will be.
+  * @param {number} pixels How many pixels the axis will be across.
+  * @param {number} The number of points stretching across the graph at its widest.
+  * @return {number} The number of points, numerically, the axis needs to be to be the specified number of pixels.
+  */
+  findAxisWidth(pixels, points) {
+    // Width of the canvas.
+    const canvasWidth = this.ctx.canvas.parentElement.clientWidth;
+    // See documentation for explanation of this algorithm.
+    return (pixels * points) / (canvasWidth - pixels);
+  }
 
   /*
   * Converts a list of numbers into X/Y coordinates for a scatter-chart, allowing it to be displayed as a dot-plot.
@@ -122,7 +148,7 @@ class DoubleDotPlot {
   * @param {number=} index The position in the list this dataset is.
   * @return {!Array<Object>} An array of objects, with x and y values.
   */
-  numbersToDotPlot(data, index = 0) {
+  numbersToDotPlot(data, index, width) {
 	let points = [];
 
 	// Keep track of the existing datapoints already with this value.
@@ -146,8 +172,8 @@ class DoubleDotPlot {
     	// Create a new point.
     	// Alternate between placing points to the left and right of 0.
 		  const newPoint = {
-  			// Create a gap of 6 dots between the two sections.
-  			x: (existing[value] + 3) * Math.pow(-1, index),
+  			// Create a gap of dots between the two sections.
+  			x: (existing[value] + (width * 1.5) / 2) * Math.pow(-1, index + 1),
   			y: value
   		};
   		points.push(newPoint);
@@ -157,16 +183,43 @@ class DoubleDotPlot {
   }
 
   /*
-  * Adds a y-axis to the chart.
+  * Finds the step size for the axis.
   */
-  addYAxis(yMin, yMax) {
+  findAxisStepSize(yMin, yMax) {
+    let stepSize = 1;
+    // Positions to draw the label at.
+    if (yMax - yMin < 20) {
+      stepSize = 1;
+    } else if (yMax - yMin < 50) {
+      // If there are too many things, draw every 5 instead.
+      stepSize = 5;
+    } else if (yMax - yMin < 100) {
+      // If there are even more things, draw every 10 instead.
+      stepSize = 10;
+    } else {
+      // Draw every 50.
+      stepSize = 50;
+    }
+
+    return stepSize;
+  }
+
+  /*
+  * Adds a y-axis to the chart.
+  * yMin, yMax are in terms of the numbers on the axis.
+  * Width is in terms of the numerical dimensions of the chart (not pixels).
+  */
+  addYAxis(yMin, yMax, width) {
     yMin = Math.min(yMin, -3) || -3;
     yMax = Math.max(yMax, 3) || 3;
-    this.yMin = yMin;
-    this.yMax = yMax;
 
-    let xMin = -2;
-    let xMax = 2;
+    let stepSize = this.findAxisStepSize(yMin, yMax);
+
+    this.yMin = Utils.roundTo(yMin, stepSize);
+    this.yMax = Utils.roundTo(yMax, stepSize);
+
+    let xMin = 0 - (width / 2);
+    let xMax = 0 + (width / 2);
 
     // Add the background for the axis labels.
     this.options.options.annotation.annotations.push({
@@ -190,8 +243,8 @@ class DoubleDotPlot {
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
 
-        // Positions to draw the label at.
-        const ticks = generateRange(yMin, yMax);
+        const ticks = Utils.generateRange(yMin, yMax, stepSize);
+        
         for (let i = 0; i < ticks.length; i++) {
           // Draw each label in the centre.
           this.drawAt(ctx, {
@@ -209,18 +262,25 @@ class DoubleDotPlot {
         this.drawAt(ctx, {
           text: 'Difficulty',
           x: xMin,
-          y: yMax + 0.5
+          y: yMax,
+          // Offset from the canvas coordinate in pixels.
+          offsetX: 0,
+          offsetY: -30
         });
         this.drawAt(ctx, {
           text: 'Hard',
           x: xMin,
-          y: yMax + 0.2
+          y: yMax,
+          offsetX: 0,
+          offsetY: -15
         });
         ctx.textBaseline = 'top';
         this.drawAt(ctx, {
           text: 'Easy',
           x: xMin,
-          y: yMin - 0.2
+          y: yMin,
+          offsetX: 0,
+          offsetY: 0
         });
 
         ctx.textAlign = 'left';
@@ -229,18 +289,24 @@ class DoubleDotPlot {
         this.drawAt(ctx, {
           text: 'Performance',
           x: xMax,
-          y: yMax + 0.5
+          y: yMax,
+          offsetX: 0,
+          offsetY: -30
         });
         this.drawAt(ctx, {
           text: 'High',
           x: xMax,
-          y: yMax + 0.2
+          y: yMax,
+          offsetX: 0,
+          offsetY: -15
         });
         ctx.textBaseline = 'top';
         this.drawAt(ctx, {
           text: 'Low',
           x: xMax,
-          y: yMin - 0.2
+          y: yMin,
+          offsetX: 0,
+          offsetY: 0
         });
 
         ctx.restore();
@@ -257,8 +323,8 @@ class DoubleDotPlot {
     const xScale = this.chart.chart.scales.x;
 
     // Convert the chart coordinates to canvas coordinates.
-    const canvasY = yScale.getPixelForValue(options.y || 0);
-    const canvasX = xScale.getPixelForValue(options.x || 0);
+    const canvasY = yScale.getPixelForValue(options.y || 0) + (options.offsetY || 0);
+    const canvasX = xScale.getPixelForValue(options.x || 0) + (options.offsetX || 0);
 
     ctx.fillText(options.text, canvasX, canvasY);
   }

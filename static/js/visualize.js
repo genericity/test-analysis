@@ -163,8 +163,8 @@ class ChartState {
 
     // Wait until both student and question data has been retrieved.
     Promise.all([this.getQuestionData(), this.getStudentData()]).then((values) => {
-      const studentData = values[0];
-      const questionData = values[1];
+      const studentData = values[1];
+      const questionData = values[0];
 
       const annotations = [this.dividers[0].annotation, this.dividers[1].annotation, this.dividers[2].annotation];
 
@@ -270,9 +270,9 @@ class ChartState {
   */
   regenerateColours() {
     const datasetQuestions = this.chart.data.datasets[0];
-    datasetQuestions.pointBackgroundColor = this.chart.chartState.generateColours(datasetQuestions.data, "blue");
+    datasetQuestions.pointBackgroundColor = this.chart.chartState.generateColours(datasetQuestions.data, "red");
     const datasetStudents = this.chart.data.datasets[1];
-    datasetStudents.pointBackgroundColor = this.chart.chartState.generateColours(datasetStudents.data, "red");
+    datasetStudents.pointBackgroundColor = this.chart.chartState.generateColours(datasetStudents.data, "blue");
   }
 
   /*
