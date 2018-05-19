@@ -96,4 +96,4 @@ Unit tests can be run by navigating to the test directory (`cd test`) and runnin
 
 There's a bug in one of them ([Annotation plugin for Chart.js](https://github.com/chartjs/chartjs-plugin-annotation)) that prevents objects from being redrawn. So, without fixing the bug (as I've done locally here), it's impossible to have the sliders you see on the graph be draggable.
 
-The other library ([ChartJS](https://github.com/chartjs)) doesn't allow custom callbacks after drawing elements onto the graph. So, without adding a way to hook into the rendering cycle, it's impossible to draw the labels on the central y-axis on the graph.
+The other library ([Chart.js](https://github.com/chartjs)) doesn't allow custom callbacks after drawing elements onto the graph. So, without adding a way to hook into the rendering cycle, it's impossible to draw the labels on the central y-axis on the graph. 
