@@ -18,6 +18,10 @@ class Spinner {
 
 	hide() {
 		this.imgContainer.classList.add('hidden');
-		this.container.removeChild(this.imgContainer)
+		this.container.removeChild(this.imgContainer);
+
+		if (document.getElementById('graph-canvas')) {
+			document.getElementById('graph-canvas').style.height = '900px';
+		}
 	}
 }

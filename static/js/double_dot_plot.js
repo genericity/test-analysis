@@ -32,8 +32,8 @@ class DoubleDotPlot {
           padding: {
             left: 10,
             right: 20,
-            top: 50,
-            bottom: 30,
+            top: 70,
+            bottom: 50,
           }
         },
         scales: {
@@ -215,8 +215,11 @@ class DoubleDotPlot {
 
     let stepSize = this.findAxisStepSize(yMin, yMax);
 
-    this.yMin = Utils.roundTo(yMin, stepSize);
-    this.yMax = Utils.roundTo(yMax, stepSize);
+    yMin = Utils.roundTo(yMin, stepSize);
+    yMax = Utils.roundTo(yMax, stepSize);
+
+    this.yMin = yMin;
+    this.yMax = yMax;
 
     let xMin = 0 - (width / 2);
     let xMax = 0 + (width / 2);
