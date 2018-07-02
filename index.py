@@ -3,12 +3,13 @@ import rpy2.robjects as robjects
 import file_processing
 import sqlite3
 import db
+import os
 
 # Define the application.
 app = Flask(__name__)
 app.debug = True
-# This should be locally configured.
-app.secret_key = 'a>Sx9dxf7xdf_xcb84002xdcN?xf6xabj;8?x83abe2j'
+# Random secret key, so session cookies cannot be modified to gain access to other sessions even by the administrators.
+app.secret_key = os.urandom(24)
 DEFAULT_AB_BOUNDARY = 0.5
 DEFAULT_BC_BOUNDARY = -0.5
 DEFAULT_CD_BOUNDARY = -2

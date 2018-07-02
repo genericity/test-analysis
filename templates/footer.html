@@ -22,6 +22,7 @@
 
     {% if questions or review %}
     <!-- Table sorting scripts and styles. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/sticky_headers.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/libraries/sortable.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/row.js') }}"></script>
     <link href="{{ url_for('static', filename='css/sortable.css') }}" rel="stylesheet">

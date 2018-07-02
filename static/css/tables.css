@@ -20,6 +20,10 @@ table.sorted-table thead tr th{
 	border-bottom: 3px solid #E0E0E0;
 }
 
+table.sorted-table thead tr {
+	background: #eee;
+}
+
 table.sorted-table thead tr th:hover, table[data-sortable] th[data-sorted="true"]{
 	background: #E0E0E0;
 }
@@ -66,6 +70,15 @@ tr.removed:hover {
 table[data-sortable].sorted-table th, table[data-sortable].sorted-table td {
 	margin: 12px;
 	line-height: 28px;
+}
+
+table[data-sortable] .floating-header th:after {
+	visibility: hidden;
+}
+
+
+table[data-sortable] .visible th:after {
+	visibility: visible;
 }
 
 table[data-sortable] th:after {
@@ -205,4 +218,19 @@ table[data-sortable] th[data-sorted-direction="descending"]:after {
 
 #statistics-table.summary-table .table-icon.good.table-icon-up {
 	color: #4CAF50;
+}
+
+/* Sticky headers. */
+.floating-header {
+	position: fixed;
+	top: 0;
+	visibility: hidden;
+}
+
+.floating-header * {
+	visibility: hidden;
+}
+
+.visible, .visible * {
+	visibility: visible;
 }

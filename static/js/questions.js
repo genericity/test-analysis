@@ -10,4 +10,5 @@ questionHandler().then((questions) => {
 
 	// Hide the spinner.
 	spinner.hide();
+	Sortable.init();
 });
