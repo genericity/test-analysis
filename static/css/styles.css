@@ -31,9 +31,15 @@ body {
     width: 85%;
     max-width: 1800px;
     margin: auto;
-    overflow: auto;
-    overflow-x: hidden;
+    /*overflow: auto;
+    overflow-x: hidden;*/
     position: relative;
+}
+
+.inner-wrapper:after {
+  display: table;
+  content: "";
+  clear: both;
 }
 
 #content .inner-wrapper {
@@ -703,4 +709,47 @@ b {
     position: relative;
     margin: 10em auto;
     display: block;
+}
+
+/* Tooltips. */
+
+.tooltip-wrapper {
+    position: relative;
+}
+
+.tooltip-wrapper .tooltip {
+    visibility: hidden;
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    text-align: center;
+    padding: 12px 0;
+    border-radius: 3px;
+
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 50%;
+    margin-left: -100px;
+
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-wrapper .tooltip::after {
+    bottom: 100%;
+    left: 50%;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #444;
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    border-width: 8px;
+    margin-left: -8px;
+}
+
+.tooltip-wrapper:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
 }
