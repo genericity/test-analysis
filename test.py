@@ -7,7 +7,7 @@ from rpy2.robjects.packages import importr
 
 # Represents an entire test.
 class Test:
-	def __init__(self, students, versions, discarded = [], boundaries = None, texts = None):
+	def __init__(self, students, versions, discarded = [], boundaries = None, texts = None, subboundaries = None):
 		# {!Array<!Student>} An array of students.
 		self.students = students
 		# {Object<string, !Array<number>>} Dictionary mapping the version names to their answer keys.
@@ -35,11 +35,16 @@ class Test:
 		self.bc = -0.5
 		# {number} The grade boundary between C and D.
 		self.cd = -2
+		# Any set subboundaries.
+		self.subboundaries = None
 
 		if boundaries:
 			self.ab = boundaries[0]
 			self.bc = boundaries[1]
 			self.cd = boundaries[2]
+
+		if subboundaries:
+			self.subboundaries = subboundaries
 
 	# Score all the students.
 	def score_all(self):
@@ -231,6 +236,100 @@ class Test:
 
 		return max_score
 
+	# Converts the A/B, B/C, and C/D grade boundaries to find a grade boundary key in item score terms.
+	def calculate_subboundaries(self, ab_lowest, bc_lowest, cd_lowest):
+		min_score = self.min_student_location()
+		max_score = self.max_student_location()
+
+		# Get the range of each 'section'.
+		range_a = max(max_score - ab_lowest, 0)
+		range_b = max(ab_lowest - bc_lowest, 0)
+		range_c = max(bc_lowest - cd_lowest, 0)
+		range_d = max(cd_lowest - min_score, 0)
+
+		# Check for ranges of 0.
+		subboundaries = [
+		{
+			'grade': 'A+',
+			# This is set to the top 50% of scores in the A range.
+			'value': ab_lowest + (range_a / 4) * 2
+		},
+		{
+			'grade': 'A',
+			# This is set to the middle 25% of scores in the A range.
+			'value': ab_lowest + (range_a / 4) * 1
+		},
+		{
+			'grade': 'A-',
+			# This is set to the bottom 25% of scores in the A range.
+			'value': ab_lowest + (range_a / 4) * 0
+		},
+		{
+			'grade': 'B+',
+			# This is set to the top 33% of scores in the B range.
+			'value': bc_lowest + (range_b / 3) * 2
+		},
+		{
+			'grade': 'B',
+			# This is set to the middle 33% of scores in the B range.
+			'value': bc_lowest + (range_b / 3) * 1
+		},
+		{
+			'grade': 'B-',
+			# This is set to the bottom 33% of scores in the B range.
+			'value': bc_lowest + (range_b / 3) * 0
+		},
+		{
+			'grade': 'C+',
+			# This is set to the top 33% of scores in the C range.
+			'value': cd_lowest + (range_c / 3) * 2
+		},
+		{
+			'grade': 'C',
+			# This is set to the middle 33% of scores in the C range.
+			'value': cd_lowest + (range_c / 3) * 1
+		},
+		{
+			'grade': 'C-',
+			# This is set to the bottom 33% of scores in the C range.
+			'value': cd_lowest + (range_c / 3) * 0
+		},
+		{
+			'grade': 'D+',
+			# This is set to the top 33% of scores in the D range.
+			'value': min_score + (range_d / 3) * 2
+		},
+		{
+			'grade': 'D',
+			# This is set to the middle 33% of scores in the D range.
+			'value': min_score + (range_d / 3) * 1
+		},
+		{
+			'grade': 'D-',
+			'value': min_score
+		},
+		]
+
+		return subboundaries
+
+	# Calculates subboundaries if subboundaries are not set.
+	def get_grade_boundaries(self):
+		if not self.subboundaries:
+			return self.calculate_subboundaries(self.ab, self.bc, self.cd)
+
+		# Use the existing grade boundaries if they exist.
+		grade_boundaries = self.calculate_subboundaries(self.ab, self.bc, self.cd)
+		grade_boundaries[0]['value'] = self.subboundaries[0]
+		grade_boundaries[1]['value'] = self.subboundaries[1]
+		grade_boundaries[3]['value'] = self.subboundaries[2]
+		grade_boundaries[4]['value'] = self.subboundaries[3]
+		grade_boundaries[6]['value'] = self.subboundaries[4]
+		grade_boundaries[7]['value'] = self.subboundaries[5]
+		grade_boundaries[9]['value'] = self.subboundaries[6]
+		grade_boundaries[10]['value'] = self.subboundaries[7]
+
+		return grade_boundaries
+
 	# Outputs question data in a CSV-like format, comma-delineated.
 	def to_student_csv(self):
 		if (len(self.students) == 0):
@@ -240,10 +339,11 @@ class Test:
 		students = []
 
 		# Grade boundary key.
-		boundaries = [self.ab, self.bc, self.cd]
 		min_location = self.min_student_location()
 		max_location = self.max_student_location()
-		grade_boundaries = self.students[0].item_score_to_grade_boundaries(boundaries, min_location, max_location)
+		grade_boundaries = self.get_grade_boundaries()
+
+		print(grade_boundaries)
 
 		# Go through all the students and retrieve information about each one.
 		for i in range (0, len(self.students)):

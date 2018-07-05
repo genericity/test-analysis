@@ -90,6 +90,7 @@ def populate_default_boundaries(preloaded_test = None):
 	ab_student_locations = []
 	bc_student_locations = []
 	cd_student_locations = []
+
 	# Get the mean location of students with a raw percentage of between 75 - 85%.
 	# Why not just 80% precisely? Some tests may have an odd number of questions, non-multiple of 5, etc., so that no students get exactly 80% on the test.
 	for student in test.students:
@@ -102,6 +103,7 @@ def populate_default_boundaries(preloaded_test = None):
 		# And with C/D students (45 - 55%).
 		elif percentage >= 45 and percentage < 55:
 			cd_student_locations.append(student.get_location())
+
 	session['natural_ab'] = process_utils.mean(ab_student_locations) if len(ab_student_locations) != 0 else DEFAULT_AB_BOUNDARY
 	session['natural_bc'] = process_utils.mean(bc_student_locations) if len(bc_student_locations) != 0 else DEFAULT_BC_BOUNDARY
 	session['natural_cd'] = process_utils.mean(cd_student_locations) if len(cd_student_locations) != 0 else DEFAULT_CD_BOUNDARY
@@ -112,8 +114,28 @@ def save_discarded_questions(discarded_list):
 	db.insert_or_update_discarded(session['id'], raw_discarded)
 
 # Saves the grade boundaries.
-def save_boundaries(ab, bc, cd):
+def save_boundaries(ab, bc, cd, preloaded_test = None):
 	db.insert_or_update_boundaries(session['id'], ab, bc, cd)
+
+	test = preloaded_test or load_test()
+
+	# Calculate the natural grade subboundaries.
+	subboundaries = test.calculate_subboundaries(ab, bc, cd)
+
+	# Set the subboundaries.
+	session['natural_ap'] = subboundaries[0]['value']
+	session['natural_a'] = subboundaries[1]['value']
+	session['natural_bp'] = subboundaries[3]['value']
+	session['natural_b'] = subboundaries[4]['value']
+	session['natural_cp'] = subboundaries[6]['value']
+	session['natural_c'] = subboundaries[7]['value']
+	session['natural_dp'] = subboundaries[9]['value']
+	session['natural_d'] = subboundaries[10]['value']
+
+# Saves the grade boundaries.
+def save_subboundaries(subboundaries):
+	print('save subboundaries', subboundaries)
+	db.insert_or_update_subboundaries(session['id'], subboundaries)
 
 # Loads test data based on the session ID.
 def load_test():
@@ -160,8 +182,10 @@ def load_test():
 
 	# Retrieve grade boundaries if it exists.
 	boundaries = db.get_grade_boundaries(session_id)
+	subboundaries = db.get_grade_subboundaries(session_id)
+	print(subboundaries)
 
-	test = Test(students, versions, discarded = discarded, boundaries = boundaries, texts = texts)
+	test = Test(students, versions, discarded = discarded, boundaries = boundaries, texts = texts, subboundaries = subboundaries)
 
 	return test
 

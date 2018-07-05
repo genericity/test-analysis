@@ -43,7 +43,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/review.js') }}"></script>
     {% endif %}
 
-    {% if grades %}
+    {% if grades or confirm %}
     <!-- Chart and visualization scripts. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/libraries/chart.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/libraries/annotations.js') }}"></script>
@@ -56,7 +56,19 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/student_row.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/student_handler.js') }}"></script>
     <!-- For visualization. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/chart_state.js') }}"></script>
+    {% endif %}
+
+    {% if grades %}
+    <!-- Visualization initialization scripts. -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+    {% endif %}
+
+    {% if confirm %}
+    <!-- For visualization. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/sub_chart_state.js') }}"></script>
+    <!-- Visualization initialization scripts. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/confirm.js') }}"></script>
     {% endif %}
 
     {% if export %}

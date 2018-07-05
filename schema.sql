@@ -25,3 +25,9 @@ create table if not exists boundaries (
 	boundaries text,
 	foreign key(session_id) references responses(ROWID)
 );
+
+create table if not exists subboundaries (
+	session_id integer not null,
+	boundaries text,
+	foreign key(session_id) references responses(ROWID)
+);

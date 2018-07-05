@@ -10,6 +10,8 @@ app = Flask(__name__)
 app.debug = True
 # Random secret key, so session cookies cannot be modified to gain access to other sessions even by the administrators.
 app.secret_key = os.urandom(24)
+# Default grade boundaries. These should never be used, but it is good to have
+# failsafes in case a user navigates to a page before the page has the necessary information.
 DEFAULT_AB_BOUNDARY = 0.5
 DEFAULT_BC_BOUNDARY = -0.5
 DEFAULT_CD_BOUNDARY = -2
@@ -88,22 +90,82 @@ def grades_page():
 		file_processing.save_discarded_questions(discard)
 
 	boundaries = db.get_grade_boundaries(session['id'])
-	if boundaries:
-		return render_template('grades.html', grades = True, ab = boundaries[0], bc = boundaries[1], cd = boundaries[2])
-	else:
-		return render_template('grades.html', grades = True, ab = session['natural_ab'], bc = session['natural_bc'], cd = session['natural_cd'])
 
-@app.route('/review', methods = ['GET', 'POST'])
-def review_page():
+	# The first time the user visits this page, no boundaries have been set yet.
+	ab = session['natural_ab']
+	bc = session['natural_bc']
+	cd = session['natural_cd']
+
+	# If boundaries have been saved into the database.
+	if boundaries:
+		ab = boundaries[0]
+		bc = boundaries[1]
+		cd = boundaries[2]
+
+	return render_template('grades.html', grades = True, ab = ab, bc = bc, cd = cd)
+
+@app.route('/grades-confirm', methods = ['GET', 'POST'])
+def confirm_page():
 	# The result of submitting the previous grades page.
 	# Process the data.
 	if request.method == 'POST':
 		# All the grade boundaries.
-		ab_boundary = request.form.get('ab-boundary') or session['natural_ab']
-		bc_boundary = request.form.get('bc-boundary') or session['natural_bc']
-		cd_boundary = request.form.get('cd-boundary') or session['natural_cd']
+		ab_boundary = float(request.form.get('ab-boundary') or session['natural_ab'])
+		bc_boundary = float(request.form.get('bc-boundary') or session['natural_bc'])
+		cd_boundary = float(request.form.get('cd-boundary') or session['natural_cd'])
 		# Save the boundaries into the database.
 		file_processing.save_boundaries(ab_boundary, bc_boundary, cd_boundary)
+
+		# Delete any existing subboundaries.
+		subboundaries = db.get_grade_subboundaries(session['id'])
+		if subboundaries:
+			db.delete_grade_subboundaries(session['id'])
+
+	boundaries = db.get_grade_boundaries(session['id'])
+
+	ab = session['natural_ab']
+	bc = session['natural_bc']
+	cd = session['natural_cd']
+	ap = session['natural_ap']
+	a = session['natural_a']
+	bp = session['natural_bp']
+	b = session['natural_b']
+	cp = session['natural_cp']
+	c = session['natural_c']
+	dp = session['natural_dp']
+	d = session['natural_d']
+
+	if boundaries:
+		ab = boundaries[0]
+		bc = boundaries[1]
+		cd = boundaries[2]
+
+	if subboundaries:
+		ap = subboundaries[0]
+		a = subboundaries[1]
+		bp = subboundaries[2]
+		b = subboundaries[3]
+		cp = subboundaries[4]
+		c = subboundaries[5]
+		dp = subboundaries[6]
+		d = subboundaries[7]
+
+	return render_template('grades-confirm.html', confirm = True, ab = ab, bc = bc, cd = cd, ap = ap, a = a, bp = bp, b = b, cp = cp, c = c, dp = dp, d = d)
+
+@app.route('/review', methods = ['GET', 'POST'])
+def review_page():
+	# The result of submitting the previous subgrade boundaries page.
+	# Process the data.
+	if request.method == 'POST':
+		# All the grade boundaries.
+		ids = ['ap', 'a', 'bp', 'b', 'cp', 'c', 'dp', 'd']
+		subboundaries = []
+		for subboundary in ids:
+			boundary = float(request.form.get(subboundary + '-boundary') or session['natural_' + subboundary])
+			subboundaries.append(boundary)
+
+		# Save the boundaries into the database.
+		file_processing.save_subboundaries(subboundaries)
 
 	return render_template('review.html', review = True)
 

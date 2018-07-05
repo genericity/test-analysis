@@ -626,9 +626,9 @@ footer ul li a:hover {
 
 #grade-boundaries label {
     margin: 1em;
-    display: block;
+    display: inline-block;
     color: #757575;
-    flex-grow: 2;
+    flex-grow: 1;
     white-space: nowrap;
 }
 
@@ -638,11 +638,23 @@ footer ul li a:hover {
 
 #grade-boundary-numbers {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 #grade-boundary-numbers .input-field {
     flex-grow: 1;
+    min-width: 100px;
+}
+
+#grade-boundary-numbers div[role='group'] {
+    display: flex;
+    flex-direction: row;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+#grade-boundary-numbers div[role='group'] .input-field {
+    width: initial;
 }
 
 /* Input fields. */

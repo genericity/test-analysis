@@ -74,6 +74,42 @@ def get_grade_boundaries(session_id):
 	# Return None if there were no results.
 	return None
 
+# Inserts or updates the selected grade boundaries into the database.
+def insert_or_update_subboundaries(session_id, boundaries):
+ 	cursor = get_db().cursor()
+
+ 	print(session_id, boundaries)
+
+ 	if not session_id:
+ 		return
+
+ 	boundaries_str = ','.join(list(map(str, boundaries)))
+ 	print (boundaries_str)
+
+ 	# If there are no existing rows in the database, insert.
+ 	if not get_grade_subboundaries(session_id):
+ 		query_db('insert into subboundaries (session_id, boundaries) values (?,?);', [session_id, boundaries_str], cursor = cursor)
+ 	# Otherwise, update the existing entry.
+ 	else:
+ 		query_db('update subboundaries set boundaries = ? where session_id = ? limit 1;', [boundaries_str, session_id], cursor = cursor)
+
+# Retrieves the sub grade boundaries from the database.
+def get_grade_subboundaries(session_id):
+ 	result = query_db('select * from subboundaries where session_id = ?', [session_id], one = True)
+
+ 	if result:
+	 	# Split into the three boundaries.
+	 	boundaries = result['boundaries'].split(',')
+	 	# Convert to numeric values and return.
+	 	return [float(i) for i in boundaries]
+
+	# Return None if there were no results.
+	return None
+
+# Retrieves the sub grade boundaries from the database.
+def delete_grade_subboundaries(session_id):
+ 	result = query_db('delete from subboundaries where session_id = ?', [session_id], one = True)
+
 # Retrieves response data from the database given a session id.
 def get_responses(session_id):
 	result = query_db('select * from responses where ROWID = ?;', [session_id], one = True)

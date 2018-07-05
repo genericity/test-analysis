@@ -1,0 +1,51 @@
+{% include "header.html" %}
+            <h2>Confirm grade boundaries
+                <span>Description describing this page.</span>
+            </h2>
+            <p>
+                Description describing this page.
+            </p>
+            <section id="grades">
+                <div id="graph-container">
+                    <h3 id="questions-heading">Questions</h3>
+                    <h3 id="students-heading">Students</h3>
+                    <div id="canvas-container">
+                        <canvas id="graph-canvas" height="1"></canvas>
+                    </div>
+                </div>
+                <div id="grade-boundaries">
+                    <h3>Grades</h3>
+                    <form id="grade-boundary-numbers" method="post" action="{{ url_for('review_page') }}" enctype="multipart/form-data">
+                        <input type="text" id="ab-boundary" class="hidden" value="{{ ab }}" />
+                        <input type="text" id="bc-boundary" class="hidden" value="{{ bc }}" />
+                        <input type="text" id="cd-boundary" class="hidden" value="{{ cd }}" />
+                        <!-- Using <div role="group"> because <fieldset> cannot be used as a flex element. -->
+                        <div role="group">
+                            <label for="ap-boundary">A+/A boundary</label><input type="text" class="input-field" id="ap-boundary" name="ap-boundary" value="{{ ap }}">
+                            <label for="a-boundary">A/A- boundary</label><input type="text" class="input-field" id="a-boundary" name="a-boundary" value="{{ a }}">
+                        </div>
+                        <div role="group">
+                            <label for="bp-boundary">B+/B boundary</label><input type="text" class="input-field" id="bp-boundary" name="bp-boundary" value="{{ bp }}">
+                            <label for="b-boundary">B/B- boundary</label><input type="text" class="input-field" id="b-boundary" name="b-boundary" value="{{ b }}">
+                        </div>
+                        <div role="group">
+                            <label for="cp-boundary">C+/C boundary</label><input type="text" class="input-field" id="cp-boundary" name="cp-boundary" value="{{ cp }}">
+                            <label for="c-boundary">C/C- boundary</label><input type="text" class="input-field" id="c-boundary" name="c-boundary" value="{{ c }}">
+                        </div>
+                        <div role="group">
+                            <label for="dp-boundary">D+/D boundary</label><input type="text" class="input-field" id="dp-boundary" name="dp-boundary" value="{{ dp }}">
+                            <label for="d-boundary">D/D- boundary</label><input type="text" class="input-field" id="d-boundary" name="d-boundary" value="{{ d }}">
+                        </div>
+                        <input type="submit" id="submit-form" class="hidden" />
+                    </form>
+                </div>
+            </section>
+            <a class="button reversed-button" id="back-button" href="{{ url_for('grades_page') }}">
+                <span class="button-icon material-icons">arrow_back</span>
+                <span class="button-text">Back</span>
+            </a>
+            <label class="button" id="next-button" for="submit-form">
+                <span class="button-text">Next</span>
+                <span class="button-icon material-icons">arrow_forward</span>
+            </label>
+{% include "footer.html" %}

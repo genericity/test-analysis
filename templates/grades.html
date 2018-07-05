@@ -48,10 +48,12 @@
                 </div>
                 <div id="grade-boundaries">
                     <h3>Grades</h3>
-                    <form id="grade-boundary-numbers" method="post" action="{{ url_for('review_page') }}" enctype="multipart/form-data">
-                        <label for="ab-boundary">A/B boundary</label><input type="text" class="input-field" id="ab-boundary" name="ab-boundary" value="{{ ab }}">
-                        <label for="bc-boundary">B/C boundary</label><input type="text" class="input-field" id="bc-boundary" name="bc-boundary" value="{{ bc }}">
-                        <label for="cd-boundary">C/D boundary</label><input type="text" class="input-field" id="cd-boundary" name="cd-boundary" value="{{ cd }}">
+                    <form id="grade-boundary-numbers" method="post" action="{{ url_for('confirm_page') }}" enctype="multipart/form-data">
+                        <div role="group">
+                            <label for="ab-boundary">A/B boundary</label><input type="text" class="input-field" id="ab-boundary" name="ab-boundary" value="{{ ab }}">
+                            <label for="bc-boundary">B/C boundary</label><input type="text" class="input-field" id="bc-boundary" name="bc-boundary" value="{{ bc }}">
+                            <label for="cd-boundary">C/D boundary</label><input type="text" class="input-field" id="cd-boundary" name="cd-boundary" value="{{ cd }}">
+                        </div>
                         <input type="submit" id="submit-form" class="hidden" />
                     </form>
                 </div>
