@@ -44,7 +44,14 @@ class Divider {
         this.chartState.setGradeBoundary(this.dividerId, field.value);
       }
 		}
+
+    // Disable the fields initially while the graph is loading.
+    field.disabled = true;
 	}
+
+  enableField() {
+    document.getElementById(this.fieldId).disabled = false;
+  }
 
   isMoveValid(chartY) {
     // Check that the B/C divider is not moving higher than the A/B divider, etc.

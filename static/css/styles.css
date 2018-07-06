@@ -706,11 +706,16 @@ input[type="text"], input[type="date"], input[type="datetime"], input[type="date
 }
 
 input[type="text"]:disabled, input[type="date"]:disabled, input[type="datetime"]:disabled, input[type="datetime-local"]:disabled, input[type="email"]:disabled, input[type="month"]:disabled, input[type="number"]:disabled, input[type="password"]:disabled, input[type="search"]:disabled, input[type="tel"]:disabled, input[type="text"]:disabled, input[type="time"]:disabled, input[type="url"]:disabled, input[type="week"]:disabled, select[multiple]:disabled, select[size]:disabled, textarea:disabled {
-     background: #f7f7f7;
+    color: #999;
+    background: #eee;
 }
 
 .input-field:hover, .input-field:focus {
-border-bottom: 2px solid #607d8b;
+    border-bottom: 2px solid #607d8b;
+}
+
+input[type="text"]:disabled:hover {
+    border-bottom: 2px solid #ddd;
 }
 
 /* Utility. */

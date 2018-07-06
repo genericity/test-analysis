@@ -266,6 +266,11 @@ class ChartState {
       if (this.spinner) {
         this.spinner.hide();
       }
+
+      // Enable the fields for editing.
+      for (const divider of this.dividers) {
+        divider.enableField();
+      }
     });
   }
 
