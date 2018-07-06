@@ -337,6 +337,10 @@ nav ul li:last-child:after{
     margin: 0 0 2em 0;
 }
 
+.upload-format {
+    padding-bottom: 36px;
+}
+
 .upload-card {
     background: #fafafa;
     cursor: pointer;
@@ -346,9 +350,6 @@ nav ul li:last-child:after{
     width: 33%;
     flex: 1;
     border-bottom: 5px solid #f1f1f1;
-}
-
-.upload-format {
     padding-bottom: 36px;
 }
 
@@ -417,6 +418,29 @@ nav ul li:last-child:after{
 
 .upload-status.upload-card {
     padding: 0;
+    background-repeat: no-repeat;
+    padding-bottom: 170px;
+    background-position: center 200px;
+}
+
+#upload-csv {
+    background-image: url('/static/csv.png');
+    background-size: auto 40%;
+}
+
+#upload-answer {
+    background-image: url('/static/answer.png');
+    background-size: auto 40%;
+}
+
+#upload-response {
+    background-image: url('/static/response.png');
+    background-size: 90% auto;
+}
+
+#upload-text {
+    background-image: url('/static/text.png');
+    background-size: auto 40%;
 }
 
 .upload-subtext {
@@ -458,11 +482,11 @@ nav ul li:last-child:after{
 }
 
 .upload-format-box:checked + .upload-format {
-    background: #efefef;
+    background-color: #efefef;
 }
 
 .upload-format:hover {
-    background: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 

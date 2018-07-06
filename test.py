@@ -343,8 +343,6 @@ class Test:
 		max_location = self.max_student_location()
 		grade_boundaries = self.get_grade_boundaries()
 
-		print(grade_boundaries)
-
 		# Go through all the students and retrieve information about each one.
 		for i in range (0, len(self.students)):
 			student = self.students[i]

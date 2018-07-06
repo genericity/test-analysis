@@ -134,7 +134,6 @@ def save_boundaries(ab, bc, cd, preloaded_test = None):
 
 # Saves the grade boundaries.
 def save_subboundaries(subboundaries):
-	print('save subboundaries', subboundaries)
 	db.insert_or_update_subboundaries(session['id'], subboundaries)
 
 # Loads test data based on the session ID.
@@ -183,7 +182,6 @@ def load_test():
 	# Retrieve grade boundaries if it exists.
 	boundaries = db.get_grade_boundaries(session_id)
 	subboundaries = db.get_grade_subboundaries(session_id)
-	print(subboundaries)
 
 	test = Test(students, versions, discarded = discarded, boundaries = boundaries, texts = texts, subboundaries = subboundaries)
 
