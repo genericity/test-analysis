@@ -375,6 +375,7 @@ nav ul li:last-child:after{
     padding: 24px;
     overflow: auto;
     display: block;
+    padding-bottom: 8px;
 }
 
 .upload-file + label:before {
@@ -422,6 +423,27 @@ nav ul li:last-child:after{
     padding-bottom: 170px;
     background-position: center 200px;
 }
+.upload-status.upload-card.drag-and-drop {
+    background-position: center 216px;
+}
+
+.upload-status .upload-drag-supported {
+    display: none;
+}
+
+.upload-status.drag-and-drop .upload-drag-supported {
+    display: block;
+    text-align: center;
+    color: #777;
+}
+
+.upload-status.drag-and-drop {
+    border: 6px solid #fafafa;
+}
+
+.upload-status.drag-and-drop.drag-over {
+    border: 6px solid #e3e8eb;
+}
 
 #upload-csv {
     background-image: url('/static/csv.png');
@@ -450,6 +472,7 @@ nav ul li:last-child:after{
      color: #bdbdbd;
      text-align: center;
      margin-bottom: 2em;
+     padding-top: 16px;
 }
 
 .upload-file + label.file-selected:before {
@@ -483,6 +506,7 @@ nav ul li:last-child:after{
 
 .upload-format-box:checked + .upload-format {
     background-color: #efefef;
+    border-top: 4px solid #dcdcdc;
 }
 
 .upload-format:hover {

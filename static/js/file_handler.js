@@ -10,13 +10,18 @@ class FileHandler {
 		// Next page.
 		this.nextPage = '/questions';
 
+		const cards = document.getElementsByClassName('upload-status');
+		this.enableDragAndDrop(cards);
+		
 		// For each set of response types.
 		for (const type of types) {
 			// Listen to the radio button change.
 			const radio = type.radio;
 			const radioButton = document.getElementById(type.radio);
-			const cards = document.getElementsByClassName('upload-status');
+			
 			const fileIds = type.show;
+
+			// When the set is selected.
 			radioButton.onchange = () => {
 				// Clear set.
 				if (!this.required[radio]) {
@@ -68,10 +73,71 @@ class FileHandler {
 			}
 		}
 
-		// Fire the events.
-		document.getElementById('file-type-answer-response').checked = true;
-		document.getElementById('file-type-answer-response').onchange();
+		// Fire the events when the page loads to change the selected type to the prescored CSV.
+		document.getElementById('file-type-prescored').checked = true;
+		document.getElementById('file-type-prescored').onchange();
+	}
 
+	/*
+	* Enables drag and drop file uploading if possible.
+	* @param {Array<!Element>} cards The array of elements to have drag events for.
+	*/
+	enableDragAndDrop(cards) {
+		// Enable drag and drop for all the cards if possible / supported.
+		if (this.dragAndDropSupported()) {
+			for (const element of cards) {
+				// Style it differently by showing the drag and drop text and adding an outline.
+				element.classList.add('drag-and-drop');
+
+				const stopPropagation = function(e) {
+					e.preventDefault();
+    				e.stopPropagation();
+				}
+				// Stop the page from redirecting on drag/drop.
+				element.addEventListener('drag', stopPropagation);
+				element.addEventListener('dragstart', stopPropagation);
+				element.addEventListener('dragend', stopPropagation);
+				element.addEventListener('dragover', stopPropagation);
+				element.addEventListener('dragenter', stopPropagation);
+				element.addEventListener('dragleave', stopPropagation);
+				element.addEventListener('drop', stopPropagation);
+
+				// Have visual states added when hovering over the label.
+				const addVisualState = function(e) {
+					element.classList.add('drag-over');
+				}
+				element.addEventListener('dragover', addVisualState);
+				element.addEventListener('dragenter', addVisualState);
+
+				// Remove visual states added when not hovering over the label.
+				const removeVisualState = function(e) {
+					element.classList.remove('drag-over');
+				}
+				element.addEventListener('dragend', removeVisualState);
+				element.addEventListener('dragleave', removeVisualState);
+				element.addEventListener('drop', removeVisualState);
+
+				// Handle the dropped files.
+				const handleDrop = function(e) {
+					// Get the file input element.
+					const fileInput = element.getElementsByTagName('input')[0];
+					// Set its files to the uploaded files.
+					fileInput.files = e.dataTransfer.files;
+				}
+				element.addEventListener('drop', handleDrop);
+			}
+		}
+	}
+
+	/*
+	* Checks if advanced drag and drop file uploading is supported by the browser.
+	* @return {boolean} True if drag and drop is supported, false otherwise.
+	*/
+	dragAndDropSupported() {
+		const div = document.createElement('div');
+		const supported = (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FileReader' in window;
+
+		return supported;
 	}
 
 	/*
