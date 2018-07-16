@@ -124,8 +124,9 @@ class Student:
 	# Set this student's scores, given an answer key.
 	def score(self, answer_key):
 		self.scores = []
+		length = len(self.answers)
 		for i in range(0, len(answer_key)):
-			if self.answers[i] == answer_key[i]:
+			if (i + 1) <= length and self.answers[i] == answer_key[i]:
 				self.scores.append(True)
 			else:
 				self.scores.append(False)
@@ -172,7 +173,6 @@ class Student:
 		lowest = min_score
 		# For each grade.
 		for grade in grade_boundaries:
-			print('to percentage now', grade, grade_boundaries)
 			letter_grade = grade['grade']
 			# Check if the value is in the grade boundaries.
 			if value >= grade['value'] and len(letter_grade) > 1 and letter_grade[1] == '-':

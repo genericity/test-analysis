@@ -30,12 +30,12 @@
                 <table class="sortable-theme-minimal sorted-table sticky-table" id="questions-table" data-sortable>
                     <thead>
                         <tr>
-                            <th data-sortable-type="numeric" class="tooltip-wrapper">Number<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable="false" class="tooltip-wrapper">Question data<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable-type="numeric" class="tooltip-wrapper">% Correct<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable-type="numeric" class="tooltip-wrapper">Discrimination<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable-type="numeric" class="tooltip-wrapper">Item weight<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable="false" class="tooltip-wrapper">Keep / Discard<span class="tooltip">Tooltip describing this attribute.</span></th>
+                            <th data-sortable-type="numeric" class="tooltip-wrapper">Number</th>
+                            <th data-sortable="false" class="tooltip-wrapper">Question text</th>
+                            <th data-sortable-type="numeric" class="tooltip-wrapper">% Correct<span class="tooltip">The total percent % correct based on raw scores.</span></th>
+                            <th data-sortable-type="numeric" class="tooltip-wrapper">Discrimination<span class="tooltip">Discrimination parameter is an index of how well a MCQ item differentiates between low and high performing test-takers.<br>It ranges from negative to positive values. Negative values mean an item is easier for low-performing students than high-performing ones; these items are recommended for deletion.<br>The stronger the positive value, the more the high-performing students are likely to get the item right compared to low-performing students.</span></th>
+                            <th data-sortable-type="numeric" class="tooltip-wrapper">Item weight<span class="tooltip">Item weight is the statistical analysis of the MCQ item difficulty based on examinees’ responses. It typically ranges from +3 (hard item) to -3 (easy item), with 0 being the average difficulty.<br>The difficulty of an item describes where the item functions along the ability scale. A hard item means the probability of getting it right is &lt;50% for all students with an ability score less than the item’s difficulty location. An easy item will have >50% of being answered correctly by students with an ability score greater than the item’s difficulty.</span></th>
+                            <th data-sortable="false" class="tooltip-wrapper">Keep / Discard<span class="tooltip">This is the recommendation for each item. However, you may choose to keep or discard MCQ item(s) according to your judgment.</span></th>
                         </tr>
                     </thead>
                     <tbody id="question-body">
