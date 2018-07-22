@@ -1,0 +1,16 @@
+{% include "header.html" %}
+            <h2>Page not found
+                <span>Sorry, either we couldn't find this page or this page is not accessible yet.</span>
+            </h2>
+            <p>
+                Click the button below to go back to the last page you visited.
+            </p>
+            <section id="error">
+                <div>
+                    <a class="button reversed-button" id="back-button" href="#" onclick="window.history.back()">
+                        <span class="button-icon material-icons">arrow_back</span>
+                        <span class="button-text">Go back</span>
+                    </a>
+                </div>
+            </section>
+{% include "footer.html" %}

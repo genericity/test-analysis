@@ -299,6 +299,15 @@ nav ul li:last-child:after{
      float: right;
 }
 
+#error #back-button .button-text {
+     font-size: 36px;
+     line-height: 64px;
+}
+
+#error #back-button .button-icon {
+    font-size: 50px;
+}
+
 /* Main area. */
 
 #content {

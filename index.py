@@ -7,14 +7,10 @@ import os
 
 # Define the application.
 app = Flask(__name__)
-app.debug = True
+app.debug = False
+
 # Random secret key, so session cookies cannot be modified to gain access to other sessions even by the administrators.
 app.secret_key = os.urandom(24)
-# Default grade boundaries. These should never be used, but it is good to have
-# failsafes in case a user navigates to a page before the page has the necessary information.
-DEFAULT_AB_BOUNDARY = 0.5
-DEFAULT_BC_BOUNDARY = -0.5
-DEFAULT_CD_BOUNDARY = -2
 
 # R setup.
 r = robjects.r
@@ -180,6 +176,16 @@ def question_data():
 @app.route('/get/students')
 def student_data():
 	return file_processing.get_student_data()
+
+# Error handler for 404 errors.
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+# Error handler for 500 errors.
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
 
 # Initializes the database. The readme file contains instructions on how to run this at the start of installing the application.
 def init_db():
