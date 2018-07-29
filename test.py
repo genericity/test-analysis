@@ -91,18 +91,18 @@ class Test:
 
 	# Given a string, guess which version it is most likely to be.
 	def get_version(self, version_string):
-		# Start by trying out a direct comparison.
+		# Strip the non-numeric characters from the versions we have.
+		for version_name in self.versions.keys():
+			version_stripped = re.sub("\D", "", version_name)
+			# Compare it to the integer value of the version given without the course code (first three characters).
+			# After further samples have been given, it's revealed only the last character of the version matters.
+			if version_stripped == version_string:
+				return version_name
+
+		# Then try out a direct comparison.
 		for version_name in self.versions.keys():
 			if version_name == version_string:
 				return version_string
-
-		# Strip the non-numeric characters from the versions we have.
-		for version_name in self.versions.keys():
-			version_stripped = int(re.sub("\D", "", version_name))
-			# Compare it to the integer value of the version given without the course code (first three characters).
-			version_cutoff = int(version_string[3:])
-			if version_stripped == version_cutoff:
-				return version_name
 
 		# Return the first key as a default.
 		return self.versions.keys()[0]

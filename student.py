@@ -108,7 +108,7 @@ class Student:
 		# First name.
 		self.first_name = data[25:33].strip()
 		# Version of the test.
-		self.version = data[33:44].strip()
+		self.version = data[43:44].strip()
 
 		# Split into chunks of 2, each one is a question response.
 		# Convert them into integers.
