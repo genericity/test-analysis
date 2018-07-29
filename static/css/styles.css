@@ -668,6 +668,12 @@ footer ul li a:hover {
     clear: both;
 }
 
+#student-hider-button {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}
+
 #questions-heading {
     float: left;
 }

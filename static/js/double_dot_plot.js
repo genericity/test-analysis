@@ -17,6 +17,7 @@ class DoubleDotPlot {
     this.originalData = data;
     this.yMin = 0;
     this.yMax = 0;
+    this.xMax = 0;
     this.ctx = ctx;
 
     // Default options.
@@ -124,8 +125,13 @@ class DoubleDotPlot {
     // Add a y-axis.
     this.addYAxis(yMin, yMax, width);
 
+    // Add a box to hide the students until it's clicked on.
+    this.studentHider = new StudentHider(yMin, yMax, width, this.xMax, this);
+
     // Create chart.
     this.chart = new Chart(ctx, this.options);
+
+    this.studentHider.show();
     }
 
   /*
@@ -169,11 +175,17 @@ class DoubleDotPlot {
     		existing[value] = 0;
     	}
 
+      const newX = (existing[value] + (width * 1.5) / 2) * Math.pow(-1, index + 1);
+
+      if (newX > this.xMax) {
+        this.xMax = newX;
+      }
+
     	// Create a new point.
     	// Alternate between placing points to the left and right of 0.
 		  const newPoint = {
   			// Create a gap of dots between the two sections.
-  			x: (existing[value] + (width * 1.5) / 2) * Math.pow(-1, index + 1),
+  			x: newX,
   			y: value
   		};
   		points.push(newPoint);
