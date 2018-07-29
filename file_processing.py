@@ -9,6 +9,9 @@ DEFAULT_AB_BOUNDARY = 0.5
 DEFAULT_BC_BOUNDARY = -0.5
 DEFAULT_CD_BOUNDARY = -2
 
+# Set up a database object.
+database_manager = db.Database()
+
 # Converts a student data file into an array of student objects.
 def to_student_array(student_data, prescored = False, test_length = 30):
 	# Clean data of carriage returns first.
@@ -28,6 +31,9 @@ def to_student_array(student_data, prescored = False, test_length = 30):
 
 # Converts a version answer data file into a dictionary of answer keys.
 def to_version_dict(version_data, first_column = True):
+	if not version_data:
+		return None
+
 	versions = {}
 	version_array = version_data.splitlines()
 
@@ -61,11 +67,14 @@ def to_version_dict(version_data, first_column = True):
 
 # Converts raw question text data into an array.
 def to_text_array(raw_question_data):
+	if not raw_question_data:
+		return None
+
 	return raw_question_data.splitlines()
 
 # Saves raw data and sets session variables.
 def save_raw_data(raw_student_data, raw_version_data, raw_question_data):
-	session['id'] = db.insert_raw(raw_student_data, raw_version_data, raw_question_data)
+	session['id'] = database_manager.insert('uploads', ['responses', 'answers', 'question_texts'], [raw_student_data, raw_version_data, raw_question_data])
 
 	# Set the number of files.
 	session['num_files'] = 0
@@ -110,17 +119,16 @@ def populate_default_boundaries(preloaded_test = None):
 
 # Saves the list of discarded questions.
 def save_discarded_questions(discarded_list):
-	raw_discarded = ','.join(discarded_list)
-	db.insert_or_update_discarded(session['id'], raw_discarded)
+	database_manager.insert_or_update_from('discarded_questions', session['id'], discarded_list)
 
 # Saves the grade boundaries.
-def save_boundaries(ab, bc, cd, preloaded_test = None):
-	db.insert_or_update_boundaries(session['id'], ab, bc, cd)
+def save_boundaries(boundaries, preloaded_test = None):
+	database_manager.insert_or_update_from('boundaries', session['id'], boundaries)
 
 	test = preloaded_test or load_test()
 
 	# Calculate the natural grade subboundaries.
-	subboundaries = test.calculate_subboundaries(ab, bc, cd)
+	subboundaries = test.calculate_subboundaries(boundaries)
 
 	# Set the subboundaries.
 	session['natural_ap'] = subboundaries[0]['value']
@@ -134,7 +142,7 @@ def save_boundaries(ab, bc, cd, preloaded_test = None):
 
 # Saves the grade boundaries.
 def save_subboundaries(subboundaries):
-	db.insert_or_update_subboundaries(session['id'], subboundaries)
+	database_manager.insert_or_update_from('subboundaries', session['id'], subboundaries)
 
 # Loads test data based on the session ID.
 def load_test():
@@ -143,48 +151,34 @@ def load_test():
 
 	# Retrieve data from the database.
 	session_id = session['id']
-	raw_student_data = db.get_responses(session_id)
-	raw_version_data = db.get_answers(session_id)
-	raw_question_data = db.get_texts(session_id)
-
-	# This should not happen. But prepare for it anyway.
-	if raw_student_data['data'] is None:
-		return ''
+	uploaded_data = database_manager.get_from('uploads', session_id, 'ROWID')
 
 	# Student objects in an array.
 	students = None
 	# Version data.
 	versions = None
-	# Question text data.
-	texts = None
+	# Convert the question texts if it exists.
+	texts = to_text_array(uploaded_data['question_texts'])
 
 	# Determine if the data is prescored or not by if version data was uploaded.
-	if raw_student_data and not raw_version_data:
+	if uploaded_data['responses'] and not uploaded_data['answers']:
 		# Convert the tab-delineated file to an array of actual student objects.
-		students = to_student_array(raw_student_data['data'], prescored = True)
+		students = to_student_array(uploaded_data['responses'], prescored = True)
 	else:
 		# Convert the version data if it exists.
-		students = to_student_array(raw_student_data['data'], prescored = False)
-		versions = to_version_dict(raw_version_data['data'])
-
-	# Convert the question texts if it exists.
-	if raw_question_data:
-		texts = to_text_array(raw_question_data['data'])
+		students = to_student_array(uploaded_data['responses'], prescored = False)
+		versions = to_version_dict(uploaded_data['answers'])
 
 	# Check if there are any discarded questions stored in the database.
-	raw_discarded = db.get_discarded(session_id)
-	discarded = []
-	# If there is, convert it into a list of integers.
-	if raw_discarded and not raw_discarded['questions'] is None and not len(raw_discarded['questions']) == 0:
-		discarded = raw_discarded['questions'].split(',')
-		discarded = map(int, discarded)
-
+	discarded = database_manager.get_from('discarded_questions', session_id)
+	discarded = discarded['discarded_questions'] if discarded else None
 	# Retrieve grade boundaries if it exists.
-	boundaries = db.get_grade_boundaries(session_id)
-	subboundaries = db.get_grade_subboundaries(session_id)
+	boundaries = database_manager.get_from('boundaries', session_id)
+	boundaries = boundaries['boundaries'] if boundaries else None
+	subboundaries = database_manager.get_from('subboundaries', session_id)
+	subboundaries = subboundaries['subboundaries'] if subboundaries else None
 
 	test = Test(students, versions, discarded = discarded, boundaries = boundaries, texts = texts, subboundaries = subboundaries)
-
 	return test
 
 # Outputs question data in a comma-delineated format.

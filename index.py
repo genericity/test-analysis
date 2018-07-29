@@ -15,6 +15,9 @@ app.secret_key = os.urandom(24)
 # R setup.
 r = robjects.r
 
+# Set up a database object.
+database_manager = db.Database()
+
 # App routing.
 @app.route('/')
 def upload_page():
@@ -85,7 +88,7 @@ def grades_page():
 		# Process the discarded questions.
 		file_processing.save_discarded_questions(discard)
 
-	boundaries = db.get_grade_boundaries(session['id'])
+	boundaries = database_manager.get_from('boundaries', session['id'])
 
 	# The first time the user visits this page, no boundaries have been set yet.
 	ab = session['natural_ab']
@@ -94,9 +97,9 @@ def grades_page():
 
 	# If boundaries have been saved into the database.
 	if boundaries:
-		ab = boundaries[0]
-		bc = boundaries[1]
-		cd = boundaries[2]
+		ab = boundaries['boundaries'][0]
+		bc = boundaries['boundaries'][1]
+		cd = boundaries['boundaries'][2]
 
 	return render_template('grades.html', grades = True, ab = ab, bc = bc, cd = cd)
 
@@ -110,14 +113,14 @@ def confirm_page():
 		bc_boundary = float(request.form.get('bc-boundary') or session['natural_bc'])
 		cd_boundary = float(request.form.get('cd-boundary') or session['natural_cd'])
 		# Save the boundaries into the database.
-		file_processing.save_boundaries(ab_boundary, bc_boundary, cd_boundary)
+		file_processing.save_boundaries([ab_boundary, bc_boundary, cd_boundary])
 
 		# Delete any existing subboundaries.
-		subboundaries = db.get_grade_subboundaries(session['id'])
+		subboundaries = database_manager.get_from('subboundaries', session['id'])
 		if subboundaries:
-			db.delete_grade_subboundaries(session['id'])
+			database_manager.delete_from('subboundaries', session['id'])
 
-	boundaries = db.get_grade_boundaries(session['id'])
+	boundaries = database_manager.get_from('boundaries', session['id'])['boundaries']
 
 	ab = session['natural_ab']
 	bc = session['natural_bc']
@@ -190,7 +193,7 @@ def internal_error(error):
 # Initializes the database. The readme file contains instructions on how to run this at the start of installing the application.
 def init_db():
     with app.app_context():
-        database = db.get_db()
+        database = database_manager.get_db()
         with app.open_resource('schema.sql', mode = 'r') as f:
             database.cursor().executescript(f.read())
         database.commit()

@@ -29,22 +29,10 @@ class Test:
 		# {number} The length of the test.
 		self.test_length = len(self.questions)
 
-		# {number} The grade boundary between A and B.
-		self.ab = 0.5
-		# {number} The grade boundary between B and C.
-		self.bc = -0.5
-		# {number} The grade boundary between C and D.
-		self.cd = -2
+		# {!Array<number>} The default grade boundaries.
+		self.boundaries = boundaries or [0.5, -0.5, -2]
 		# Any set subboundaries.
-		self.subboundaries = None
-
-		if boundaries:
-			self.ab = boundaries[0]
-			self.bc = boundaries[1]
-			self.cd = boundaries[2]
-
-		if subboundaries:
-			self.subboundaries = subboundaries
+		self.subboundaries = subboundaries or None
 
 	# Score all the students.
 	def score_all(self):
@@ -74,6 +62,7 @@ class Test:
 
 	# Initializes the array of question objects.
 	def init_questions(self, text_array, discard_array):
+		print('init questions', discard_array, self.test_length)
 		questions = []
 
 		for i in range(self.test_length):
@@ -82,7 +71,8 @@ class Test:
 			# The text for the question, if it exists.
 			text = text_array[i] if text_array and len(text_array) - 1 >= i else ''
 			# If this question was marked as to discard or not.
-			discard = ((i + 1) in discard_array)
+			discard = ((i + 1) in discard_array) if discard_array else False
+			print(i, discard)
 
 			# Create the question.
 			question = Question(self, percentage_correct = percentage, text = text, discard = discard)
@@ -141,7 +131,7 @@ class Test:
 		return '\n'.join(questions)
 
 	# Sets item weights and discriminations for the questions.
-	def calculate_question_stats(self, response_matrix = None):
+	def calculate_question_stats(self, response_matrix = None, return_values = False):
 		response_matrix = response_matrix or self.get_response_matrix()
 
 		# Assign to a symbol.
@@ -168,7 +158,7 @@ class Test:
 			question.item_weight = item_weights.rx2(i + 1)[0]
 
 	# Sets locations for the students.
-	def calculate_student_stats(self, response_matrix = None):
+	def calculate_student_stats(self, response_matrix = None, return_values = False):
 		response_matrix = response_matrix or self.get_response_matrix()
 
 		# Assign to a symbol.
@@ -237,7 +227,11 @@ class Test:
 		return max_score
 
 	# Converts the A/B, B/C, and C/D grade boundaries to find a grade boundary key in item score terms.
-	def calculate_subboundaries(self, ab_lowest, bc_lowest, cd_lowest):
+	def calculate_subboundaries(self, boundaries):
+		ab_lowest = boundaries[0]
+		bc_lowest = boundaries[1]
+		cd_lowest = boundaries[2]
+
 		min_score = self.min_student_location()
 		max_score = self.max_student_location()
 
@@ -315,10 +309,10 @@ class Test:
 	# Calculates subboundaries if subboundaries are not set.
 	def get_grade_boundaries(self):
 		if not self.subboundaries:
-			return self.calculate_subboundaries(self.ab, self.bc, self.cd)
+			return self.calculate_subboundaries(self.boundaries)
 
 		# Use the existing grade boundaries if they exist.
-		grade_boundaries = self.calculate_subboundaries(self.ab, self.bc, self.cd)
+		grade_boundaries = self.calculate_subboundaries(self.boundaries)
 		grade_boundaries[0]['value'] = self.subboundaries[0]
 		grade_boundaries[1]['value'] = self.subboundaries[1]
 		grade_boundaries[3]['value'] = self.subboundaries[2]
