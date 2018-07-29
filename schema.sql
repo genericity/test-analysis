@@ -21,3 +21,21 @@ create table if not exists subboundaries (
 	subboundaries text,
 	foreign key(session_id) references uploads(ROWID)
 );
+
+create table if not exists question_discriminations (
+	session_id integer not null,
+	question_discriminations text,
+	foreign key(session_id) references uploads(ROWID)
+);
+
+create table if not exists question_weights (
+	session_id integer not null,
+	question_weights text,
+	foreign key(session_id) references uploads(ROWID)
+);
+
+create table if not exists student_locations (
+	session_id integer not null,
+	student_locations text,
+	foreign key(session_id) references uploads(ROWID)
+);

@@ -175,10 +175,29 @@ def load_test():
 	# Retrieve grade boundaries if it exists.
 	boundaries = database_manager.get_from('boundaries', session_id)
 	boundaries = boundaries['boundaries'] if boundaries else None
+	# Retrieve grade subboundaries if it exists.
 	subboundaries = database_manager.get_from('subboundaries', session_id)
 	subboundaries = subboundaries['subboundaries'] if subboundaries else None
 
-	test = Test(students, versions, discarded = discarded, boundaries = boundaries, texts = texts, subboundaries = subboundaries)
+	# Retrieve question discriminations if it exists.
+	question_discriminations = database_manager.get_from('question_discriminations', session_id)
+	question_discriminations = question_discriminations['question_discriminations'] if question_discriminations else None
+	# Retrieve question weights if it exists.
+	question_weights = database_manager.get_from('question_weights', session_id)
+	question_weights = question_weights['question_weights'] if question_weights else None
+
+	# Retrieve student locations if it exists.
+	student_locations = database_manager.get_from('student_locations', session_id)
+	student_locations = student_locations['student_locations'] if student_locations else None
+
+	test = Test(students, versions,
+		discarded = discarded,
+		boundaries = boundaries,
+		texts = texts,
+		subboundaries = subboundaries,
+		question_discriminations = question_discriminations,
+		question_weights = question_weights,
+		student_locations = student_locations)
 	return test
 
 # Outputs question data in a comma-delineated format.

@@ -85,6 +85,18 @@ def grades_page():
 	if request.method == 'POST':
 		# All the questions that were checked, i.e. need to be discarded.
 		discard = request.form.getlist('question')
+
+		def list_to_str(x):
+			return ','.join(list(map(str, x))) if x else ''
+
+		# Delete any existing analysis conducted if the discarded questions are not the same. Else, keep the analysis.
+		existing_discard = database_manager.get_from('discarded_questions', session['id'])
+		existing_discard = existing_discard['discarded_questions'] if existing_discard else None
+		if list_to_str(existing_discard) != list_to_str(discard):
+			database_manager.delete_from('question_discriminations', session['id'])
+			database_manager.delete_from('question_weights', session['id'])
+			database_manager.delete_from('student_locations', session['id'])
+
 		# Process the discarded questions.
 		file_processing.save_discarded_questions(discard)
 

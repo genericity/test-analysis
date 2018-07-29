@@ -1,6 +1,6 @@
 # Represents an individual question.
 class Question:
-	def __init__(self, test, percentage_correct = 0, discard = False, text = ''):
+	def __init__(self, test, percentage_correct = 0, discard = False, text = '', discrimination = None, weight = None):
 		# {!Test} The test containing this question.
 		self.test = test
 		# {string} The question text string.
@@ -10,9 +10,9 @@ class Question:
 		# {boolean} If this question should be discarded from analysis.
 		self.discard = (percentage_correct == 100) or (percentage_correct == 0) or discard
 		# {number} The question weight, or item score.
-		self.item_weight = None
+		self.item_weight = weight
 		# {number} The discrimination of the question.
-		self.discrimination = None
+		self.discrimination = discrimination
 
 	# Retrieve the discrimination for a specific question.
 	def get_discrimination(self):

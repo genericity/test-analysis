@@ -1,13 +1,15 @@
 import re
+import db
 from student import Student
 from question import Question
 import process_utils
 import rpy2.robjects as robjects
 from rpy2.robjects.packages import importr
+from flask import session
 
 # Represents an entire test.
 class Test:
-	def __init__(self, students, versions, discarded = [], boundaries = None, texts = None, subboundaries = None):
+	def __init__(self, students, versions, discarded = [], boundaries = None, texts = None, subboundaries = None, question_discriminations = None, question_weights = None,	student_locations = None):
 		# {!Array<!Student>} An array of students.
 		self.students = students
 		# {Object<string, !Array<number>>} Dictionary mapping the version names to their answer keys.
@@ -22,8 +24,12 @@ class Test:
 			for i in range(len(self.students)):
 				self.students[i].test = self
 
+				# Also try to set the location.
+				if student_locations and (len(student_locations) - 1) >= i:
+					self.students[i].location = student_locations[i]
+
 		# {!Array<!Question>} The array of questions within the test.
-		self.questions = self.init_questions(texts, discarded)
+		self.questions = self.init_questions(texts, discarded, question_discriminations, question_weights)
 		# {!Array<number>} Question indexes that are discarded.
 		self.discarded = discarded
 		# {number} The length of the test.
@@ -61,8 +67,7 @@ class Test:
 			return right / (len(self.students) * 1.0) * 100
 
 	# Initializes the array of question objects.
-	def init_questions(self, text_array, discard_array):
-		print('init questions', discard_array, self.test_length)
+	def init_questions(self, text_array, discard_array, question_discriminations, question_weights):
 		questions = []
 
 		for i in range(self.test_length):
@@ -72,10 +77,13 @@ class Test:
 			text = text_array[i] if text_array and len(text_array) - 1 >= i else ''
 			# If this question was marked as to discard or not.
 			discard = ((i + 1) in discard_array) if discard_array else False
-			print(i, discard)
+			# If a question discrimination was saved.
+			discrimination = question_discriminations[i] if question_discriminations and len(question_discriminations) - 1 >= i else None
+			# If a question weight was saved.
+			weight = question_weights[i] if question_weights and len(question_weights) - 1 >= i else None
 
 			# Create the question.
-			question = Question(self, percentage_correct = percentage, text = text, discard = discard)
+			question = Question(self, percentage_correct = percentage, text = text, discard = discard, discrimination = discrimination, weight = weight)
 
 			questions.append(question)
 
@@ -132,6 +140,7 @@ class Test:
 
 	# Sets item weights and discriminations for the questions.
 	def calculate_question_stats(self, response_matrix = None, return_values = False):
+
 		response_matrix = response_matrix or self.get_response_matrix()
 
 		# Assign to a symbol.
@@ -146,6 +155,11 @@ class Test:
 		# Store a row of item weights.
 		item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
 
+		# Create a list to store the discriminations for saving into the database.
+		discriminations_to_save = []
+		# Create a list to store the weights for saving into the database.
+		weights_to_save = []
+
 		# Store inside the questions.
 		for i in range(len(self.questions)):
 			question = self.questions[i]
@@ -156,6 +170,15 @@ class Test:
 			# Cache the item weight.
 			# R vectors are 1-indexed.
 			question.item_weight = item_weights.rx2(i + 1)[0]
+
+			discriminations_to_save.append(question.discrimination)
+			weights_to_save.append(question.item_weight)
+
+		# Set up a database object.
+		database_manager = db.Database()
+
+		database_manager.insert_or_update_from('question_discriminations', session['id'], discriminations_to_save)
+		database_manager.insert_or_update_from('question_weights', session['id'], weights_to_save)
 
 	# Sets locations for the students.
 	def calculate_student_stats(self, response_matrix = None, return_values = False):
@@ -172,6 +195,9 @@ class Test:
 		# Store a row of location coefficients.
 		locations = robjects.r('locations$score.dat["z1"]')
 
+		# Create a list to store the locations for saving into the database.
+		locations_to_save = []
+
 		# Store inside the questions.
 		for i in range(len(self.students)):
 			student = self.students[i]
@@ -179,6 +205,11 @@ class Test:
 			# Cache the discrimination.
 			# R vectors are 1-indexed.
 			student.location = locations.rx(i + 1, 'z1')[0]
+			locations_to_save.append(student.location)
+
+		# Set up a database object.
+		database_manager = db.Database()
+		database_manager.insert_or_update_from('student_locations', session['id'], locations_to_save)
 
 	# Returns the matrix of responses in a dataframe / ltm-usable format.
 	def get_response_matrix(self):

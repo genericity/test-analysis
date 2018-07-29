@@ -26,7 +26,10 @@ class Database:
 			'question_texts': no_processing,
 			'discarded_questions': str_to_int_list,
 			'boundaries': str_to_float_list,
-			'subboundaries': str_to_float_list
+			'subboundaries': str_to_float_list,
+			'question_discriminations': str_to_float_list,
+			'question_weights': str_to_float_list,
+			'student_locations': str_to_float_list
 		}
 
 		self.insert_processing = {
@@ -35,7 +38,10 @@ class Database:
 			'question_texts': no_processing,
 			'discarded_questions': list_to_str,
 			'boundaries': list_to_str,
-			'subboundaries': list_to_str
+			'subboundaries': list_to_str,
+			'question_discriminations': list_to_str,
+			'question_weights': list_to_str,
+			'student_locations': list_to_str
 		}
 
 	# Retrieves the current connection.
@@ -123,4 +129,4 @@ class Database:
 
 
 	def delete_from(self, table, session_id):
-		self.query_db('update %s set ? = \'\' where session_id = ?' % table, [table, session_id], one = True)
+		self.query_db('update %s set %s = \'\' where session_id = ?' % (table, table), [session_id], one = True)
