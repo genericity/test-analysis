@@ -37,12 +37,12 @@
                     <thead>
                         <tr>
                             <th>Student ID</th>
-                            <th data-sortable-type="numeric" class="tooltip-wrapper">Raw %<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable-type="grade" class="tooltip-wrapper">Raw grade<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable-type="numeric" class="tooltip-wrapper">Analyzed %<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable-type="numeric" class="tooltip-wrapper">Analyzed location<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable-type="numeric" class="tooltip-wrapper">Recommended %<span class="tooltip">Tooltip describing this attribute.</span></th>
-                            <th data-sortable-type="grade" class="tooltip-wrapper">Recommended grade<span class="tooltip">Tooltip describing this attribute.</span></th>
+                            <th data-sortable-type="numeric" class="tooltip-wrapper">Raw %<span class="tooltip">This is the percent correct each student got before any adjustments are made.</span></th>
+                            <th data-sortable-type="grade" class="tooltip-wrapper">Raw grade<span class="tooltip"> This is the letter grade each student would get based on the raw % correct.</span></th>
+                            <th data-sortable-type="numeric" class="tooltip-wrapper">Analyzed %<span class="tooltip">This is the percent correct each student would get after removing any questions you've discarded.</span></th>
+                            <th data-sortable-type="numeric" class="tooltip-wrapper">Analyzed location<span class="tooltip"> This is the theoretical ability score the student’s analysed score estimates on a scale of -3 to +3 with mean = 0 and standard deviation = 1.00.</span></th>
+                            <th data-sortable-type="numeric" class="tooltip-wrapper">Recommended %<span class="tooltip">This is the percent correct score each student would get after the standards you set for the test (the grade boundaries you have set).</span></th>
+                            <th data-sortable-type="grade" class="tooltip-wrapper">Recommended grade<span class="tooltip">This is the UoA letter grade each student would get based on the Recommended % score.</span></th>
                         </tr>
                     </thead>
                     <tbody id="student-body">

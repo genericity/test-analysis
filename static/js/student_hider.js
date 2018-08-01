@@ -3,8 +3,9 @@ class StudentHider {
   * Constructor. Defines some constants.
   */
   constructor(yMin, yMax, axisWidth, xMax, chart) {
-  	this.yMax = yMax;
-  	this.yMin = yMin;
+  	// As the topmost and bottommost values may show.
+  	this.yMax = yMax + 0.1;
+  	this.yMin = yMin - 0.1;
   	this.xMin = axisWidth / 2;
   	// As this would only come up to the middle of the dot at the longest position, adding 1 is necessary to hide the whole dot.
   	this.xMax = xMax + 1;
@@ -94,7 +95,7 @@ class StudentHider {
 			ctx.restore();
 		},
 		onMousedown: (event) => {
-        	this.hide();
+        	this.button.onclick();
       	}
 	};
   }
