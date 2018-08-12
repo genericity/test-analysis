@@ -14,7 +14,8 @@ new FileHandler([
 		}, {
 			input: 'file-question-data',
 			label: 'label-question-data',
-			required: false
+			required: false,
+			verify: 'text'
 		}]
 	},
 	{
@@ -32,7 +33,8 @@ new FileHandler([
 		}, {
 			input: 'file-question-data',
 			label: 'label-question-data',
-			required: false
+			required: false,
+			verify: 'text'
 		}]
 	},
 	{

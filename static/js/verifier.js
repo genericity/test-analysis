@@ -36,7 +36,9 @@ class Verifier {
 			this.getFile(fileElement, this.verifyExam);
 		} else if (fileType == 'answerkey') {
 			this.getFile(fileElement, this.verifyAnswerKey);
-		}
+		} else if (fileType == 'text') {
+			this.getFile(fileElement, this.verifyQuestionText);
+		} 
 	}
 
 	verifyCsv(self, fileContents, fileElement) {
@@ -115,6 +117,16 @@ class Verifier {
 			}
 		} catch (exception) {
 			self.falsify(fileElement, 'answer key');
+		}
+	}
+
+	verifyQuestionText(self, fileContents, fileElement) {
+		try {
+			fileContents = fileContents.split('\n');
+			for (const line of fileContents) {
+			}
+		} catch (exception) {
+			self.falsify(fileElement, 'question text');
 		}
 	}
 

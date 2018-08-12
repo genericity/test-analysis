@@ -56,19 +56,18 @@ class FileHandler {
 							// Change the colour and icon to indicate a file has been selected.
 							label.classList.add('file-selected');
 
+							// Verify this is the correct format.
+							if (fileId.verify) {
+								const verifier = new Verifier();
+								verifier.verifyFile(fileElement, fileId.verify);
+							}
+
 							// Add this to the set of uploaded files.
 							this.requiredUploaded[radio].add(fileId.input);
 							// Check if the required set is a subset of the uploaded set.
 							if (this.requiredUploaded[radio].isSuperset(this.required[radio])) {
 								this.allowProgress();
 							}
-
-							// Verify this is the correct format.
-							if (fileId.verify) {
-								const verifier = new Verifier();
-								verifier.verifyFile(fileElement, fileId.verify);
-							}
-							
 						}
 					};
 				}
