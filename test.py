@@ -91,18 +91,26 @@ class Test:
 
 	# Given a string, guess which version it is most likely to be.
 	def get_version(self, version_string):
-		# Strip the non-numeric characters from the versions we have.
-		for version_name in self.versions.keys():
-			version_stripped = re.sub("\D", "", version_name)
-			# Compare it to the integer value of the version given without the course code (first three characters).
-			# After further samples have been given, it's revealed only the last character of the version matters.
-			if version_stripped == version_string:
-				return version_name
+		# Full version, including course code.
+		given_version_int_full = int(version_string)
+		# Without the course code.
+		given_version_int_without_course_code = int(version_string[3:])
+		# Last character only.
+		given_version_int_last_char = int(version_string[-1:])
 
-		# Then try out a direct comparison.
-		for version_name in self.versions.keys():
-			if version_name == version_string:
-				return version_string
+		to_search = [given_version_int_full, given_version_int_without_course_code, given_version_int_last_char]
+
+		# Compare from the fullest version to the most abbreviated version.
+		for given_comparable in to_search:
+			# Search through the keys we have.
+			for key_name in self.versions.keys():
+				# Strip the non-numeric characters from the keys we have.
+				stripped_key_name = re.sub("\D", "", key_name)
+				stripped_key_name_int = int(stripped_key_name)
+
+				# Compare it to the integer value of the version given.
+				if stripped_key_name_int == given_comparable:
+					return key_name
 
 		# Return the first key as a default.
 		return self.versions.keys()[0]
@@ -146,14 +154,30 @@ class Test:
 		# Assign to a symbol.
 		robjects.globalenv['response_matrix'] = response_matrix
 
-		# Use ltm.
-		importr('ltm')
-		robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
+		# Comment out for archiving until I can print this in the report.
+		# # Use ltm.
+		# importr('ltm')
+		# robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
+
+		# # Store a row of discrimination coefficients.
+		# discriminations = robjects.r('item_weights[1]$coefficients[,2]')
+		# # Store a row of item weights.
+		# item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
+
+		# Use mirt.
+		importr('mirt')
+		# Create the model.
+		twopl_mod = "ability = 1 - " + str(len(response_matrix))
+		# Fit the model.
+		robjects.r('twopl_fit <- mirt(data = response_matrix, model = "' + twopl_mod + '", itemtype = "2PL", SE = TRUE)')
+		# Process parameters.
+		robjects.r('twopl_params <- coef(twopl_fit, IRTpars = TRUE, simplify = TRUE)')
+		robjects.r('twopl_items <- twopl_params$items')
 
 		# Store a row of discrimination coefficients.
-		discriminations = robjects.r('item_weights[1]$coefficients[,2]')
+		discriminations = robjects.r('twopl_items[,1]')
 		# Store a row of item weights.
-		item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
+		item_weights = robjects.r('twopl_items[,2]')
 
 		# Create a list to store the discriminations for saving into the database.
 		discriminations_to_save = []
@@ -226,13 +250,16 @@ class Test:
 			if not question.discard:
 				# Retrieve all the responses for each student.
 				for j in range(len(self.students)):
-					question_response_vector.append(self.students[j].is_right(question_index))
+					# question_response_vector.append(self.students[j].is_right(question_index))
+					question_response_vector.append(int(self.students[j].is_right(question_index)))
 			else:
 				# Otherwise, create a vector of NA objects.
-				question_response_vector = [robjects.NA_Logical] * len(self.students)
+				# question_response_vector = [robjects.NA_Logical] * len(self.students)
+				question_response_vector = [robjects.NA_Integer] * len(self.students)
 
 			# Convert to a vector.
-			matrix[question_index + 1] = robjects.BoolVector(question_response_vector)
+			# matrix[question_index + 1] = robjects.BoolVector(question_response_vector)
+			matrix[question_index + 1] = robjects.IntVector(question_response_vector)
 
 		# Convert the dictionary of vectors to a dataframe.
 		response_matrix = robjects.DataFrame(matrix)
@@ -263,8 +290,8 @@ class Test:
 		bc_lowest = boundaries[1]
 		cd_lowest = boundaries[2]
 
-		min_score = self.min_student_location()
-		max_score = self.max_student_location()
+		min_score = min(self.min_student_location(), cd_lowest)
+		max_score = max(self.max_student_location(), ab_lowest)
 
 		# Get the range of each 'section'.
 		range_a = max(max_score - ab_lowest, 0)

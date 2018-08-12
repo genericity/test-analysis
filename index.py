@@ -133,6 +133,9 @@ def confirm_page():
 			database_manager.delete_from('subboundaries', session['id'])
 
 	boundaries = database_manager.get_from('boundaries', session['id'])['boundaries']
+	subboundaries = database_manager.get_from('subboundaries', session['id'])
+	if subboundaries:
+		subboundaries = subboundaries['subboundaries']
 
 	ab = session['natural_ab']
 	bc = session['natural_bc']
