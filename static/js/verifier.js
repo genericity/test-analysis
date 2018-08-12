@@ -44,7 +44,11 @@ class Verifier {
 	verifyCsv(self, fileContents, fileElement) {
 		try {
 			fileContents = fileContents.split('\n');
-			for (const line of fileContents) {
+			for (const i in fileContents) {
+				const line = fileContents[i];
+				if (line == "" && i == fileContents.length -1 ) {
+					break;
+				}
 				// Verify each line is a CSV line.
 				const splitLine = line.split(',');
 				for (const character of splitLine) {
@@ -61,7 +65,12 @@ class Verifier {
 	verifyExam(self, fileContents, fileElement) {
 		try {
 			fileContents = fileContents.split('\n');
-			for (const line of fileContents) {
+			for (const i in fileContents) {
+				const line = fileContents[i];
+				if (line == "" && i == fileContents.length -1 ) {
+					break;
+				}
+
 				// Verify each line is an exam response line.
 				// Verify ID is numbers only.
 				const numbersOnly = /^[\d\s]+$/;

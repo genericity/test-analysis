@@ -65,6 +65,8 @@ def questions_page():
 		# Populate the default boundaries as it doesn't exist.
 		file_processing.populate_default_boundaries(test)
 
+	versions = False
+
 	# Set metadata.
 	if session.get('num_files'):
 		metadata = {
@@ -72,11 +74,16 @@ def questions_page():
 			'num_students': session['num_students'],
 			'num_questions': session['num_questions'],
 			'first_student': session['first_student'],
-			'last_student': session['last_student']
+			'last_student': session['last_student'],
 		}
 
+		versions = bool(int(session['versions']))
+		if versions:
+			metadata['versions_students'] = session['versions_students']
+			metadata['versions_answer_key'] = session['versions_answer_key']
+
 	# Display the questions page.
-	return render_template('questions.html', questions = True, data = metadata)
+	return render_template('questions.html', questions = True, versions = versions, data = metadata)
 
 @app.route('/grades', methods = ['GET', 'POST'])
 def grades_page():

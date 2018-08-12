@@ -15,6 +15,9 @@ class Test:
 		# {Object<string, !Array<number>>} Dictionary mapping the version names to their answer keys.
 		self.versions = versions
 
+		# Metadata.
+		self.student_versions = set()
+
 		if students and versions:
 			self.score_all()
 
@@ -23,6 +26,10 @@ class Test:
 			# Store a reference to this test in each student object.
 			for i in range(len(self.students)):
 				self.students[i].test = self
+
+				if (self.students[i].version != None):
+					# Append versions.
+					self.student_versions.add(self.students[i].version)
 
 				# Also try to set the location.
 				if student_locations and (len(student_locations) - 1) >= i:
@@ -39,6 +46,7 @@ class Test:
 		self.boundaries = boundaries or [0.5, -0.5, -2]
 		# Any set subboundaries.
 		self.subboundaries = subboundaries or None
+
 
 	# Score all the students.
 	def score_all(self):

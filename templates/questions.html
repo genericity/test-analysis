@@ -13,6 +13,11 @@
                 <tr class="neutral">
                     <td class="table-icon good table-icon-up">check_circle</td><td>Students are from <span class="table-statistic-number" id="first-student">{{ data['first_student'] }}</span> to <span class="table-statistic-number" id="last-student">{{ data['last_student'] }}</span></td>
                 </tr>
+                {% if versions %}
+                <tr class="neutral">
+                    <td class="table-icon good table-icon-up">check_circle</td><td>Versions detected in the answer key are <span class="table-statistic-number" id="versions-answer">{{ data['versions_answer_key'] }}</span> and versions detected in the students are <span class="table-statistic-number" id="versions-students">{{ data['versions_students'] }}</span></td>
+                </tr>
+                {% endif %}
             </table>
             {% endif %}
             <p>
