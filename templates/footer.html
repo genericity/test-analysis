@@ -16,6 +16,7 @@
 
     {% if upload %}
     <!-- Scripts for uploading files. -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/verifier.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/file_handler.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
     {% endif %}

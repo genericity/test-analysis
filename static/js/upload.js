@@ -10,6 +10,7 @@ new FileHandler([
 			input: 'file-prescored-data',
 			label: 'label-prescored-data',
 			required: true,
+			verify: 'csv'
 		}, {
 			input: 'file-question-data',
 			label: 'label-question-data',
@@ -22,10 +23,12 @@ new FileHandler([
 			input: 'file-student-data',
 			label: 'label-student-data',
 			required: true,
+			verify: 'exam'
 		}, {
 			input: 'file-version-data',
 			label: 'label-version-data',
 			required: true,
+			verify: 'answerkey'
 		}, {
 			input: 'file-question-data',
 			label: 'label-question-data',

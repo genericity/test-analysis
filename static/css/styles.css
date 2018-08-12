@@ -426,6 +426,20 @@ nav ul li:last-child:after{
     color: #1976D2;
 }
 
+.upload-file + label.file-selected.incorrect:before {
+    content: 'cancel';
+}
+
+.upload-file + label.file-selected.incorrect:before,
+.upload-file + label.file-selected.incorrect span {
+    color: #ff6272;
+}
+
+.upload-file + label.file-selected.incorrect:hover:before,
+.upload-file + label.file-selected.incorrect:hover span {
+    color: #e64656;
+}
+
 .upload-status.upload-card {
     padding: 0;
     background-repeat: no-repeat;

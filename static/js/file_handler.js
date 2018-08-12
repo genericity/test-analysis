@@ -62,6 +62,13 @@ class FileHandler {
 							if (this.requiredUploaded[radio].isSuperset(this.required[radio])) {
 								this.allowProgress();
 							}
+
+							// Verify this is the correct format.
+							if (fileId.verify) {
+								const verifier = new Verifier();
+								verifier.verifyFile(fileElement, fileId.verify);
+							}
+							
 						}
 					};
 				}
