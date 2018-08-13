@@ -212,6 +212,10 @@ def page_not_found(error):
 def internal_error(error):
     return render_template('500.html'), 500
 
+@app.route('/formats')
+def formats_page():
+    return render_template('formats.html')
+
 # Initializes the database. The readme file contains instructions on how to run this at the start of installing the application.
 def init_db():
     with app.app_context():

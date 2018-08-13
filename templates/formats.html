@@ -1,0 +1,46 @@
+{% include "header.html" %}
+            <h2>Format help
+                <span>A more detailed description of the formats available.</span>
+            </h2>
+            <h3 id="csv">CSV</h3>
+            <img src="/static/csv.png" width="200">
+            <p>
+                A <b>CSV file</b> containing the scored answers of students for each question. Each row should contain the answers of one student, separated by commas. The answers should either be 0 (indicating the student was wrong) or 1 (indicating the student was right). 
+            </p>
+            <p>
+                An exam with 50 students and 20 questions should have 50 rows, and 20 columns.
+            </p>
+            <h3 id="response">Student response</h3>
+            <img src="/static/response.png" width="600">
+            <p>
+                A <b>student response file</b> is in the format returned from the exam office after a multichoice exam was scanned. Each row contains data for one student.
+            </p>
+            <p>
+                On each line, the 3rd to the 11th character should be the student's ID.
+            </p>
+            <p>
+                On each line, the 14th to the 26th character should be the student's last name.
+            </p>
+            <p>
+                On each line, the 26th to the 33rd character should be the version number of the test. e.g. 13100000001. This indicates the class code was 131, and the version code that the student sat was 00000001.
+            </p>
+            <p>
+                The rest of the line should be the student's answers. A will be encoded as 01, B as 02, C as 04, D as 08, and E as 16.
+            </p>
+            <h3 id="answer">Answer key</h3>
+            <img src="/static/answer.png" width="400">
+            <p>
+                An <b>answer key</b> contains the answers for each version of the exam a student has sat.
+            </p>
+            <p>
+                The first line is a header line. It describes the version codes for each of the answer columns. For example, if your version codes were 00000001, 00000002, 00000003, 00000004, then your header row will be "Q[tab]V00000001[tab]V00000002[tab]V00000003[tab]V00000004". Preceding 0s can be omitted for clarity, e.g. "Q[tab]V1[tab]V2[tab]V3[tab]V4".
+            </p>
+            <p>
+                Following lines are also tab-separated, and contain the answers for each version, in the numeric encoding described by the exam office response format. Each line can be preceded by the question number of the current line for clarity, but this is ignored and only the true line number used. For example, if line 2 (line 1 is the header row) was "1[tab]1[tab]2[tab]4[tab]8", then for the first question, version 1 had a correct answer of A, version 2 B, version 3 C, and version 4 D. 
+            </p>
+            <h3 id="text">Question text</h3>
+            <img src="/static/text.png" width="400">
+            <p>
+                <b>Question text</b> is an optional file that contains the text for each item. It is a text file with the question text for each question on a new line. For example, line 1 would contain the question text for the first question, line 2 the question text for the second question.
+            </p>
+{% include "footer.html" %}

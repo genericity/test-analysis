@@ -3,19 +3,10 @@
                 <span>Preparing your test for analysis.</span>
             </h2>
             <p>
-                You can drag &amp; drop files or select files from your computer.
+                You can drag and drop files or select files from your computer.
             </p>
             <p>
-                Two files are required:
-                <ol>
-                    <li><b>Student test data</b> file contains answers each student gave for each item. Use a CSV format. Each student goes on a separate row and each answer is separated by commas from the next question.
-                    </li>
-                    <li><b>Test version/Answer</b> file contains the correct answers for each item. Use a CSV format. If your test was scanned by the examination office the answer file should be in the format A=01, B=02, C=04, D=08, E=16, with a comma separating each question. If the items are already pre-scored as (0=wrong, 1=right), your answer key will be 1,1,1,… for each item in the test.
-                    </li>
-                </ol>
-            </p>
-            <p>
-                <b>Question text</b> is an optional file that contains the text for each item.
+                 <a href="/formats" class="link" target="_blank">Click here to learn more about the different formats.</a>
             </p>
             <section id="upload">
                 <form id="upload-statuses" method="post" action="{{ url_for('questions_page') }}" enctype="multipart/form-data">
@@ -44,24 +35,28 @@
                             <label for="file-prescored-data" id="label-prescored-data"><span><em>Choose</em> a prescored CSV file</span></label>
                             <span class="upload-drag-supported">or drag and drop</span>
                             <span class="upload-subtext">Required</span>
+                            <a class="upload-info material-icons" href="/formats#csv" target="_blank">help</a>
                         </div>
                         <div class="upload-status upload-card hidden" id="upload-response">
                             <input type="file" name="file-student-data" id="file-student-data" class="upload-file" />
                             <label for="file-student-data" id="label-student-data"><span><em>Choose</em> a student response file</span></label>
                             <span class="upload-drag-supported">or drag and drop</span>
                             <span class="upload-subtext">Required</span>
+                            <a class="upload-info material-icons" href="/formats#response" target="_blank">help</a>
                         </div>
                         <div class="upload-status upload-card hidden" id="upload-answer">
                             <input type="file" name="file-version-data" id="file-version-data" class="upload-file" />
                             <label for="file-version-data" id="label-version-data"><span><em>Choose</em> an answer key file</span></label>
                             <span class="upload-drag-supported">or drag and drop</span>
                             <span class="upload-subtext">Required</span>
+                            <a class="upload-info material-icons" href="/formats#answer" target="_blank">help</a>
                         </div>
                         <div class="upload-status upload-card" id="upload-text">
                             <input type="file" name="file-question-data" id="file-question-data" class="upload-file" />
                             <label for="file-question-data" id="label-question-data"><span><em>Choose</em> a question text file</span></label>
                             <span class="upload-drag-supported">or drag and drop</span>
                             <span class="upload-subtext">Optional</span>
+                            <a class="upload-info material-icons" href="/formats#text" target="_blank">help</a>
                         </div>
                     </div>
                     <input type="submit" id="submit-form" class="hidden" />

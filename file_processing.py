@@ -92,6 +92,11 @@ def populate_metadata(preloaded_test = None):
 	session['num_students'] = len(test.students)
 	session['first_student'] = test.students[0].id
 	session['last_student'] = test.students[-1].id
+	session['versions'] = bool(test.versions != None and (len(test.versions.keys()) > 0))
+	if (session['versions']):
+		session['versions_students'] = ', '.join(list(test.student_versions))
+		session['versions_answer_key'] = ', '.join(test.versions.keys())
+
 
 # Populates default grade boundaries about the test.
 def populate_default_boundaries(preloaded_test = None):

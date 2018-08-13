@@ -47,12 +47,12 @@ class Verifier {
 			for (const i in fileContents) {
 				const line = fileContents[i];
 				if (line == "" && i == fileContents.length -1 ) {
-					break;
+					continue;
 				}
 				// Verify each line is a CSV line.
 				const splitLine = line.split(',');
 				for (const character of splitLine) {
-					if (character != '1' && character != '0') {
+					if (parseInt(character) != 1 && parseInt(character) != 0) {
 						throw 'Not a CSV file.';
 					}
 				}
@@ -68,7 +68,7 @@ class Verifier {
 			for (const i in fileContents) {
 				const line = fileContents[i];
 				if (line == "" && i == fileContents.length -1 ) {
-					break;
+					continue;
 				}
 
 				// Verify each line is an exam response line.

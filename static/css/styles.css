@@ -52,6 +52,14 @@ header .inner-wrapper {
     align-items: center;
 }
 
+a.link {
+    color: #2196F3;
+    font-weight: 500;
+}
+
+a.link:hover {
+    color: #1976D2;
+}
 
 /* Header. */
 
@@ -360,6 +368,7 @@ nav ul li:last-child:after{
     flex: 1;
     border-bottom: 5px solid #f1f1f1;
     padding-bottom: 36px;
+    position: relative;
 }
 
 .upload-card:first-child {
@@ -440,11 +449,25 @@ nav ul li:last-child:after{
     color: #e64656;
 }
 
+.upload-info {
+    position: absolute;
+    bottom: 12px;
+    color: #cfdee6;
+    text-align: center;
+    right: 0;
+    left: 0;
+}
+
+.upload-info:hover {
+    color: #B0BEC5;
+}
+
 .upload-status.upload-card {
     padding: 0;
     background-repeat: no-repeat;
-    padding-bottom: 170px;
+    padding-bottom: 200px;
     background-position: center 200px;
+    position: relative;
 }
 .upload-status.upload-card.drag-and-drop {
     background-position: center 216px;

@@ -163,29 +163,30 @@ class Test:
 		robjects.globalenv['response_matrix'] = response_matrix
 
 		# Comment out for archiving until I can print this in the report.
-		# # Use ltm.
-		# importr('ltm')
-		# robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
-
-		# # Store a row of discrimination coefficients.
-		# discriminations = robjects.r('item_weights[1]$coefficients[,2]')
-		# # Store a row of item weights.
-		# item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
-
-		# Use mirt.
-		importr('mirt')
-		# Create the model.
-		twopl_mod = "ability = 1 - " + str(len(response_matrix))
-		# Fit the model.
-		robjects.r('twopl_fit <- mirt(data = response_matrix, model = "' + twopl_mod + '", itemtype = "2PL", SE = TRUE)')
-		# Process parameters.
-		robjects.r('twopl_params <- coef(twopl_fit, IRTpars = TRUE, simplify = TRUE)')
-		robjects.r('twopl_items <- twopl_params$items')
+		# Use ltm.
+		importr('ltm')
+		robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
 
 		# Store a row of discrimination coefficients.
-		discriminations = robjects.r('twopl_items[,1]')
+		discriminations = robjects.r('item_weights[1]$coefficients[,2]')
 		# Store a row of item weights.
-		item_weights = robjects.r('twopl_items[,2]')
+		item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
+
+		# # Use mirt.
+		# importr('mirt')
+		# # Create the model.
+		# twopl_mod = "ability = 1 - " + str(len(response_matrix))
+		# print(twopl_mod, response_matrix)
+		# # Fit the model.
+		# robjects.r('twopl_fit <- mirt(data = response_matrix, model = "' + twopl_mod + '", itemtype = "2PL", SE = TRUE)')
+		# # Process parameters.
+		# robjects.r('twopl_params <- coef(twopl_fit, IRTpars = TRUE, simplify = TRUE)')
+		# robjects.r('twopl_items <- twopl_params$items')
+
+		# # Store a row of discrimination coefficients.
+		# discriminations = robjects.r('twopl_items[,1]')
+		# # Store a row of item weights.
+		# item_weights = robjects.r('twopl_items[,2]')
 
 		# Create a list to store the discriminations for saving into the database.
 		discriminations_to_save = []
@@ -258,16 +259,16 @@ class Test:
 			if not question.discard:
 				# Retrieve all the responses for each student.
 				for j in range(len(self.students)):
-					# question_response_vector.append(self.students[j].is_right(question_index))
-					question_response_vector.append(int(self.students[j].is_right(question_index)))
+					question_response_vector.append(self.students[j].is_right(question_index))
+					# question_response_vector.append(int(self.students[j].is_right(question_index)))
 			else:
 				# Otherwise, create a vector of NA objects.
-				# question_response_vector = [robjects.NA_Logical] * len(self.students)
-				question_response_vector = [robjects.NA_Integer] * len(self.students)
+				question_response_vector = [robjects.NA_Logical] * len(self.students)
+				# question_response_vector = [robjects.NA_Integer] * len(self.students)
 
 			# Convert to a vector.
-			# matrix[question_index + 1] = robjects.BoolVector(question_response_vector)
-			matrix[question_index + 1] = robjects.IntVector(question_response_vector)
+			matrix[question_index + 1] = robjects.BoolVector(question_response_vector)
+			# matrix[question_index + 1] = robjects.IntVector(question_response_vector)
 
 		# Convert the dictionary of vectors to a dataframe.
 		response_matrix = robjects.DataFrame(matrix)
