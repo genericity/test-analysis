@@ -31,3 +31,13 @@ def html_encode(str):
 # Returns the mean for an array of numbers.
 def mean(numbers):
 	return float(sum(numbers)) / max(len(numbers), 1)
+
+# Returns the median for an array of numbers.
+def median(numbers):
+	n = len(numbers)
+	if n < 1:
+		return None
+	if n % 2 == 1:
+		return sorted(numbers)[n // 2]
+	else:
+		return sum(sorted(numbers)[(n // 2 - 1):(n // 2 + 1)]) / 2.0

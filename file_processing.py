@@ -104,10 +104,6 @@ def populate_metadata(preloaded_test = None):
 		session['version_data'] = '#'.join(versions)
 
 
-		#session['version_data'] = ', '.join(list(test.student_versions))
-		#session['versions_answer_key'] = ', '.join(test.versions.keys())
-
-
 # Populates default grade boundaries about the test.
 def populate_default_boundaries(preloaded_test = None):
 	test = preloaded_test or load_test()
@@ -128,9 +124,9 @@ def populate_default_boundaries(preloaded_test = None):
 		elif percentage >= 45 and percentage < 55:
 			cd_student_locations.append(student.get_location())
 
-	session['natural_ab'] = process_utils.mean(ab_student_locations) if len(ab_student_locations) != 0 else DEFAULT_AB_BOUNDARY
-	session['natural_bc'] = process_utils.mean(bc_student_locations) if len(bc_student_locations) != 0 else DEFAULT_BC_BOUNDARY
-	session['natural_cd'] = process_utils.mean(cd_student_locations) if len(cd_student_locations) != 0 else DEFAULT_CD_BOUNDARY
+	session['natural_ab'] = process_utils.median(ab_student_locations) if len(ab_student_locations) != 0 else DEFAULT_AB_BOUNDARY
+	session['natural_bc'] = process_utils.median(bc_student_locations) if len(bc_student_locations) != 0 else DEFAULT_BC_BOUNDARY
+	session['natural_cd'] = process_utils.median(cd_student_locations) if len(cd_student_locations) != 0 else DEFAULT_CD_BOUNDARY
 
 # Saves the list of discarded questions.
 def save_discarded_questions(discarded_list):
