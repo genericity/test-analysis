@@ -18,21 +18,24 @@ class ChartState {
         text: 'A/B',
         index: 2,
         fieldId: 'ab-boundary',
-        y: parseFloat(document.getElementById('ab-boundary').value)
+        y: parseFloat(document.getElementById('ab-boundary').value),
+        position: 'left'
       }, this),
       new Divider({
         dividerId: 'line-divider-bc',
         text: 'B/C',
         index: 5,
         fieldId: 'bc-boundary',
-        y: parseFloat(document.getElementById('bc-boundary').value)
+        y: parseFloat(document.getElementById('bc-boundary').value),
+        position: 'left'
       }, this),
       new Divider({
         dividerId: 'line-divider-cd',
         text: 'C/D',
         index: 8,
         fieldId: 'cd-boundary',
-        y: parseFloat(document.getElementById('cd-boundary').value)
+        y: parseFloat(document.getElementById('cd-boundary').value),
+        position: 'left'
       }, this)
     ];
 

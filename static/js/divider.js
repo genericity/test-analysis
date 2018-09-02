@@ -25,12 +25,12 @@ class Divider {
       label: {
         content: this.text,
         enabled: true,
-        position: 'right',
+        position: options.position || 'right',
         xPadding: 12,
         yPadding: 12,
         fontFamily: 'Roboto',
         fontSize: (options.fontSize || 18),
-        xAdjust: -50,
+        xAdjust: (options.position && options.position == 'right' ? 50 : -50),
       },
       onMousedown: (event) => {
         document.body.onmousemove = (event) => { this.midDrag(event, this.chartState); };

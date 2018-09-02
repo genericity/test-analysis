@@ -31,7 +31,7 @@ class DoubleDotPlot {
         responsive: true,
         layout: {
           padding: {
-            left: 10,
+            left: 65,
             right: 20,
             top: 70,
             bottom: 50,
