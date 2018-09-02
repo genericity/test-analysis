@@ -10,18 +10,15 @@ sys.path.insert(0, parent_dir)
 import unittest
 from test import Test
 import file_processing
-import rpy2.robjects as robjects
-from rpy2.robjects.vectors import DataFrame
-from rpy2.robjects.packages import importr
-
 
 EXAM_DATA = 'test_data/raw_exam.csv'
 
-# Tests the methods in the Test class. Extends unittest.TestCase.
-class TestTestMethods(unittest.TestCase):
+# Tests the ltm methods in the LtmTest class. Extends unittest.TestCase.
+class TestLtm(unittest.TestCase):
 
     # Sets up a test.
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         # Read the data from the test data directory.
         content = ''
         with open(EXAM_DATA) as file_handle:
@@ -36,7 +33,7 @@ class TestTestMethods(unittest.TestCase):
         self.test.calculate_student_stats(store = False)
 
     # Tests that discriminations are calculated correctly with ltm.
-    def test_ltm_discrimination(self):
+    def test_discriminations(self):
         # Check the first six questions' discriminations are equal to the pre-calculated ones.
         self.assertAlmostEqual(self.test.questions[0].get_discrimination(), 0.4, delta = 0.02)
         self.assertAlmostEqual(self.test.questions[1].get_discrimination(), 1.45, delta = 0.02)
@@ -46,7 +43,7 @@ class TestTestMethods(unittest.TestCase):
         self.assertAlmostEqual(self.test.questions[5].get_discrimination(), 0.48, delta = 0.02)
 
     # Tests that item weights are calculated correctly with ltm.
-    def test_item_weight(self):
+    def test_item_weights(self):
         # Check the first six questions' item weights are equal to the pre-calculated ones.
         self.assertAlmostEqual(self.test.questions[0].get_item_weight(), 2.57, delta = 0.02)
         self.assertAlmostEqual(self.test.questions[1].get_item_weight(), -1.61, delta = 0.02)
@@ -65,9 +62,51 @@ class TestTestMethods(unittest.TestCase):
         self.assertAlmostEqual(self.test.students[4].get_location(), 0.87, delta = 0.02)
         self.assertAlmostEqual(self.test.students[5].get_location(), -0.46, delta = 0.02)
 
-    # Tests that students' locations calculated with ltm are equal to those calculated with mirt.
-    def test_mirt_ltm(self):
-        pass
+
+# Tests the ltm methods in the LtmTest class. Extends unittest.TestCase.
+class TestMirtEquality(unittest.TestCase):
+
+    # Sets up a test.
+    @classmethod
+    def setUpClass(self):
+        # Read the data from the test data directory.
+        content = ''
+        with open(EXAM_DATA) as file_handle:
+            content = file_handle.read()
+        students = file_processing.to_student_array(content, prescored = True)
+
+        # Create the ltm test.
+        self.ltm_test = LtmTest(students, None)
+        # Create the mIRT test.
+        self.mirt_test = Test(students, None)
+        
+        # Run ltm on the response matrix.
+        self.ltm_test.calculate_question_stats(store = False)
+        self.ltm_test.calculate_student_stats(store = False)
+        # Run mirt on the response matrix.
+        self.mirt_test.calculate_question_stats(store = False)
+        self.mirt_test.calculate_student_stats(store = False)
+
+    # Tests that the difference between discriminations calculated with mIRT and ltm is not too large.
+    def test_discriminations_equal(self):
+        for i in range(len(self.ltm_test.questions)):
+            ltm_discrimination = self.ltm_test.questions[i].get_discrimination()
+            mirt_discrimination = self.mirt_test.questions[i].get_discrimination()
+            self.assertAlmostEqual(ltm_discrimination, mirt_discrimination, delta = 0.03)
+
+    # Tests that the difference between item weights calculated with mIRT and ltm is not too large.
+    def test_item_weights_equal(self):
+        for i in range(len(self.ltm_test.questions)):
+            ltm_weight = self.ltm_test.questions[i].get_item_weight()
+            mirt_weight = self.mirt_test.questions[i].get_item_weight()
+            self.assertAlmostEqual(ltm_weight, mirt_weight, delta = 0.03)
+
+    # Tests that the difference between locations calculated with mIRT and ltm is not too large.
+    def test_item_weights_equal(self):
+        for i in range(len(self.ltm_test.students)):
+            ltm_location = self.ltm_test.students[i].get_location()
+            mirt_location = self.mirt_test.students[i].get_location()
+            self.assertAlmostEqual(ltm_location, mirt_location, delta = 0.03)
 
 if __name__ == '__main__':
     unittest.main()
