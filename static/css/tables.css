@@ -218,6 +218,7 @@ table[data-sortable] th[data-sorted-direction="descending"]:after {
 
 #statistics-table.summary-table .table-icon.good.table-icon-up {
 	color: #4CAF50;
+	vertical-align: top;
 }
 
 /* Sticky headers. */
@@ -233,4 +234,13 @@ table[data-sortable] th[data-sorted-direction="descending"]:after {
 
 .visible, .visible * {
 	visibility: visible;
+}
+
+#versions-table {
+	padding-top: 0.8em;
+}
+
+#versions-table td {
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
 }

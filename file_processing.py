@@ -94,8 +94,18 @@ def populate_metadata(preloaded_test = None):
 	session['last_student'] = test.students[-1].id
 	session['versions'] = bool(test.versions != None and (len(test.versions.keys()) > 0))
 	if (session['versions']):
-		session['versions_students'] = ', '.join(list(test.student_versions))
-		session['versions_answer_key'] = ', '.join(test.versions.keys())
+		# Create a list of alternating answer and student version information.
+		versions = []
+		# For each student version:
+		for version in list(test.student_versions):
+			# Add the student version.
+			versions.append(version)
+			versions.append(test.get_version(version))
+		session['version_data'] = '#'.join(versions)
+
+
+		#session['version_data'] = ', '.join(list(test.student_versions))
+		#session['versions_answer_key'] = ', '.join(test.versions.keys())
 
 
 # Populates default grade boundaries about the test.

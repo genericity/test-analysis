@@ -38,7 +38,7 @@ class Test:
 		# {!Array<!Question>} The array of questions within the test.
 		self.questions = self.init_questions(texts, discarded, question_discriminations, question_weights)
 		# {!Array<number>} Question indexes that are discarded.
-		self.discarded = discarded
+		self.discarded = discarded or []
 		# {number} The length of the test.
 		self.test_length = len(self.questions)
 
@@ -154,6 +154,24 @@ class Test:
 		# Return the joined string.
 		return '\n'.join(questions)
 
+	def process_raw_question_stats(self, response_r_object):
+		features = []
+
+		j = 0
+		# Store inside the questions.
+		for i in range(len(self.questions)):
+			if not self.questions[i].discard:
+				# Cache the feature.
+				# R vectors are 1-indexed.
+				feature = response_r_object.rx2(j + 1)
+				features.append(feature[0])
+
+				j += 1
+			else:
+				features.append(0)
+
+		return features
+
 	# Sets item weights and discriminations for the questions.
 	def calculate_question_stats(self, response_matrix = None, return_values = False):
 
@@ -164,29 +182,28 @@ class Test:
 
 		# Comment out for archiving until I can print this in the report.
 		# Use ltm.
-		importr('ltm')
-		robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
-
-		# Store a row of discrimination coefficients.
-		discriminations = robjects.r('item_weights[1]$coefficients[,2]')
-		# Store a row of item weights.
-		item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
-
-		# # Use mirt.
-		# importr('mirt')
-		# # Create the model.
-		# twopl_mod = "ability = 1 - " + str(len(response_matrix))
-		# print(twopl_mod, response_matrix)
-		# # Fit the model.
-		# robjects.r('twopl_fit <- mirt(data = response_matrix, model = "' + twopl_mod + '", itemtype = "2PL", SE = TRUE)')
-		# # Process parameters.
-		# robjects.r('twopl_params <- coef(twopl_fit, IRTpars = TRUE, simplify = TRUE)')
-		# robjects.r('twopl_items <- twopl_params$items')
+		# importr('ltm')
+		# robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
 
 		# # Store a row of discrimination coefficients.
-		# discriminations = robjects.r('twopl_items[,1]')
+		# discriminations = robjects.r('item_weights[1]$coefficients[,2]')
 		# # Store a row of item weights.
-		# item_weights = robjects.r('twopl_items[,2]')
+		# item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
+
+		# Use mirt.
+		importr('mirt')
+		# Create the model.
+		twopl_mod = "ability = 1 - " + str(len(response_matrix))
+		# Fit the model.
+		robjects.r('twopl_fit <- mirt(data = response_matrix, model = "' + twopl_mod + '", itemtype = "2PL", SE = TRUE)')
+		# Process parameters.
+		robjects.r('twopl_params <- coef(twopl_fit, IRTpars = TRUE, simplify = TRUE)')
+		robjects.r('twopl_items <- twopl_params$items')
+
+		# Store a row of discrimination coefficients.
+		discriminations = self.process_raw_question_stats(robjects.r('twopl_items[,1]'))
+		# Store a row of item weights.
+		item_weights = self.process_raw_question_stats(robjects.r('twopl_items[,2]'))
 
 		# Create a list to store the discriminations for saving into the database.
 		discriminations_to_save = []
@@ -199,10 +216,10 @@ class Test:
 
 			# Cache the discrimination.
 			# R vectors are 1-indexed.
-			question.discrimination = discriminations.rx2(i + 1)[0]
+			question.discrimination = discriminations[i]
 			# Cache the item weight.
 			# R vectors are 1-indexed.
-			question.item_weight = item_weights.rx2(i + 1)[0]
+			question.item_weight = item_weights[i]
 
 			discriminations_to_save.append(question.discrimination)
 			weights_to_save.append(question.item_weight)
@@ -221,12 +238,23 @@ class Test:
 		robjects.globalenv['response_matrix'] = response_matrix
 
 		# Use ltm.
-		importr('ltm')
-		robjects.r('item_scores <- ltm(response_matrix ~ z1, na.action = NULL)')
-		robjects.r('locations <- factor.scores(item_scores, resp.patterns = response_matrix)')
+		# importr('ltm')
+		# robjects.r('item_scores <- ltm(response_matrix ~ z1, na.action = NULL)')
+		# robjects.r('locations <- factor.scores(item_scores, resp.patterns = response_matrix)')
 
-		# Store a row of location coefficients.
-		locations = robjects.r('locations$score.dat["z1"]')
+		# # Store a row of location coefficients.
+		# locations = robjects.r('locations$score.dat["z1"]')
+
+		# Use mirt.
+		importr('mirt')
+		# Create the model.
+		twopl_mod = "ability = 1 - " + str(len(response_matrix))
+		# Fit the model.
+		robjects.r('twopl_fit <- mirt(data = response_matrix, model = "' + twopl_mod + '", itemtype = "2PL", SE = TRUE)')
+		# Fit the student model.
+		robjects.r('student_fit <- fscores(twopl_fit, method = "MAP", full.scores = TRUE, full.scores.SE = TRUE)')
+
+		locations = robjects.r('student_fit[,1]')
 
 		# Create a list to store the locations for saving into the database.
 		locations_to_save = []
@@ -237,7 +265,8 @@ class Test:
 
 			# Cache the discrimination.
 			# R vectors are 1-indexed.
-			student.location = locations.rx(i + 1, 'z1')[0]
+			# student.location = locations.rx(i + 1, 'z1')[0]
+			student.location = locations.rx(i + 1)[0]
 			locations_to_save.append(student.location)
 
 		# Set up a database object.
@@ -248,27 +277,33 @@ class Test:
 	def get_response_matrix(self):
 		matrix = {}
 
+		matrix_index = 0
 		# For each question:
 		for question_index in range(self.test_length):
-			question_response_vector = []
-
 			question = self.questions[question_index]
 
 			# Cannot have questions where either 100% or 0% were correct, as ltm will crash.
 			# This also excludes questions the user has opted to discard.
 			if not question.discard:
+				# Header value.
+				question_response_vector = []
+
 				# Retrieve all the responses for each student.
 				for j in range(len(self.students)):
-					question_response_vector.append(self.students[j].is_right(question_index))
-					# question_response_vector.append(int(self.students[j].is_right(question_index)))
+					# question_response_vector.append(self.students[j].is_right(question_index))
+					question_response_vector.append(int(self.students[j].is_right(question_index)))
+
+				# question_response_vector.append(1)
+				matrix_index += 1
 			else:
 				# Otherwise, create a vector of NA objects.
-				question_response_vector = [robjects.NA_Logical] * len(self.students)
+				# question_response_vector = [robjects.NA_Logical] * len(self.students)
 				# question_response_vector = [robjects.NA_Integer] * len(self.students)
+				pass
 
 			# Convert to a vector.
-			matrix[question_index + 1] = robjects.BoolVector(question_response_vector)
-			# matrix[question_index + 1] = robjects.IntVector(question_response_vector)
+			# matrix[question_index + 1] = robjects.BoolVector(question_response_vector)
+			matrix[matrix_index] = robjects.IntVector(question_response_vector)
 
 		# Convert the dictionary of vectors to a dataframe.
 		response_matrix = robjects.DataFrame(matrix)

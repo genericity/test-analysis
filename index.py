@@ -79,8 +79,14 @@ def questions_page():
 
 		versions = bool(int(session['versions']))
 		if versions:
-			metadata['versions_students'] = session['versions_students']
-			metadata['versions_answer_key'] = session['versions_answer_key']
+			metadata['versions'] = []
+			all_versions = session['version_data'].split('#')
+			for i in range(len(all_versions)):
+				# Expected to be student/answer combinations.
+				if i % 2 == 0:
+					metadata['versions'].append({'student': all_versions[i], 'answer': ''})
+				else:
+					metadata['versions'][-1]['answer'] = all_versions[i]
 
 	# Display the questions page.
 	return render_template('questions.html', questions = True, versions = versions, data = metadata)
