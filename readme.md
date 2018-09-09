@@ -11,6 +11,11 @@ Users are able to upload student response and answer data, and this software wil
 
 This allows users to reduce poor identifiers of true student ability and so increase the effectiveness of test questions.
 
+### Analyzing questions:
+![](https://i.imgur.com/34AmjV5.png)
+
+### Visualizing questions and students:
+![](https://i.imgur.com/LB4SoFY.png)
 
 ## Install Python
 
