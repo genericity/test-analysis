@@ -16,7 +16,7 @@ This allows users to reduce poor identifiers of true student ability and so incr
 
 View instructions on how to install Python for your operating system here: [https://www.python.org/downloads/](https://www.python.org/downloads/).
 
-Select the latest version of Python 2 to install.
+Select the latest version of Python 3 to install.
 
 ## Install pip
 
@@ -30,7 +30,7 @@ For Ubuntu, python-pip is in the universe repository.
 sudo apt-get install software-properties-common
 sudo apt-add-repository universe
 sudo apt-get update
-sudo apt-get install python-pip
+sudo apt-get install python3-pip
 ```
 
 ## Install Flask
@@ -42,23 +42,51 @@ View instructions on how to install Flask here: [http://flask.pocoo.org/docs/0.1
 Select a mirror to install R here:
 [https://cran.r-project.org/mirrors.html](https://cran.r-project.org/mirrors.html)
 
+For Ubuntu, you can try these commands.
+
+To remove R:
+```
+sudo apt-get remove r-base-core
+```
+
+To install R:
+
+```
+sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu $(lsb_release -sc)/"
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+sudo add-apt-repository ppa:marutter/rdev
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install r-base
+```
+
 ## Install rpy2
 
-Run `pip install rpy2==2.8.6` to install rpy2.  
-An older version is required as rpy2 does not support Python 2 anymore.  
+Run `pip3 install rpy2` to install rpy2.  .  
 
 See also: [http://rpy.sourceforge.net/rpy2/doc-dev/html/overview.html](http://rpy.sourceforge.net/rpy2/doc-dev/html/overview.html)
 
-Ubuntu users may wish to try `sudo apt install python-rpy2`.
+Ubuntu users may also wish to try `sudo apt install python-rpy2`.
 
-## Install the ltm package
+## Install the MIRT package
 
+Type `git clone https://github.com/genericity/mirt` to download the contents of the repository at https://github.com/genericity/mirt to a folder called `mirt`.
 
 Open R (type `r` or `R` from the commandline) and type:  
 
-`install.packages("ltm")`
+```
+remove.packages('mirt') # In case you have installed MIRT already.
+install.packages('devtools')
+library('devtools')
+install_local('mirt')
+```
 
-Select a mirror to install the ltm package and all dependencies.  
+You may have to install additional packages for devtools to be installed. For Ubuntu, type these commands to install the appropriate libraries.
+```
+sudo apt-get install libssl-dev
+sudo apt-get install libcurl4-openssl-dev
+```
+
 Type `quit()` to exit R. Type `y` to save your changes.
 
 ## Download this project
@@ -77,20 +105,35 @@ Open Python (type `python` from the commandline) and type:
 This sets up the SQLite database.  
 Type `quit()` to exit Python.
 
-## Run the tool
+## Run the tool (development mode)
 
 To run in development mode, type into the command-line:
 
 `export FLASK_APP=index.py`  
 `python -m flask run`
 
-To run in production mode, type into the commandline:  
+To run while logging errors, type into the commandline:  
   
 `sudo python index.py &`  or, to log:   
 `sudo python index.py >> log.txt 2>&1 &`  
+
+## Deploying (production mode)
+
+The current stable version on the server is served using [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) and [NGINX](https://www.nginx.com/). There are other options to deploy Flask projects, but any version chosen should be multiprocessed to avoid concurrency issues while using R and rpy2.
+
+## Tests
   
 Unit tests can be run by navigating to the test directory (`cd test`) and running:  
 `python -m unittest -v test_test`
+
+### Install the LTM package (For running tests only)
+
+Open R (type `r` or `R` from the commandline) and type:  
+
+`install.packages("ltm")`
+
+Select a mirror to install the ltm package and all dependencies.  
+Type `quit()` to exit R. Type `y` to save your changes.
 
 ## Why do you have two libraries checked in?
 
