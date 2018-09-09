@@ -34,6 +34,8 @@ class Test:
 				# Also try to set the location.
 				if student_locations and (len(student_locations) - 1) >= i:
 					self.students[i].location = student_locations[i]
+		else:
+			self.test_length = 0
 
 		# {!Array<!Question>} The array of questions within the test.
 		self.questions = self.init_questions(texts, discarded, question_discriminations, question_weights)
@@ -173,22 +175,12 @@ class Test:
 		return features
 
 	# Sets item weights and discriminations for the questions.
-	def calculate_question_stats(self, response_matrix = None, return_values = False):
+	def calculate_question_stats(self, response_matrix = None, return_values = False, store = True):
 
 		response_matrix = response_matrix or self.get_response_matrix()
 
 		# Assign to a symbol.
 		robjects.globalenv['response_matrix'] = response_matrix
-
-		# Comment out for archiving until I can print this in the report.
-		# Use ltm.
-		# importr('ltm')
-		# robjects.r('item_weights <- ltm(response_matrix ~ z1, na.action = NULL)')
-
-		# # Store a row of discrimination coefficients.
-		# discriminations = robjects.r('item_weights[1]$coefficients[,2]')
-		# # Store a row of item weights.
-		# item_weights = robjects.r('item_weights[1]$coefficients[,1] / item_weights[1]$coefficients[,2] * -1')
 
 		# Use mirt.
 		importr('mirt')
@@ -224,35 +216,29 @@ class Test:
 			discriminations_to_save.append(question.discrimination)
 			weights_to_save.append(question.item_weight)
 
-		# Set up a database object.
-		database_manager = db.Database()
+		if store:
+			# Set up a database object.
+			database_manager = db.Database()
 
-		database_manager.insert_or_update_from('question_discriminations', session['id'], discriminations_to_save)
-		database_manager.insert_or_update_from('question_weights', session['id'], weights_to_save)
+			database_manager.insert_or_update_from('question_discriminations', session['id'], discriminations_to_save)
+			database_manager.insert_or_update_from('question_weights', session['id'], weights_to_save)
 
 	# Sets locations for the students.
-	def calculate_student_stats(self, response_matrix = None, return_values = False):
+	def calculate_student_stats(self, response_matrix = None, return_values = False, store = True):
 		response_matrix = response_matrix or self.get_response_matrix()
 
 		# Assign to a symbol.
 		robjects.globalenv['response_matrix'] = response_matrix
 
-		# Use ltm.
-		# importr('ltm')
-		# robjects.r('item_scores <- ltm(response_matrix ~ z1, na.action = NULL)')
-		# robjects.r('locations <- factor.scores(item_scores, resp.patterns = response_matrix)')
-
-		# # Store a row of location coefficients.
-		# locations = robjects.r('locations$score.dat["z1"]')
-
 		# Use mirt.
 		importr('mirt')
+		# robjects.r('tmp <- tempfile(pattern=paste("foo", Sys.getpid(), sep=""))')
 		# Create the model.
 		twopl_mod = "ability = 1 - " + str(len(response_matrix))
 		# Fit the model.
 		robjects.r('twopl_fit <- mirt(data = response_matrix, model = "' + twopl_mod + '", itemtype = "2PL", SE = TRUE)')
 		# Fit the student model.
-		robjects.r('student_fit <- fscores(twopl_fit, method = "MAP", full.scores = TRUE, full.scores.SE = TRUE)')
+		robjects.r('student_fit <- fscores(twopl_fit, method = "EAP", full.scores = TRUE, full.scores.SE = TRUE)')
 
 		locations = robjects.r('student_fit[,1]')
 
@@ -265,13 +251,13 @@ class Test:
 
 			# Cache the discrimination.
 			# R vectors are 1-indexed.
-			# student.location = locations.rx(i + 1, 'z1')[0]
 			student.location = locations.rx(i + 1)[0]
 			locations_to_save.append(student.location)
 
-		# Set up a database object.
-		database_manager = db.Database()
-		database_manager.insert_or_update_from('student_locations', session['id'], locations_to_save)
+		if store:
+			# Set up a database object.
+			database_manager = db.Database()
+			database_manager.insert_or_update_from('student_locations', session['id'], locations_to_save)
 
 	# Returns the matrix of responses in a dataframe / ltm-usable format.
 	def get_response_matrix(self):
@@ -296,9 +282,7 @@ class Test:
 				# question_response_vector.append(1)
 				matrix_index += 1
 			else:
-				# Otherwise, create a vector of NA objects.
-				# question_response_vector = [robjects.NA_Logical] * len(self.students)
-				# question_response_vector = [robjects.NA_Integer] * len(self.students)
+				# Ignore the exclusions.
 				pass
 
 			# Convert to a vector.
@@ -460,6 +444,9 @@ class Test:
 			student_array.append(analyzed_score)
 			student_array.append(recommended_percentage)
 			student_array.append(recommended_grade)
+			# student_array = student.scores
+			# student_array = [int(val) for val in student_array]
+			# student_array.insert(0, student.id)
 
 			# Convert to string.
 			student_array = list(map(str, student_array))

@@ -15,7 +15,19 @@
                 </tr>
                 {% if versions %}
                 <tr class="neutral">
-                    <td class="table-icon good table-icon-up">check_circle</td><td>Versions detected in the answer key are <span class="table-statistic-number" id="versions-answer">{{ data['versions_answer_key'] }}</span> and versions detected in the students are <span class="table-statistic-number" id="versions-students">{{ data['versions_students'] }}</span></td>
+                    <td class="table-icon good table-icon-up">check_circle</td><td>Versions detected are:
+                        <table id="versions-table" class="summary-table">
+                            <tr class="neutral">
+                                <td><span class="table-statistic-number">Seen in student response file</span></td>
+                                <td><span class="table-statistic-number">Matched to version in answer key</span></td>
+                            </tr>
+                            {% for row in data['versions'] %}
+                            <tr class="neutral">
+                                <td>{{ row['student'] }}</td>
+                                <td>{{ row['answer'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
                 </tr>
                 {% endif %}
             </table>

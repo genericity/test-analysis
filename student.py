@@ -113,13 +113,13 @@ class Student:
 		# Split into chunks of 2, each one is a question response.
 		# Convert them into integers.
 		# These are the raw answers given by the student.
-		self.answers = map(process_utils.int_if_possible, process_utils.split_into_chunks(data[45:], 2))
+		self.answers = list(map(process_utils.int_if_possible, process_utils.split_into_chunks(data[45:], 2)))
 
 	def init_prescored(self, data):
 		# Split into component answers.
 		data = data.split(',')
 		# Record if each answer was correct.
-		self.scores = map(process_utils.int_if_possible, data)
+		self.scores = list(map(process_utils.int_if_possible, data))
 
 	# Set this student's scores, given an answer key.
 	def score(self, answer_key):

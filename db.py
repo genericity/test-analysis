@@ -6,7 +6,10 @@ class Database:
 		self.DATABASE = 'database.db'
 
 		def no_processing(x):
-			return x
+			try:
+				return x.decode('utf-8')
+			except (TypeError, AttributeError) as e:
+				return x
 
 		def str_to_int_list(x):
 			x = x.split(',') if x else []
@@ -81,51 +84,51 @@ class Database:
 		session_id = cursor.lastrowid
 
 		# Return the session id, the last dataset written.
- 		return session_id
+		return session_id
 
  	# Retrieves data. Assumes that a table has only two columns: the data column (named the same as the table) and the session id column.
 	def get_from(self, table, session_id, identifier = 'session_id'):
 		cursor = self.get_db().cursor()
 
 		# If the session ID is not set, return.
-	 	if not session_id:
-	 		return
+		if not session_id:
+			return
 
-	 	result = self.query_db('select * from %s where %s = ?' % (table, identifier), args = [session_id], one = True)
+		result = self.query_db('select * from %s where %s = ?' % (table, identifier), args = [session_id], one = True)
 
-	 	if not result:
-	 		return None
+		if not result:
+			return None
 
-	 	return_dict = {}
+		return_dict = {}
 
-	 	# Multiple columns.
- 		for column in result:
- 			if column != identifier:
- 				return_dict[column] = self.get_processing[column](result[column])
+		# Multiple columns.
+		for column in result:
+			if column != identifier:
+				return_dict[column] = self.get_processing[column](result[column])
 
- 		return return_dict
+		return return_dict
 
  	# Inserts data. Assumes that a table has only two columns: the data column (named the same as the table) and the session id column.
 	def insert_or_update_from(self, table, session_id, value):
 		cursor = self.get_db().cursor()
 
 		# If the session ID is not set, return.
-	 	if not session_id:
-	 		return
+		if not session_id:
+			return
 
- 		original = self.get_from(table, session_id)
+		original = self.get_from(table, session_id)
 
-	 	# This is not the first time this has been edited.
-	 	if original:
-	 		value = value or original[table]
+		# This is not the first time this has been edited.
+		if original:
+			value = value or original[table]
 
-	 		# Erase the previous entry.
-	 		self.query_db('delete from %s where session_id = ?' % table, [session_id], one = True)
+			# Erase the previous entry.
+			self.query_db('delete from %s where session_id = ?' % table, [session_id], one = True)
 
-	 	# Process each one into a string.
-	 	value = self.insert_processing[table](value)
+		# Process each one into a string.
+		value = self.insert_processing[table](value)
 
- 	 	self.query_db('insert into %s (session_id, %s) values (?, ?);' % (table, table), [session_id, value], cursor = cursor)
+		self.query_db('insert into %s (session_id, %s) values (?, ?);' % (table, table), [session_id, value], cursor = cursor)
 
 
 	def delete_from(self, table, session_id):

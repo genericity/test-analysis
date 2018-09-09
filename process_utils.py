@@ -16,7 +16,10 @@ def int_if_possible(str):
 	if str is None or len(str) == 0:
 		return 0
 	else:
-		return int(str)
+		try:
+			return int(str)
+		except ValueError:
+			return 0
 
 # Safely escapes a string into encoded HTML characters, converting commas, <, >, etc. to safe characters.
 def html_encode(str):
