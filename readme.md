@@ -65,6 +65,15 @@ sudo apt-get upgrade
 sudo apt-get install r-base
 ```
 
+Alternately:
+
+```
+sudo add-apt-repository ppa:marutter/rrutter
+sudo apt update
+sudo apt full-upgrade
+sudo apt-get install r-base
+```
+
 ## Install rpy2
 
 Run `pip3 install rpy2` to install rpy2.  .  
@@ -102,7 +111,7 @@ Extract [the downloaded files](https://github.com/genericity/test-analysis/archi
 
 ## Set up databases:
 
-Open Python (type `python` from the commandline) and type:  
+Open Python (type `python3` from the commandline) and type:  
   
 `from index import init_db`  
 `init_db()`
@@ -115,16 +124,69 @@ Type `quit()` to exit Python.
 To run in development mode, type into the command-line:
 
 `export FLASK_APP=index.py`  
-`python -m flask run`
+`python3 -m flask run`
 
 To run while logging errors, type into the commandline:  
   
-`sudo python index.py &`  or, to log:   
-`sudo python index.py >> log.txt 2>&1 &`  
+`sudo python3 index.py &`  or, to log:   
+`sudo python3 index.py >> log.txt 2>&1 &`  
 
 ## Deploying (production mode)
 
 The current stable version on the server is served using [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) and [NGINX](https://www.nginx.com/). There are other options to deploy Flask projects, but any version chosen should be multiprocessed to avoid concurrency issues while using R and rpy2.
+
+The following instructions are written as if you are running the tool with an account named `user` and the project resides in a directory named `flask_project`.
+
+(Optional) Set up a virtual environment using virtualenv if you wish.
+```
+sudo pip3 install virtualenv
+virtualenv myprojectenv
+source myprojectenv/bin/activate
+```
+
+Install uWSGI and NGINX.
+```
+pip3 install uwsgi flask
+sudo apt-get install uwsgi-plugin-python
+sudo apt-get install python3-pip python3-dev nginx
+```
+
+Make sure your files are owned by the account that will be running NGINX/uWSGI and that they can be executed.
+```
+sudo chmod -R 0770 flask_project/
+sudo chown -R user:www-data flask_project/
+```
+Edit your `/etc/nginx/nginx.conf` file. Inside the `http {}` block, add these lines.
+
+```
+server {
+                listen 80;
+                location / {
+                        include uwsgi_params;
+                        uwsgi_pass 127.0.0.1:3033;
+                        proxy_read_timeout 3600;
+                        proxy_http_version 1.1;
+                        proxy_set_header Connection "";
+
+                }
+}
+
+```
+
+Ensure that the run-script is runnable.
+```
+cd flask_project
+chmod +x run.sh
+```
+
+Finally, run the tool using the run-script. If the tool is already running, it will be restarted.
+```
+./run.sh
+```
+
+This will also `tail` the error log so that you can observe for any errors. Hit `Ctrl - C` to close the error log (this will not close the server).
+
+Point your web browser to your server's IP to see the running tool.
 
 ## Tests
   
