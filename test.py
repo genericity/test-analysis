@@ -125,8 +125,39 @@ class Test:
 		# Return the first key as a default.
 		return self.versions.keys()[0]
 
+	# Outputs student score data in a CSV-like format, comma-delineated.
+	def to_student_score_csv(self):
+		if (len(self.students) == 0):
+			return ''
+
+		# Full array of student data.
+		students = []
+
+		# Grade boundary key.
+		min_location = self.min_student_location()
+		max_location = self.max_student_location()
+		grade_boundaries = self.get_grade_boundaries()
+
+		# Go through all the students and retrieve information about each one.
+		for i in range (0, len(self.students)):
+			student = self.students[i]
+			student_id = student.id
+
+			# Create the student array.
+			student_array = student.scores
+			student_array = [int(val) for val in student_array]
+			student_array.insert(0, student.id)
+
+			# Convert to string.
+			student_array = list(map(str, student_array))
+
+			students.append(','.join(student_array))
+
+		# Return the joined string.
+		return '\n'.join(students) 
+
 	# Outputs question data in a CSV-like format, comma-delineated.
-	def to_question_csv(self, encode = False):
+	def to_question_csv(self, encode = False, zero_indexed = True):
 		# Full array of question data.
 		questions = []
 
@@ -141,7 +172,7 @@ class Test:
 
 			# Create the question array.
 			question_array = []
-			question_array.append(i)
+			question_array.append(i if zero_indexed else i + 1)
 			question_array.append(text)
 			question_array.append(percentage)
 			question_array.append(discrimination)

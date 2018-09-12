@@ -212,11 +212,16 @@ def load_test():
 	return test
 
 # Outputs question data in a comma-delineated format.
-def get_question_data():
+def get_question_data(zero_indexed = True):
 	test = load_test()
-	return test.to_question_csv(encode = True)
+	return test.to_question_csv(encode = True, zero_indexed = zero_indexed)
 
 # Outputs student data in a comma-delineated format.
 def get_student_data():
 	test = load_test()
 	return test.to_student_csv()
+
+# Outputs student data in a comma-delineated format.
+def get_student_score_data():
+	test = load_test()
+	return test.to_student_score_csv()

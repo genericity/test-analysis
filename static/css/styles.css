@@ -591,7 +591,7 @@ input[type="checkbox"]:checked + label.toggle:hover:after {
 
 /* Downloads. */
 
-#export-area {
+.export-area {
      background: #f5f5f5;
      padding: 24px;
      margin-bottom: 24px;
@@ -599,27 +599,27 @@ input[type="checkbox"]:checked + label.toggle:hover:after {
      flex-direction: row;
 }
 
-#export-button .button-text {
+.export-button .button-text {
      font-size: 36px;
      line-height: 64px;
 }
 
-#export-button .button-icon {
+.export-button .button-icon {
      font-size: 50px;
 }
 
-#export-information {
+.export-information {
      margin-left: 1.5em;
 }
 
-#export-name {
+.export-name {
      color: #4caf50;
      display: block;
      font-size: 2em;
      line-height: 1.4em;
 }
 
-#export-subtext {
+.export-subtext {
      color: #bdbdbd;
      display: block;
      letter-spacing: 0.1em;
