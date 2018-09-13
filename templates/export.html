@@ -6,14 +6,39 @@
                 Click the download button to create a CSV data file containing student IDs and the revised recommended scores and grades. This can be uploaded to Canvas or any other storage system.
             </p>
             <section id="export">
-                <div id="export-area">
-                    <a class="button action-button" id="export-button" href="#">
+                <h3>Student statistics</h3>
+                <div class="export-area">
+                    <a class="export-button button action-button" id="export-student-summary-button" href="#">
                         <span class="button-icon material-icons">file_download</span>
                         <span class="button-text">Download</span>
                     </a>
-                    <div id="export-information">
-                        <span id="export-name">data.csv</span>
-                        <span id="export-subtext">Preparing file...</span>
+                    <div id="export-student-summary-information" class="export-information">
+                        <span class="export-name">students.csv</span>
+                        <span class="export-subtext">Preparing file...</span>
+                    </div>
+                </div>
+
+                <h3>Student scores (full)</h3>
+                <div class="export-area">
+                    <a class="export-button button action-button" id="export-student-score-button" href="#">
+                        <span class="button-icon material-icons">file_download</span>
+                        <span class="button-text">Download</span>
+                    </a>
+                    <div id="export-student-score-information" class="export-information">
+                        <span class="export-name">student_scores.csv</span>
+                        <span class="export-subtext">Preparing file...</span>
+                    </div>
+                </div>
+
+                <h3>Question statistics</h3>
+                <div class="export-area">
+                    <a class="export-button button action-button" id="export-question-summary-button" href="#">
+                        <span class="button-icon material-icons">file_download</span>
+                        <span class="button-text">Download</span>
+                    </a>
+                    <div id="export-question-summary-information" class="export-information">
+                        <span class="export-name">questions.csv</span>
+                        <span class="export-subtext">Preparing file...</span>
                     </div>
                 </div>
             </section>
