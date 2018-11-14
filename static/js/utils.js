@@ -115,7 +115,7 @@ const Utils = {
     if (array.length == 0) {
       return 0;
     }
-    let largest = array[0];
+    let largest = Number.NEGATIVE_INFINITY;
     for (const num of array) {
       if (!isNaN(num) && isNumber(num) && num > largest) {
         largest = num;
@@ -129,7 +129,7 @@ const Utils = {
     if (array.length == 0) {
       return 0;
     }
-    let smallest = array[0];
+    let smallest = Number.POSITIVE_INFINITY;
     for (const num of array) {
       if (!isNaN(num) && isNumber(num) && num < smallest) {
         smallest = num;
