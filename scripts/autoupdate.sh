@@ -21,6 +21,7 @@ mv flask_project.ini test-analysis/flask_project.ini
 
 # Make the log file and run the run-script.
 cd ~/flask_project/test-analysis
+python3 init_db.py
 touch flask_project.log
 chmod +x run.sh
 ./run.sh
