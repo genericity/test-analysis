@@ -215,6 +215,14 @@ def student_data():
 @app.route('/get/student_scores')
 def student_score_data():
 	return file_processing.get_student_score_data()
+	
+@app.route('/about')
+def about_page():
+	return render_template('about.html')
+	
+@app.route('/contact')
+def contact_page():
+	return render_template('contact.html')
 
 # Error handler for 404 errors.
 @app.errorhandler(404)
