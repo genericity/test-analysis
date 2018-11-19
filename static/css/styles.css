@@ -143,18 +143,27 @@ header ul li .button .button-icon {
      padding: 0 20px 0 0;
 }
 
-.icon-button a i {
-     font-size: 44px;
-     color: #B0BEC5;
-     -webkit-transition: color 0.2s ease;
-     -moz-transition: color 0.2s ease;
-     -o-transition: color 0.2s ease;
-     transition: color 0.2s ease;
+.icon-button a i, .icon-button a {
+	font-size: 28px;
+	color: #B0BEC5;
+	-webkit-transition: color 0.2s ease;
+	-moz-transition: color 0.2s ease;
+	-o-transition: color 0.2s ease;
+	transition: color 0.2s ease;
+	float: right;
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 44px;
 }
 
-.icon-button a i:hover {
+.icon-button a i:hover, .icon-button a:hover, .icon-button a:hover i {
      color: #90A4AE;
      transition: color 0.2s ease,
+}
+
+header .icon-button a i {
+	font-size: 44px;
+	padding-left: 4px;
 }
 
 /* Navigation. */
@@ -548,6 +557,11 @@ nav ul li:last-child:after{
     margin-top: 0;
     margin-bottom: 0;
     text-align: center;
+}
+
+#content em {
+	font-weight: 500;
+	font-style: normal;
 }
 
 .upload-format-box:checked + .upload-format {
