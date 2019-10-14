@@ -21,3 +21,4 @@ instance/
 
 # Python virtualenv.
 **/flask_project_env
+*.exe
