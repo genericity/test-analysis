@@ -22,8 +22,8 @@ sh ./cleanup.sh
 echo "Do you wish to deploy in development mode (1), production mode (2), or exit (any other key)? [1/2/e]"
 select yn in "1" "2"; do
     case $yn in
-        1 ) call 6-deploy_development.py; break;;
-        2 ) call 6-deploy_production.py; break;;
+        1 ) sh ./6-deploy_development.py; break;;
+        2 ) sh ./6-deploy_production.py; break;;
         * ) exit;;
     esac
 done

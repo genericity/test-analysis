@@ -1,19 +1,24 @@
 #!/bin/bash
 
 echo Deploying in production mode.
+
 cd ../../
-pip3 install virtualenv
-virtualenv flask_project_env
-source flask_project_env/bin/activate
 
-pip3 install flask --user
-pip3 install tornado --user
+echo "
+Edit your /etc/nginx/nginx.conf file. Inside the http {} block, add these lines.
 
-pip3 install uwsgi flask
-sudo apt-get install uwsgi-plugin-python
-sudo apt-get install python3-pip python3-dev nginx
+server {
+                listen 80;
+                location / {
+                        include uwsgi_params;
+                        uwsgi_pass 127.0.0.1:3033;
+                        proxy_read_timeout 3600;
+                        proxy_http_version 1.1;
+                        proxy_set_header Connection "";
 
-# Edit the config file here.
+                }
+}
+"
 
 chmod +x run.sh
 ./run.sh

@@ -1,10 +1,14 @@
 #!/bin/bash
 
-echo Installing R.
+echo Downloading R.
 sudo apt-get remove r-base-core
-sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu $(lsb_release -sc)/"
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-sudo add-apt-repository ppa:marutter/rrutter
-sudo apt update
-sudo apt full-upgrade
-sudo apt-get install r-base=3.5.1
+sudo apt-get install gfortran
+sudo apt-get install build-essential
+sudo apt-get install xorg-dev
+wget http://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
+tar -xzf R-3.5.1.tar.gz
+cd R-3.5.1
+echo Installing R.
+./configure --enable-R-shlib # --prefix=...
+make
+make install
