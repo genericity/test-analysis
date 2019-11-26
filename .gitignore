@@ -22,3 +22,6 @@ instance/
 # Python virtualenv.
 **/flask_project_env
 *.exe
+
+# Installation files.
+installation/windows/mirt/**
