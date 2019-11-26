@@ -1,3 +1,5 @@
+echo Downloading and extracting MIRT for R.
+
 setlocal enabledelayedexpansion
 set _filename=%cd%\master.zip
 set _url=https://github.com/genericity/mirt/archive/master.zip

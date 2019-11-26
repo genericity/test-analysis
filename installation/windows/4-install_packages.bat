@@ -1,3 +1,5 @@
+echo Installing MIRT.
+
 pip3 install rpy2 --user
 cd mirt
 Rscript -e 'install.packages("devtools")'
