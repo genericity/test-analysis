@@ -2,15 +2,17 @@
 
 echo Installing...
 
-call 1-install_python.bat
-call 2-install_r.bat
+rem call 1-install_python.bat
+rem call 2-install_r.bat
+
+set /p answer=Where is your R installation's bin directory? (e.g. C:\Program Files\R\R-3.5.1\bin) 
+set PATH=%PATH%;%answer%
+
 call 3-get_repo.bat
 call 4-install_packages.bat
 python 5-setup_db.py
 
 echo Installation complete.
-
-echo Cleaning up...
 
 call cleanup.bat
 

@@ -6,4 +6,4 @@ Powershell -Command "(New-Object Net.WebClient).DownloadFile('%_url%','%_filenam
 endlocal
 
 echo Installing Python.
-start "" %cd%\python.exe
+start /wait "" %cd%\python.exe

@@ -2,7 +2,6 @@ echo Installing MIRT.
 
 pip3 install rpy2 --user
 cd mirt
-Rscript -e 'install.packages("devtools")'
-Rscript -e 'library("devtools")'
-Rscript -e 'install_local("mirt-master")'
+rename mirt-master mirt
+Rscript ../4-install_packages.r
 cd ../
