@@ -2,8 +2,8 @@
 
 echo Installing...
 
-rem call 1-install_python.bat
-rem call 2-install_r.bat
+call 1-install_python.bat
+call 2-install_r.bat
 
 set /p answer=Where is your R installation's bin directory? (e.g. C:\Program Files\R\R-3.5.1\bin) 
 set PATH=%PATH%;%answer%
