@@ -10,6 +10,9 @@ sh ./2-install_r.sh
 echo "What is the bin directory of your R installation? (If on Ubuntu, this is /usr/lib/R/bin) "
 read answer
 export PATH=$answer:$PATH
+export RHOME=$answer
+export R_HOME=$answer
+export LD_LIBRARY_PATH=$answer
 
 sh ./3-get_repo.sh
 sh ./4-install_packages.sh
