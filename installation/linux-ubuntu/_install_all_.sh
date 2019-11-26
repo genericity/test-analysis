@@ -7,7 +7,9 @@ echo Installing...
 sh ./1-install_python.sh
 sh ./2-install_r.sh
 
-# Optional: add R to the PATH here.
+echo "What is the bin directory of your R installation? (If on Ubuntu, this is /usr/lib/R/bin) "
+read answer
+export PATH=$answer:$PATH
 
 sh ./3-get_repo.sh
 sh ./4-install_packages.sh
