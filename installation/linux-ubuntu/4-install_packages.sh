@@ -2,7 +2,7 @@
 
 echo Installing MIRT.
 
-pip3 install rpy2 --user
+sudo apt-get install python3-rpy2
 
 cd mirt
 rename mirt-master mirt
