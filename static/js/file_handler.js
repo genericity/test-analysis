@@ -16,26 +16,26 @@ class FileHandler {
 		// For each set of response types.
 		for (const type of types) {
 			// Listen to the radio button change.
-			const radio = type.radio;
-			const radioButton = document.getElementById(type.radio);
+			const radioType = type['radio'];
+			const radioButton = document.getElementById(radioType);
 			
 			const fileIds = type.show;
 
 			// When the set is selected.
 			radioButton.onchange = () => {
 				// Clear set.
-				if (!this.required[radio]) {
-					this.required[radio] = new Set();
+				if (!this.required[radioType]) {
+					this.required[radioType] = new Set();
 				}
-				if (!this.requiredUploaded[radio]) {
-					this.requiredUploaded[radio] = new Set();
+				if (!this.requiredUploaded[radioType]) {
+					this.requiredUploaded[radioType] = new Set();
 				}				
 				
 				this.disallowProgress();
 
 				// Hide all.
-				for (const element of cards) {
-					element.classList.add('hidden');
+				for (const ele of cards) {
+					ele.classList.add('hidden');
 				}
 
 				// For each file input element:
@@ -44,7 +44,7 @@ class FileHandler {
 					fileElement.parentElement.classList.remove('hidden');
 
 					if (fileId.required) {
-						this.required[radio].add(fileId.input)
+						this.required[radioType].add(fileId.input)
 					}
 
 					// When a file is selected, change the text of the label.
@@ -63,9 +63,9 @@ class FileHandler {
 							}
 
 							// Add this to the set of uploaded files.
-							this.requiredUploaded[radio].add(fileId.input);
+							this.requiredUploaded[radioType].add(fileId.input);
 							// Check if the required set is a subset of the uploaded set.
-							if (this.requiredUploaded[radio].isSuperset(this.required[radio])) {
+							if (this.requiredUploaded[radioType].isSuperset(this.required[radioType])) {
 								this.allowProgress();
 							}
 						}
@@ -73,7 +73,7 @@ class FileHandler {
 				}
 
 				// Check if the required set is a subset of the uploaded set.
-				if (this.requiredUploaded[radio].isSuperset(this.required[radio])) {
+				if (this.requiredUploaded[radioType].isSuperset(this.required[radioType])) {
 					this.allowProgress();
 				}
 			}
@@ -91,46 +91,48 @@ class FileHandler {
 	enableDragAndDrop(cards) {
 		// Enable drag and drop for all the cards if possible / supported.
 		if (this.dragAndDropSupported()) {
-			for (const element of cards) {
+			for (const ele of cards) {
 				// Style it differently by showing the drag and drop text and adding an outline.
-				element.classList.add('drag-and-drop');
+				ele.classList.add('drag-and-drop');
 
 				const stopPropagation = function(e) {
 					e.preventDefault();
     				e.stopPropagation();
 				}
 				// Stop the page from redirecting on drag/drop.
-				element.addEventListener('drag', stopPropagation);
-				element.addEventListener('dragstart', stopPropagation);
-				element.addEventListener('dragend', stopPropagation);
-				element.addEventListener('dragover', stopPropagation);
-				element.addEventListener('dragenter', stopPropagation);
-				element.addEventListener('dragleave', stopPropagation);
-				element.addEventListener('drop', stopPropagation);
+				ele.addEventListener('drag', stopPropagation);
+				ele.addEventListener('dragstart', stopPropagation);
+				ele.addEventListener('dragend', stopPropagation);
+				ele.addEventListener('dragover', stopPropagation);
+				ele.addEventListener('dragenter', stopPropagation);
+				ele.addEventListener('dragleave', stopPropagation);
+				ele.addEventListener('drop', stopPropagation);
 
 				// Have visual states added when hovering over the label.
 				const addVisualState = function(e) {
-					element.classList.add('drag-over');
+					ele.classList.add('drag-over');
 				}
-				element.addEventListener('dragover', addVisualState);
-				element.addEventListener('dragenter', addVisualState);
+				ele.addEventListener('dragover', addVisualState);
+				ele.addEventListener('dragenter', addVisualState);
 
 				// Remove visual states added when not hovering over the label.
 				const removeVisualState = function(e) {
-					element.classList.remove('drag-over');
+					ele.classList.remove('drag-over');
 				}
-				element.addEventListener('dragend', removeVisualState);
-				element.addEventListener('dragleave', removeVisualState);
-				element.addEventListener('drop', removeVisualState);
+				ele.addEventListener('dragend', removeVisualState);
+				ele.addEventListener('dragleave', removeVisualState);
+				ele.addEventListener('drop', removeVisualState);
 
 				// Handle the dropped files.
 				const handleDrop = function(e) {
 					// Get the file input element.
-					const fileInput = element.getElementsByTagName('input')[0];
+					const fileInput = ele.getElementsByTagName('input')[0];
 					// Set its files to the uploaded files.
 					fileInput.files = e.dataTransfer.files;
+                    fileInput.onchange();
+                    
 				}
-				element.addEventListener('drop', handleDrop);
+				ele.addEventListener('drop', handleDrop);
 			}
 		}
 	}
@@ -142,7 +144,7 @@ class FileHandler {
 	dragAndDropSupported() {
 		const div = document.createElement('div');
 		const supported = (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FileReader' in window;
-
+        
 		return supported;
 	}
 
@@ -159,20 +161,20 @@ class FileHandler {
 	* Allow progress to the next page.
 	*/
 	allowProgress() {
-		const button = document.getElementById('next-button');
-		button.classList.remove('disabled-button');
-		button.setAttribute('for', 'submit-form');
-		button.href = this.nextPage;
+		const button_ = document.getElementById('next-button');
+		button_.classList.remove('disabled-button');
+		button_.setAttribute('for', 'submit-form');
+		button_.href = this.nextPage;
 	}
 
 	/*
 	* Disallow progress to the next page.
 	*/
 	disallowProgress() {
-		const button = document.getElementById('next-button');
-		button.classList.add('disabled-button');
-		button.setAttribute('for', '');
-		button.href = '#';
+		const button_ = document.getElementById('next-button');
+		button_.classList.add('disabled-button');
+		button_.setAttribute('for', '');
+		button_.href = '#';
 	}
 
 }
