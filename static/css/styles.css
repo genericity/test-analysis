@@ -686,7 +686,7 @@ footer ul li a:hover {
      min-height: 400px;
      max-height: 1500px;
      margin: 36px 0;
-     display: block;
+     display: table;
 }
 
 #grades h3 {
