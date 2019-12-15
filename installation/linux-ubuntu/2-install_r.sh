@@ -2,23 +2,22 @@
 
 echo Downloading R.
 sudo apt-get remove r-base-core
-sudo apt-get install gfortran
-sudo apt-get install build-essential
-sudo apt-get install xorg-dev
-wget http://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz
-tar -xzf R-3.5.1.tar.gz
-cd R-3.5.1
 
-sudo apt install openjdk-8-jdk
+sudo -E apt install openjdk-8-jdk
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
 export PATH=$PATH:$JAVA_HOME/bin
 
-echo Installing R.
-./configure --enable-R-shlib # --prefix=...
-make
-sudo make install
-sudo chown -R $USER:$USER /usr/local/bin
-sudo chown -R $USER:$USER /usr/local/lib/R
-export PATH=$PATH:/usr/local/bin
+sudo -E apt-get install libxml2-dev
+sudo echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list
+gpg --keyserver keyserver.ubuntu.com --recv-key E298A3A825C0D65DFD57CBB651716619E084DAB9 --honor-http-proxy http-proxy=http://squid.auckland.ac.nz:3128/
+gpg -a --export E084DAB9 | sudo apt-key add -
+sudo -E apt-get update
+sudo -E apt-get install r-base-core=3.4.3-1xenial0
 
-cd ../
+echo "What is the directory of your R installation? (If on Ubuntu, this is /usr/lib/R) "
+read answer
+export PATH=$answer:$PATH
+export RHOME=$answer
+export R_HOME=$answer
+export R_HOME_DIR=$answer
+export PATH=$answer/bin:$PATH
