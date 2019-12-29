@@ -681,12 +681,9 @@ footer ul li a:hover {
 /* Rendered graph. */
 
 #grades {
-     height: 100%;
      width: 100%;
-     min-height: 400px;
-     max-height: 1500px;
      margin: 36px 0;
-     display: table;
+     display: block;
 }
 
 #grades h3 {
@@ -705,18 +702,15 @@ footer ul li a:hover {
 
 #graph-container {
      width: 100%;
-     height: 100%;
-     margin: 0 0 2.5em 0;
+     height: 1300px;
+     margin: 0 0 72px 0;
      display: block;
-     box-sizing: border-box;
 }
 
 #canvas-container {
     height: 100%;
     margin-top: 24px;
     display: block;
-    box-sizing: border-box;
-    clear: both;
 }
 
 #student-hider-button {
