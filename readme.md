@@ -17,11 +17,13 @@ This allows users to reduce poor identifiers of true student ability and so incr
 ### Visualizing questions and students:
 ![](https://i.imgur.com/LB4SoFY.png)
 
+Please see [this Google Document](https://docs.google.com/document/d/1WA3KRmnJ_OrMAmTWooFND18r7ErARnX5eSiP8P1kjFI/edit#) for the latest installation information and rationale on design decisions.
+
 ## Install Python
 
 View instructions on how to install Python for your operating system here: [https://www.python.org/downloads/](https://www.python.org/downloads/).
 
-Select the latest version of Python 3 to install.
+You must install Python 3.5 only. This is the only version that rpy2 is compatible with.
 
 ## Install pip
 
@@ -57,21 +59,20 @@ sudo apt-get remove r-base-core
 To install R:
 
 ```
-sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu $(lsb_release -sc)/"
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-sudo add-apt-repository ppa:marutter/rdev
+sudo apt-get install libxml2-dev
+sudo echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list
+gpg --keyserver keyserver.ubuntu.com --recv-key E298A3A825C0D65DFD57CBB651716619E084DAB9
+gpg -a --export E084DAB9 | sudo apt-key add -
 sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install r-base
+sudo apt-get install r-base-core=3.4.3-1xenial0
 ```
 
-Alternately:
+Make sure to update your R_HOME and PATH environment variables with the R installation directory.
 
 ```
-sudo add-apt-repository ppa:marutter/rrutter
-sudo apt update
-sudo apt full-upgrade
-sudo apt-get install r-base
+export R_HOME=/usr/lib/R
+export PATH=/usr/lib/R:$PATH
+export PATH=/usr/lib/R/bin:$PATH
 ```
 
 ## Install rpy2
