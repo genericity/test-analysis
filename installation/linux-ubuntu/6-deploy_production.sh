@@ -4,7 +4,7 @@ echo Deploying in production mode.
 
 cd ../../
 
-echo "
+echo "If this is the first time deploying in production mode:
 Edit your /etc/nginx/nginx.conf file. Inside the http {} block, add these lines.
 
 server {
@@ -19,6 +19,8 @@ server {
                 }
 }
 "
+
+read -n 1 -s -r -p "Press any key to continue"
 
 chmod +x run.sh
 ./run.sh

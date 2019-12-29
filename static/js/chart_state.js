@@ -274,6 +274,8 @@ class ChartState {
       for (const divider of this.dividers) {
         divider.enableField();
       }
+      
+      this.chart.height = "1300px";
     });
   }
 

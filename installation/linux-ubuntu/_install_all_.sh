@@ -2,18 +2,14 @@
 
 chmod -R 755 ./
 
+export http_proxy=http://squid.auckland.ac.nz:3128/
+export https_proxy=https://squid.auckland.ac.nz:3128/
+export ftp_proxy=http://squid.auckland.ac.nz:3128/
+
 echo Installing...
 
 sh ./1-install_python.sh
 sh ./2-install_r.sh
-
-echo "What is the bin directory of your R installation? (If on Ubuntu, this is /usr/lib/R/bin) "
-read answer
-export PATH=$answer:$PATH
-export RHOME=$answer
-export R_HOME=$answer
-export LD_LIBRARY_PATH=$answer
-
 sh ./3-get_repo.sh
 sh ./4-install_packages.sh
 python3 5-setup_db.py

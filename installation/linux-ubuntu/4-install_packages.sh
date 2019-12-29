@@ -2,12 +2,14 @@
 
 echo Installing MIRT.
 
+sudo -E python -m pip3 install rpy2==2.9.4
+echo "If rpy2 installed successfully in the last step, please decline to upgrade rpy2 in the next step."
+read -n 1 -s -r -p "Press any key to continue"
+
 sudo -E apt-get install python3-rpy2
-sudo -E apt-get install python-rpy2
 sudo -E apt-get install python3-flask
 sudo -E apt-get install libssl-dev
 sudo -E apt-get install libcurl4-openssl-dev
-sudo -E python3 -m pip install rpy2 --upgrade
 
 cd mirt
 mv mirt-master mirt
