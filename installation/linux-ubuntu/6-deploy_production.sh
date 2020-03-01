@@ -22,5 +22,10 @@ server {
 
 read -n 1 -s -r -p "Press any key to continue"
 
+touch flask_project.log
+local search = /home/user/flask_project/test-analysis
+local replace = $(pwd)
+sed -i 's/${search}/${replace}/g' flask_project.ini
+
 chmod +x run.sh
 ./run.sh
