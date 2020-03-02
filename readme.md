@@ -65,6 +65,8 @@ gpg --keyserver keyserver.ubuntu.com --recv-key E298A3A825C0D65DFD57CBB651716619
 gpg -a --export E084DAB9 | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install r-base-core=3.4.3-1xenial0
+sudo apt-get -y build-dep libcurl4-gnutls-dev
+sudo apt-get -y install libcurl4-gnutls-dev
 ```
 
 Make sure to update your R_HOME and PATH environment variables with the R installation directory.
@@ -74,6 +76,9 @@ export R_HOME=/usr/lib/R
 export PATH=/usr/lib/R:$PATH
 export PATH=/usr/lib/R/bin:$PATH
 ```
+
+Replace /usr/lib/R with the location of your R installation directory if you are not using Ubuntu.
+Append the three lines above to your ~/.bashrc file if you would like these directories to persist.
 
 ## Install rpy2
 
@@ -179,6 +184,8 @@ Ensure that the run-script is runnable.
 cd flask_project
 chmod +x run.sh
 ```
+
+Open flask_project.ini and replace the directory in the chdir line to your current working directory.
 
 Finally, run the tool using the run-script. If the tool is already running, it will be restarted.
 ```
