@@ -10,6 +10,7 @@ echo Installing...
 
 sh ./1-install_python.sh
 sh ./2-install_r.sh
+source ~/.bashrc
 sh ./3-get_repo.sh
 sh ./4-install_packages.sh
 python3 5-setup_db.py
@@ -21,8 +22,8 @@ sh ./cleanup.sh
 echo "Do you wish to deploy in development mode (1), production mode (2), or exit (any other key)? [1/2/e]"
 select yn in "1" "2"; do
     case $yn in
-        1 ) sh ./6-deploy_development.py; break;;
-        2 ) sh ./6-deploy_production.py; break;;
+        1 ) sh ./6-deploy_development.sh; break;;
+        2 ) sh ./6-deploy_production.sh; break;;
         * ) exit;;
     esac
 done

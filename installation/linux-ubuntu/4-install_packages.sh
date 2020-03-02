@@ -13,7 +13,7 @@ sudo -E apt-get install libcurl4-openssl-dev
 
 cd mirt
 mv mirt-master mirt
-Rscript ../4-install_packages.r
+/usr/lib/R/bin/R --slave --no-restore --file=../4-install_packages.r
 cd ../
 
 cd ../../

@@ -19,7 +19,8 @@ sudo apt-get -y install libcurl4-gnutls-dev
 
 echo "What is the directory of your R installation? (If on Ubuntu, this is /usr/lib/R) "
 read answer
-export PATH=$answer:$answer/bin:$PATH
-export RHOME=$answer:$answer/bin
-export R_HOME=$answer:$answer/bin
-export R_HOME_DIR=$answer:$answer/bin
+echo "Your directory is: ${answer}"
+echo export PATH="${answer}:${answer}/bin:${PATH}" >> ~/.bashrc
+echo export RHOME="${answer}:${answer}/bin" >> ~/.bashrc
+echo export R_HOME="${answer}:${answer}/bin" >> ~/.bashrc
+echo export R_HOME_DIR="${answer}:${answer}/bin" >> ~/.bashrc
